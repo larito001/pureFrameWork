@@ -23,6 +23,36 @@ MonoBehaviour:
     m_SerializedLabels:
     - all
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 46aa4acaa6b2c014eb8082adccb8a37b
+    m_Address: Assets/HotUpdate/prefabs/UI/FightingEndPanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f50e5ef80b9c7f7419c4baa4ee07d65b
+    m_Address: Assets/HotUpdate/prefabs/UI/FightingPanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 18bf7a91304850642861c071dbd3e0cb
+    m_Address: Assets/HotUpdate/prefabs/UI/SkillTreePanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 67b712b42fd128e42b78e47ed7e7cf18
+    m_Address: Assets/HotUpdate/prefabs/UI/StartPanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0ff06a0753cccf74aad65797a10fdd6a
+    m_Address: Assets/HotUpdate/prefabs/UI/ComPanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 9195e527738c21e4f8021deaa48a5e38, type: 2}
   m_SchemaSet:

@@ -133,12 +133,12 @@ public class UIMgr
         if (type.handlers.ContainsKey(uiEnum))
         {
             handler = type.handlers[uiEnum];
-            handler.Init(point.key, point.isStatic);
+            handler.Init(point.key, point.isStatic,uiEnum);
         }
         else
         {
             handler = new UIPageHandler();
-            handler.Init(point.key, point.isStatic);
+            handler.Init(point.key, point.isStatic,uiEnum);
             type.handlers.Add(uiEnum, handler);
         }
 

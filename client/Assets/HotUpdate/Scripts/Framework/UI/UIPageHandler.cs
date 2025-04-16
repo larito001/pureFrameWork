@@ -21,9 +21,10 @@ public class UIPageHandler
     private Action onLoadComplete;  // 加载完成的回调
     public PageState curState = PageState.UnLoad;
     private bool shouldBeHidden = false; // 新增：标记是否应该被隐藏
-
-    public void Init(string key,bool isStatic)
+    private UIEnum type;
+    public void Init(string key,bool isStatic,UIEnum t)
     {
+        this.type = t;
         Debug.Log($"[UIPageHandler] Init: key={key}, isStatic={isStatic}");
         this.isStatic=isStatic; 
         this.key = key;
@@ -114,7 +115,7 @@ public class UIPageHandler
             
             // 确保UI初始状态是隐藏的
             Disable();
-            
+            uIPageBase.uiType = type;
             uIPageBase.OnLoad();
             YOTOFramework.Instance.uIMgr.OnUILoaded(uIPageBase.gameObject);
             

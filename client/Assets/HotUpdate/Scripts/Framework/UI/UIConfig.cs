@@ -41,7 +41,10 @@ public enum UIEnum
 {
     None = 0,
     StaticLoadingUI,
-
+    StartPanel,
+    SkillTreePanel,
+    FightingPanel,
+    FightingEndPanel
 }
 public class UIConfig
 {
@@ -50,7 +53,10 @@ public class UIConfig
     /// </summary>
     public readonly Dictionary<UIEnum, UIInfo> uiConfigDic = new Dictionary<UIEnum, UIInfo>() {
          { UIEnum.StaticLoadingUI, new UIInfo( UIType.Normal,Layer.StaticUI,"StaticLoadingPage",true) },
-          
+         { UIEnum.FightingEndPanel, new UIInfo( UIType.Normal,Layer.StaticUI,"Assets/HotUpdate/prefabs/UI/FightingEndPanel.prefab") },
+         { UIEnum.StartPanel, new UIInfo( UIType.Normal,Layer.StaticUI,"Assets/HotUpdate/prefabs/UI/StartPanel.prefab") },
+         { UIEnum.SkillTreePanel, new UIInfo( UIType.Normal,Layer.StaticUI,"Assets/HotUpdate/prefabs/UI/SkillTreePanel.prefab") },
+         { UIEnum.FightingPanel, new UIInfo( UIType.Normal,Layer.StaticUI,"Assets/HotUpdate/prefabs/UI/FightingPanel.prefab") },
     };
 
 }

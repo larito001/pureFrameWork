@@ -10,6 +10,7 @@ using UnityEngine;
 [RequireComponent(typeof(CanvasGroup))]
 public abstract class UIPageBase : MonoBehaviour
 {
+    public UIEnum uiType;
     public bool isEnable = false;
     public CanvasGroup canvasGroup;
     public abstract void OnLoad();

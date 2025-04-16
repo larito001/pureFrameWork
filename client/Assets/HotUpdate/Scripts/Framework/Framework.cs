@@ -38,7 +38,7 @@ namespace YOTO
                 uIMgr.Init();
                 sceneMgr.Init();
                 dataMgr.Init();
-                netMgr.Init();
+                // netMgr.Init();
              
             }
             Debug.Log("YTLOG初始化完成");
