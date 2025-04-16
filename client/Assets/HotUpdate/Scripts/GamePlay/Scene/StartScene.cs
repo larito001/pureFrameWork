@@ -17,7 +17,6 @@ public class StartScene : VirtualSceneBase
 
     public override void OnInit()
     {
-        YOTOFramework.Instance.uIMgr.Show(UIEnum.StockUI);
     }
 
     public override void UnLoad()

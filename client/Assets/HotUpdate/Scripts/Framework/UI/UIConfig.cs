@@ -41,19 +41,7 @@ public enum UIEnum
 {
     None = 0,
     StaticLoadingUI,
-    LoginUI,
-    LoadingUI,
-    BattleMainUI,
-    RoomListUI,
-    RoomUI,
-    StockUI,
-    LoanUI,
-    InsuranceUI,
-    TurnTableUI,
-    ShopUI,
-    BagUI,
-    DateUI,
-    EndCircleUI
+
 }
 public class UIConfig
 {
@@ -62,20 +50,6 @@ public class UIConfig
     /// </summary>
     public readonly Dictionary<UIEnum, UIInfo> uiConfigDic = new Dictionary<UIEnum, UIInfo>() {
          { UIEnum.StaticLoadingUI, new UIInfo( UIType.Normal,Layer.StaticUI,"StaticLoadingPage",true) },
-        { UIEnum.LoginUI, new UIInfo( UIType.Normal,Layer.StaticUI,"LoginPage") } ,
-         { UIEnum.LoadingUI, new UIInfo( UIType.Normal,Layer.StaticUI,"LoadingPage") } ,
-          { UIEnum.BattleMainUI, new UIInfo( UIType.Normal,Layer.StaticUI,"BattleMainPage") } ,
-          { UIEnum.RoomListUI, new UIInfo( UIType.Normal,Layer.StaticUI,"RoomListPage") } ,
-          { UIEnum.RoomUI, new UIInfo( UIType.Normal,Layer.StaticUI,"RoomPage") } ,
-          
-          { UIEnum.StockUI, new UIInfo( UIType.Stack,Layer.StaticUI,"StockPage") } ,
-          { UIEnum.LoanUI, new UIInfo( UIType.Stack,Layer.StaticUI,"LoanPage") } ,
-          { UIEnum.InsuranceUI, new UIInfo( UIType.Stack,Layer.StaticUI,"InsurancePage") } ,
-          { UIEnum.TurnTableUI, new UIInfo( UIType.Stack,Layer.StaticUI,"TurntablePage") } ,
-          { UIEnum.ShopUI, new UIInfo( UIType.Stack,Layer.StaticUI,"ShopPage") } ,
-          { UIEnum.BagUI, new UIInfo( UIType.Normal,Layer.StaticUI,"BagPage") } ,
-          { UIEnum.DateUI, new UIInfo( UIType.Stack,Layer.StaticUI,"DatePage") } ,
-          { UIEnum.EndCircleUI, new UIInfo( UIType.Normal,Layer.StaticUI,"EndCirclePage") } 
           
     };
 

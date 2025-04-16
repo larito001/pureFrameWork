@@ -6,7 +6,6 @@ namespace YOTO
 {
     public enum Scenes
     {
-        Room,
         Start,
         Normal,
        
@@ -17,7 +16,6 @@ namespace YOTO
         CameraCtrl cameraCtrl;
 
         Dictionary<Scenes, VirtualSceneBase> scenesMap = new Dictionary<Scenes, VirtualSceneBase>() {
-            { Scenes.Room, new RoomScene()},
             { Scenes.Normal, new NormalScene()},
             { Scenes.Start, new StartScene()}
         };

@@ -11,7 +11,7 @@ public  class FrameworkConfig
    public static string DeletePath = "http://47.103.43.98/files";//删除服务器远端仓库的请求地址
    public static string LoginPath = "http://47.103.43.98/login";//登录服务器远端仓库的请求地址
    public static string LogoutPath = "http://47.103.43.98/logout";//登出服务器远端仓库的请求地址
-   public static string PackPath=@"F:\pureFrameWork\PureFramework\client\ServerData\StandaloneWindows64";//打好的本地Addressable包的地址
+   public static string PackPath=@"F:\PureFrame\PureFramework\client\ServerData\StandaloneWindows64";//打好的本地Addressable包的地址，用于上传
    //   public static string RemoteBuildPath = "ServerData/[BuildTarget]";Build地址需要在Addressable里改
    public static string DLLName = "HotUpdate.dll.bytes";//热更dll在group中的索引
    public static string StartSceneName="Assets/HotUpdate/Scenes/StartScene.unity";//更新后启动场景的group中的索引
