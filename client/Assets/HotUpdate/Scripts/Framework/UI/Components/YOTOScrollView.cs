@@ -7,18 +7,34 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(RectTransform))]
 public class YOTOScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [SerializeField] private RectTransform content;        // 内容容器
-    [SerializeField] private RectTransform viewport;       // 视口
-    [SerializeField] private float itemHeight = 100f;      // 每个项的高度
-    [SerializeField] private int spacing = 5;              // 项之间的间距
-    
-    private List<YOTOScrollViewItem> itemPool;            // 对象池
-    private List<YOTOScrollViewDataBase> dataList;                        // 数据列表
-    private float contentHeight;                          // 内容总高度
-    private int poolSize;                                 // 对象池大小
-    private int startIndex;                               // 当前显示的起始索引
-    private int endIndex;                                 // 当前显示的结束索引
-    private HashSet<int> visibleIndices;                 // 当前可见的索引集合
+    public enum LayoutType { Vertical, Horizontal }
+
+    [Header("Layout Settings")]
+    [SerializeField] private LayoutType layout = LayoutType.Vertical;
+    [SerializeField] private int columns = 5;     // Used when layout is Vertical
+    [SerializeField] private int rows = 1;        // Used when layout is Horizontal
+
+    [Header("References")]
+    [SerializeField] private RectTransform content;
+    [SerializeField] private RectTransform viewport;
+
+    [Header("Item Settings")]
+    [SerializeField] private float itemWidth = 100f;
+    [SerializeField] private float itemHeight = 100f;
+    [SerializeField] private int spacing = 5;
+
+    private List<YOTOScrollViewItem> itemPool;
+    private List<YOTOScrollViewDataBase> dataList;
+    private HashSet<int> visibleIndices;
+
+    private float contentWidth;
+    private float contentHeight;
+    private int poolSize;
+
+    // For vertical layout
+    private int startRow, endRow;
+    // For horizontal layout
+    private int startCol, endCol;
 
     private Vector2 lastDragPosition;
     private bool isDragging;
@@ -30,57 +46,48 @@ public class YOTOScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         dataList = new List<YOTOScrollViewDataBase>();
         visibleIndices = new HashSet<int>();
 
-        if (!TryGetComponent<Image>(out var image))
+        // Transparent and raycastable for drag
+        if (!TryGetComponent<Image>(out var img))
         {
-            image = gameObject.AddComponent<Image>();
-            image.color = new Color(0, 0, 0, 0);
+            img = gameObject.AddComponent<Image>();
+            img.color = Color.clear;
         }
-        image.raycastTarget = true;
-        
+        img.raycastTarget = true;
+
         if (content == null || viewport == null)
         {
-            Debug.LogError("Content or Viewport is not assigned!");
+            Debug.LogError("Content or Viewport not assigned!");
+            enabled = false;
             return;
         }
 
-    
-        // 设置Content的锚点和轴心点
+        // Anchor content top-left
         content.anchorMin = new Vector2(0, 1);
-        content.anchorMax = new Vector2(1, 1);
-        content.pivot = new Vector2(0.5f, 1);
+        content.anchorMax = new Vector2(0, 1);
+        content.pivot = new Vector2(0, 1);
         content.anchoredPosition = Vector2.zero;
 
-        // 设置Viewport的锚点
+        // Stretch viewport
         viewport.anchorMin = Vector2.zero;
         viewport.anchorMax = Vector2.one;
     }
 
-    private void Start()
-    {
-        // 强制更新布局
-        Canvas.ForceUpdateCanvases();
-    }
+    private void Start() => Canvas.ForceUpdateCanvases();
 
     public void Initialize(GameObject itemPrefab, int poolSize)
     {
         this.poolSize = poolSize;
-        
-        foreach (var item in itemPool)
-        {
-            if (item != null)
-            {
-                Destroy(item.gameObject);
-            }
-        }
+        foreach (var it in itemPool)
+            if (it) Destroy(it.gameObject);
         itemPool.Clear();
 
         for (int i = 0; i < poolSize; i++)
         {
-            var itemGo = Instantiate(itemPrefab, content);
-            var item = itemGo.GetComponent<YOTOScrollViewItem>();
-            if (item == null)
+            var go = Instantiate(itemPrefab, content);
+            var item = go.GetComponent<YOTOScrollViewItem>();
+            if (!item)
             {
-                Debug.LogError("Item prefab must have YOTOScrollViewItem component!");
+                Debug.LogError("Prefab needs YOTOScrollViewItem component!");
                 return;
             }
             item.gameObject.SetActive(false);
@@ -90,64 +97,58 @@ public class YOTOScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     public void SetData<T>(List<T> data) where T : YOTOScrollViewDataBase
     {
-        if (viewport == null || content == null)
-        {
-            Debug.LogError("Viewport or Content is null!");
-            return;
-        }
-
-        Debug.Log($"SetData: 数据数量={data?.Count}, 对象池大小={itemPool?.Count}");
-
-        // 检查对象池是否初始化
+        if (content == null || viewport == null) return;
         if (itemPool == null || itemPool.Count == 0)
         {
-            Debug.LogError("对象池未初始化，请先调用Initialize方法！");
+            Debug.LogError("Initialize pool first.");
             return;
         }
 
-        // 先隐藏所有项
-        foreach (var item in itemPool)
-        {
-            if (item != null && item.gameObject.activeSelf)
+        // Hide existing
+        foreach (var it in itemPool)
+            if (it.gameObject.activeSelf)
             {
-                item.OnHidItem(item.CurrentData);
-                item.gameObject.SetActive(false);
+                it.OnHidItem(it.CurrentData);
+                it.gameObject.SetActive(false);
             }
-        }
-        //
         visibleIndices.Clear();
-        
+
         if (data == null || data.Count == 0)
         {
-            Debug.Log("SetData: 数据为空，清理列表");
             dataList.Clear();
-            contentHeight = 0;
-            content.sizeDelta = new Vector2(content.sizeDelta.x, 0);
+            content.sizeDelta = Vector2.zero;
             return;
         }
 
-        dataList = data.ConvertAll(item => (YOTOScrollViewDataBase)item);
-        
-        // 计算总高度：所有项的高度 + (项数-1)个间距
-         contentHeight = (data.Count * itemHeight) + ((data.Count - 1) * spacing);
-         content.sizeDelta = new Vector2(content.sizeDelta.x, contentHeight);
-        // content.anchoredPosition = Vector2.zero;
-        // lastContentPosition = Vector2.zero;
+        dataList = data.ConvertAll(x => (YOTOScrollViewDataBase)x);
+        int count = dataList.Count;
+
+        int totalRows, totalCols;
+        if (layout == LayoutType.Vertical)
+        {
+            totalCols = Mathf.Max(1, columns);
+            totalRows = Mathf.CeilToInt((float)count / totalCols);
+        }
+        else // Horizontal
+        {
+            totalRows = Mathf.Max(1, rows);
+            totalCols = Mathf.CeilToInt((float)count / totalRows);
+        }
+
+        contentWidth  = totalCols * itemWidth + (totalCols - 1) * spacing;
+        contentHeight = totalRows * itemHeight + (totalRows - 1) * spacing;
+        content.sizeDelta = new Vector2(contentWidth, contentHeight);
+
         ClampContentPosition();
         RefreshItems();
-      
     }
 
     private YOTOScrollViewItem GetFreeItem()
     {
-        foreach (var item in itemPool)
-        {
-            if (!item.gameObject.activeSelf)
-            {
-                return item;
-            }
-        }
-        Debug.LogWarning($"对象池大小不足！当前池大小：{itemPool.Count}");
+        foreach (var it in itemPool)
+            if (!it.gameObject.activeSelf)
+                return it;
+        Debug.LogWarning($"Pool shortage (size={itemPool.Count})");
         return null;
     }
 
@@ -155,86 +156,154 @@ public class YOTOScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         if (dataList == null || dataList.Count == 0) return;
 
-        float scrollPosition = content.anchoredPosition.y;
-        float viewportHeight = viewport.rect.height;
-        float itemTotalHeight = itemHeight + spacing;
-
-        // 计算当前应该显示的索引范围
-        startIndex = Mathf.Max(0, Mathf.FloorToInt(scrollPosition / itemTotalHeight));
-        int visibleCount = Mathf.CeilToInt(viewportHeight / itemTotalHeight) + 2;
-        endIndex = Mathf.Min(dataList.Count - 1, startIndex + visibleCount);
-        // Debug.Log("索引范围"+startIndex+":"+endIndex);
-        // 处理当前显示的项
-        Dictionary<int, YOTOScrollViewItem> currentItems = new Dictionary<int, YOTOScrollViewItem>();
-        foreach (var item in itemPool)
+        if (layout == LayoutType.Vertical)
         {
-            if (item.gameObject.activeSelf)
-            {
-                int index = item.DataIndex;
-                if (index >= startIndex && index <= endIndex)
+            float scrollY = content.anchoredPosition.y;
+            float viewH = viewport.rect.height;
+            float rowH = itemHeight + spacing;
+
+            startRow = Mathf.FloorToInt(scrollY / rowH);
+            int visRows = Mathf.CeilToInt(viewH / rowH) + 1;
+            endRow = startRow + visRows;
+
+            int maxRow = Mathf.CeilToInt((float)dataList.Count / columns) - 1;
+            startRow = Mathf.Clamp(startRow, 0, maxRow);
+            endRow   = Mathf.Clamp(endRow,   0, maxRow);
+
+            var current = new Dictionary<int, YOTOScrollViewItem>();
+            foreach (var it in itemPool)
+                if (it.gameObject.activeSelf)
                 {
-                    currentItems[index] = item;
-                    continue;
+                    int idx = it.DataIndex;
+                    int r = idx / columns;
+                    if (r < startRow || r > endRow)
+                    {
+                        it.OnHidItem(it.CurrentData);
+                        it.gameObject.SetActive(false);
+                        visibleIndices.Remove(idx);
+                    }
+                    else current[idx] = it;
                 }
-                item.OnHidItem(item.CurrentData);
-                item.gameObject.SetActive(false);
-                visibleIndices.Remove(index);
+
+            for (int r = startRow; r <= endRow; r++)
+            {
+                for (int c = 0; c < columns; c++)
+                {
+                    int idx = r * columns + c;
+                    if (idx >= dataList.Count) break;
+
+                    float x = c * (itemWidth + spacing) + itemWidth * 0.5f;
+                    float y = -r * (itemHeight + spacing) - itemHeight * 0.5f;
+
+                    if (current.TryGetValue(idx, out var exist))
+                    {
+                        exist.transform.localPosition = new Vector3(x, y, 0);
+                        continue;
+                    }
+
+                    var ni = GetFreeItem();
+                    if (ni == null) continue;
+                    ni.transform.localPosition = new Vector3(x, y, 0);
+                    ni.DataIndex = idx;
+                    ni.gameObject.SetActive(true);
+                    ni.OnRenderItem(dataList[idx]);
+                    visibleIndices.Add(idx);
+                }
             }
         }
-
-        // 更新或显示需要显示的项
-        for (int i = startIndex; i <= endIndex; i++)
+        else // Horizontal layout
         {
-            float itemYPos = -(i * (itemHeight + spacing))-itemTotalHeight/2;
+            float scrollX = -content.anchoredPosition.x;
+            float viewW = viewport.rect.width;
+            float colW = itemWidth + spacing;
 
-            if (currentItems.TryGetValue(i, out var existingItem))
+            startCol = Mathf.FloorToInt(scrollX / colW);
+            int visCols = Mathf.CeilToInt(viewW / colW) + 1;
+            endCol = startCol + visCols;
+
+            int totalCols = Mathf.CeilToInt((float)dataList.Count / rows) - 1;
+            startCol = Mathf.Clamp(startCol, 0, totalCols);
+            endCol   = Mathf.Clamp(endCol,   0, totalCols);
+
+            var current = new Dictionary<int, YOTOScrollViewItem>();
+            foreach (var it in itemPool)
+                if (it.gameObject.activeSelf)
+                {
+                    int idx = it.DataIndex;
+                    int c = idx / rows;
+                    if (c < startCol || c > endCol)
+                    {
+                        it.OnHidItem(it.CurrentData);
+                        it.gameObject.SetActive(false);
+                        visibleIndices.Remove(idx);
+                    }
+                    else current[idx] = it;
+                }
+
+            for (int c = startCol; c <= endCol; c++)
             {
-                existingItem.transform.localPosition = new Vector3(0, itemYPos, 0);
-                // Debug.Log("设置位置"+existingItem.transform.localPosition);
-                continue;
+                for (int r = 0; r < rows; r++)
+                {
+                    int idx = c * rows + r;
+                    if (idx >= dataList.Count) break;
+
+                    float x = c * (itemWidth + spacing) + itemWidth * 0.5f;
+                    float y = -r * (itemHeight + spacing) - itemHeight * 0.5f;
+
+                    if (current.TryGetValue(idx, out var exist))
+                    {
+                        exist.transform.localPosition = new Vector3(x, y, 0);
+                        continue;
+                    }
+
+                    var ni = GetFreeItem();
+                    if (ni == null) continue;
+                    ni.transform.localPosition = new Vector3(x, y, 0);
+                    ni.DataIndex = idx;
+                    ni.gameObject.SetActive(true);
+                    ni.OnRenderItem(dataList[idx]);
+                    visibleIndices.Add(idx);
+                }
             }
-
-            YOTOScrollViewItem newItem = GetFreeItem();
-            if (newItem == null) continue;
-
-            newItem.transform.localPosition = new Vector3(0, itemYPos, 0);
-            // Debug.Log("设置位置2:"+newItem.transform.localPosition);
-            newItem.DataIndex = i;
-            newItem.gameObject.SetActive(true);
-            newItem.OnRenderItem(dataList[i]);
-            visibleIndices.Add(i);
         }
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData ev)
     {
         isDragging = true;
-        lastDragPosition = eventData.position;
+        lastDragPosition = ev.position;
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public void OnDrag(PointerEventData ev)
     {
         if (!isDragging) return;
+        Vector2 delta = ev.position - lastDragPosition;
+        if (layout == LayoutType.Vertical)
+            content.anchoredPosition += new Vector2(0, delta.y);
+        else
+            content.anchoredPosition += new Vector2(delta.x, 0);
 
-        Vector2 delta = eventData.position - lastDragPosition;
-        content.anchoredPosition += new Vector2(0, delta.y);
-        
         ClampContentPosition();
         RefreshItems();
-        lastDragPosition = eventData.position;
+        lastDragPosition = ev.position;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        isDragging = false;
-    }
+    public void OnEndDrag(PointerEventData ev) => isDragging = false;
 
     private void ClampContentPosition()
     {
-        float y = content.anchoredPosition.y;
-        float maxY = Mathf.Max(0, contentHeight - viewport.rect.height);
-        y = Mathf.Clamp(y, 0, maxY);
-        content.anchoredPosition = new Vector2(content.anchoredPosition.x, y);
+        Vector2 pos = content.anchoredPosition;
+        if (layout == LayoutType.Vertical)
+        {
+            float maxY = Mathf.Max(0, contentHeight - viewport.rect.height);
+            pos.y = Mathf.Clamp(pos.y, 0, maxY);
+        }
+        else
+        {
+            float maxX = Mathf.Max(0, contentWidth - viewport.rect.width);
+            pos.x = Mathf.Clamp(pos.x, -maxX, 0);
+        }
+        content.anchoredPosition = pos;
     }
 
     private void Update()
