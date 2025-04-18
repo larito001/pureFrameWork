@@ -11,12 +11,12 @@ namespace YOTO
         private ResLoader<T> CreateLoader<T>()
         {
             //ȡ��
-            return YOTOFramework.Instance.poolMgr.GetObjectPool(ObjectPoolType.Loader).Get<ResLoader<T>>(); 
+            return YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.Loader).Get<ResLoader<T>>(); 
         }
         private void RecycleLoader<T>(ResLoader<T> baseLoader)
         {
             //�Ż�
-            YOTOFramework.Instance.poolMgr.GetObjectPool(ObjectPoolType.Loader).Set<ResLoader<T>>(baseLoader);
+            YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.Loader).Set<ResLoader<T>>(baseLoader);
         }
         public void Init()
         {

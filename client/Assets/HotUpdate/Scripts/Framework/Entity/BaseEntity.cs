@@ -18,7 +18,7 @@ public abstract  class BaseEntity
         //Debug.Log("���������");
         YOTOOnload();
         _isLoaded = true;
-        YOTOFramework.Instance.entityMgr._AddEntity(this);
+        YOTOFramework.entityMgr._AddEntity(this);
     }
     protected abstract void YOTOOnload();
     public abstract void YOTOStart();
@@ -37,7 +37,7 @@ public abstract  class BaseEntity
     public virtual void Free()
     {
         Hide();
-        YOTOFramework.Instance.entityMgr._RemoveEntity(this);
+        YOTOFramework.entityMgr._RemoveEntity(this);
      
 
     }

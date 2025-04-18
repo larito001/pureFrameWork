@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using YOTO;
 
 /// <summary>
 /// UI�ű���Ҫ�̳���
@@ -27,5 +28,10 @@ public abstract class UIPageBase : MonoBehaviour
         GetComponent<RectTransform>().anchoredPosition=new Vector2( GetComponent<RectTransform>().anchoredPosition.x,    100f);
         GetComponent<RectTransform>().DOAnchorPosY(0, 0.5f)
             .SetEase(Ease.OutQuad);
+    }
+
+    public void CloseSelf()
+    {
+        YOTOFramework.uIMgr.Hide(uiType);
     }
 }

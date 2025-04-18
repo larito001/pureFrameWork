@@ -13,7 +13,7 @@ namespace YOTO
             if (context.phase == InputActionPhase.Performed)
             {
                 //Debug.Log("��ȡ����" + context.ReadValue<Vector2>());
-                YOTOFramework.Instance.eventMgr.TriggerEvent<float>(YOTO.EventType.Scroll, context.ReadValue<Vector2>().y);
+                YOTOFramework.eventMgr.TriggerEvent<float>(YOTO.EventType.Scroll, context.ReadValue<Vector2>().y);
             }
 
         }
@@ -32,11 +32,11 @@ namespace YOTO
         {
              if (context.phase == InputActionPhase.Performed)
             {
-                YOTOFramework.Instance.eventMgr.TriggerEvent<Vector2>(EventType.Move, context.ReadValue<Vector2>()); 
+                YOTOFramework.eventMgr.TriggerEvent<Vector2>(EventType.Move, context.ReadValue<Vector2>()); 
             }
             else if (context.phase == InputActionPhase.Canceled)
             {
-                YOTOFramework.Instance.eventMgr.TriggerEvent<Vector2>(EventType.Move, context.ReadValue<Vector2>());
+                YOTOFramework.eventMgr.TriggerEvent<Vector2>(EventType.Move, context.ReadValue<Vector2>());
             }
         }
 
@@ -52,7 +52,7 @@ namespace YOTO
         {
             if (context.phase == InputActionPhase.Started)
             {
-                YOTOFramework.Instance.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.TouchMove, context.ReadValue<Vector2>());
+                YOTOFramework.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.TouchMove, context.ReadValue<Vector2>());
                
             }
 
@@ -62,7 +62,7 @@ namespace YOTO
         {
             if (context.phase == InputActionPhase.Performed)
             {
-                YOTOFramework.Instance.eventMgr.TriggerEvent(EventType.Sprint);
+                YOTOFramework.eventMgr.TriggerEvent(EventType.Sprint);
             }
         }
 
@@ -70,7 +70,7 @@ namespace YOTO
         {
             if (context.phase == InputActionPhase.Performed)
             {
-                YOTOFramework.Instance.eventMgr.TriggerEvent(EventType.UseItem);
+                YOTOFramework.eventMgr.TriggerEvent(EventType.UseItem);
             }
         }
 
@@ -78,7 +78,7 @@ namespace YOTO
         {
             if (context.phase == InputActionPhase.Performed)
             {
-                YOTOFramework.Instance.eventMgr.TriggerEvent(EventType.Cooking);
+                YOTOFramework.eventMgr.TriggerEvent(EventType.Cooking);
             }
         }
     }

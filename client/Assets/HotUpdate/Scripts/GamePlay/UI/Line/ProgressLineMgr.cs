@@ -9,10 +9,10 @@ public class ProgressLineMgr : Singleton<ProgressLineMgr>
     private int id = 1000;
     public void Init()
     {
-        YOTOFramework.Instance.resMgr.LoadUI("ProgressLinePrefab", (prefab) =>
+        YOTOFramework.resMgr.LoadUI("ProgressLinePrefab", (prefab) =>
         {
             //prefab
-            YOTOFramework.Instance.poolMgr.GetGameObjectPool(GameObjectPoolType.ProgressLine).SetPrefab(prefab.GetComponent<ProgressLineCtrl>());
+            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.ProgressLine).SetPrefab(prefab.GetComponent<ProgressLineCtrl>());
 
         });
         
@@ -21,7 +21,7 @@ public class ProgressLineMgr : Singleton<ProgressLineMgr>
    //获取
     public int GetProgress()
     {
-        ProgressLineCtrl proline=     YOTOFramework.Instance.poolMgr.GetGameObjectPool(GameObjectPoolType.ProgressLine).Get<ProgressLineCtrl>(YOTOFramework.Instance.uIMgr.topTipsLayer.transform);
+        ProgressLineCtrl proline=     YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.ProgressLine).Get<ProgressLineCtrl>(YOTOFramework.uIMgr.topTipsLayer.transform);
         progressLineDict.Add(id,proline);
         return id++;//返回id
     }
@@ -29,12 +29,12 @@ public class ProgressLineMgr : Singleton<ProgressLineMgr>
     public void SetProgress(int id, Vector3 worldPos,float progress)
     {
         var proline = progressLineDict[id];
-        Canvas canvas = YOTOFramework.Instance.uIMgr.topTipsLayer.GetComponent<Canvas>();
+        Canvas canvas = YOTOFramework.uIMgr.topTipsLayer.GetComponent<Canvas>();
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
         
         // 获取主相机和UI相机
-        Camera mainCamera = YOTOFramework.Instance.cameraMgr.getMainCamera();
-        Camera uiCamera = YOTOFramework.Instance.cameraMgr.getUICamera();
+        Camera mainCamera = YOTOFramework.cameraMgr.getMainCamera();
+        Camera uiCamera = YOTOFramework.cameraMgr.getUICamera();
         
         // 转换世界坐标到屏幕坐标
         worldPos+=Vector3.up;
@@ -54,7 +54,7 @@ public class ProgressLineMgr : Singleton<ProgressLineMgr>
         {
             var proline = progressLineDict[id];
             progressLineDict.Remove(id); 
-            YOTOFramework.Instance.poolMgr.GetGameObjectPool(GameObjectPoolType.ProgressLine)
+            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.ProgressLine)
                 .Set<ProgressLineCtrl>(proline);  
         }
 

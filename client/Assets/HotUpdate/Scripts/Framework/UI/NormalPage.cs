@@ -41,14 +41,14 @@ public class NormalPage : UITypeBase
         // 设置加载完成的回调
         newHandler.SetLoadCallback(() =>
         {
-            // 获取当前显示的UI（如果有的话）
-            UIEnum previousUI = uiList.Count > 1 ? uiList[uiList.Count - 2] : UIEnum.None;
-            var current = uiEnum;
-            // 在新UI加载完成后，先隐藏之前的UI，但不隐藏自己
-            if (previousUI != UIEnum.None && previousUI != current && handlers.ContainsKey(previousUI))
-            {
-                Hide(previousUI);
-            }
+            // // 获取当前显示的UI（如果有的话）
+            // UIEnum previousUI = uiList.Count > 1 ? uiList[uiList.Count - 2] : UIEnum.None;
+            // var current = uiEnum;
+            // // 在新UI加载完成后，先隐藏之前的UI，但不隐藏自己
+            // if (previousUI != UIEnum.None && previousUI != current && handlers.ContainsKey(previousUI))
+            // {
+            //     Hide(previousUI);
+            // }
         });
 
         // 添加新UI到列表

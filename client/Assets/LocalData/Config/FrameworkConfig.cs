@@ -4,7 +4,7 @@ using UnityEngine;
 
 public  class FrameworkConfig
 {
-   public static string DownLoadPath = "F:\\local\\local";//打包后，Adressable缓存地址（外部{}引用）
+   public static string DownLoadPath = "D:\\Desktop\\local\\test";//打包后，Adressable缓存地址（外部{}引用）
    public static string RemotePath = "http://47.103.43.98/files/";//Adressable的服务器地址（外部{}引用）
    public static string BaseUrl = "http://47.103.43.98/";
    public static string UploadPath = "http://47.103.43.98/upload";//打好的Addressable包的上传的地址

@@ -25,8 +25,8 @@ public class PlayerMoveCtrl : CtrlBase
         {
             rigidbody = characterBase.character.AddComponent<Rigidbody>();
         }
-        YOTOFramework.Instance.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/VFX/smoke_1.prefab",Vector3.zero ,Quaternion.identity,(obj,pos,rot) => {
-            YOTOFramework.Instance.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).SetPrefab(obj.GetComponent<VFXBase>());
+        YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/VFX/smoke_1.prefab",Vector3.zero ,Quaternion.identity,(obj,pos,rot) => {
+            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).SetPrefab(obj.GetComponent<VFXBase>());
         });
    
     }
@@ -44,7 +44,7 @@ public class PlayerMoveCtrl : CtrlBase
     {
         WaitForSeconds wait =    new WaitForSeconds(0.1f);
         while (true) {
-            VFXBase vfx = YOTOFramework.Instance.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).Get<VFXBase>();
+            VFXBase vfx = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).Get<VFXBase>();
             vfx.transform.position = transform.position;
             vfx.PlayVFX();
             vfxs.Add(vfx);
@@ -83,7 +83,7 @@ public class PlayerMoveCtrl : CtrlBase
 
         for (int i = 0; i < vfxs.Count; i++)
         {
-            YOTOFramework.Instance.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).Set<VFXBase>(vfxs[i]);
+            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).Set<VFXBase>(vfxs[i]);
         }
         vfxs.Clear();
         fvxIE = null;

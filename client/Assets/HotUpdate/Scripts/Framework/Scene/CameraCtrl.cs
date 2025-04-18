@@ -18,15 +18,15 @@ public class CameraCtrl
     PointerEventData pointerEventData;
     public CameraCtrl()
     {
-        vCamera = YOTOFramework.Instance.cameraMgr.getVirtualCamera("MainCameraVirtual");
+        vCamera = YOTOFramework.cameraMgr.getVirtualCamera("MainCameraVirtual");
         GameObject cameraDir = GameObject.Find("CameraDir");
         vCamera.transform.position = cameraDir.transform.position;
         vCamera.transform.rotation = cameraDir.transform.rotation;
         vCamera.m_Lens.FieldOfView = 30;
-        YOTOFramework.Instance.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Touch, Touch);
+        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Touch, Touch);
         //YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.TouchMove, CameraMove);
-        YOTOFramework.Instance.eventMgr.AddEventListener<float>(YOTO.EventType.Scroll, CameraSclae);
-        graphicRaycaster = YOTOFramework.Instance.uIMgr.UIRoot.GetComponent<GraphicRaycaster>();
+        YOTOFramework.eventMgr.AddEventListener<float>(YOTO.EventType.Scroll, CameraSclae);
+        graphicRaycaster = YOTOFramework.uIMgr.UIRoot.GetComponent<GraphicRaycaster>();
         pointerEventData = new PointerEventData(EventSystem.current);
     }
 
@@ -55,8 +55,8 @@ public class CameraCtrl
  
         Vector3 dir=new Vector3(pos.x,pos.y, vCamera.m_Lens.NearClipPlane);
         //Debug.Log("TOUCH" + dir);
-        Ray ray = YOTOFramework.Instance.cameraMgr.getMainCamera().ScreenPointToRay(dir);
-        Ray uiRay = YOTOFramework.Instance.cameraMgr.getUICamera().ScreenPointToRay(dir);
+        Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
+        Ray uiRay = YOTOFramework.cameraMgr.getUICamera().ScreenPointToRay(dir);
         RaycastHit hitInfo;//
 
         pointerEventData.position = pos;

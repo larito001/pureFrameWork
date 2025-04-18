@@ -14,6 +14,7 @@ public class GameRoot : SingletonMono<GameRoot>
     {
         FlyTextMgr.Instance.Init();
         TouchSimulation.Enable();
+        YOTOFramework.sceneMgr.LoadScene(Scenes.Start);
         Debug.Log("GameRoot 加载完成");
     }
 
