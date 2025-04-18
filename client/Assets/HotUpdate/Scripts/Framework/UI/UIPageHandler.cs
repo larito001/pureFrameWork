@@ -75,7 +75,7 @@ public class UIPageHandler
             else
             {
                 Debug.Log($"[UIPageHandler] Loading Dynamic UI: key={key}");
-                YOTOFramework.Instance.resMgr.LoadUI(key, OnLoaded);
+                YOTOFramework.resMgr.LoadUI(key, OnLoaded);
             }
         }
         else
@@ -117,7 +117,7 @@ public class UIPageHandler
             Disable();
             uIPageBase.uiType = type;
             uIPageBase.OnLoad();
-            YOTOFramework.Instance.uIMgr.OnUILoaded(uIPageBase.gameObject);
+            YOTOFramework.uIMgr.OnUILoaded(uIPageBase.gameObject);
             
             Debug.Log($"[UIPageHandler] Before callback: key={key}");
             onLoadComplete?.Invoke();

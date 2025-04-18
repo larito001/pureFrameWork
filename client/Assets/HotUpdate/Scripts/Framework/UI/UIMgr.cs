@@ -66,7 +66,7 @@ public class UIMgr
                 // 添加Canvas组件
                 Canvas canvas = typeObj.AddComponent<Canvas>();
                 canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                canvas.worldCamera = YOTOFramework.Instance.cameraMgr.getUICamera();
+                canvas.worldCamera = YOTOFramework.cameraMgr.getUICamera();
                 canvas.overrideSorting = true;  // 重要：启用排序覆盖
                 canvas.sortingOrder = ((int)layer * 100) + (10 - (int)type * 5);
                 CanvasScaler scaler = typeObj.AddComponent<CanvasScaler>();
@@ -105,7 +105,7 @@ public class UIMgr
         topTipsLayer.transform.SetParent(UIRoot.transform, false);
         Canvas tipCanvas = topTipsLayer.AddComponent<Canvas>();     
         tipCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        tipCanvas.worldCamera = YOTOFramework.Instance.cameraMgr.getUICamera();
+        tipCanvas.worldCamera = YOTOFramework.cameraMgr.getUICamera();
         tipCanvas.overrideSorting = true;  // 重要：启用排序覆盖
         tipCanvas.sortingOrder = (999 *10);
         CanvasScaler scalerTips = topTipsLayer.AddComponent<CanvasScaler>();

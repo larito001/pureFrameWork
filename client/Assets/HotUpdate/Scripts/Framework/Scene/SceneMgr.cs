@@ -38,7 +38,7 @@ namespace YOTO
 
 
             currentScene = scenesMap[scene];
-            YOTOFramework.Instance.uIMgr.ClearUI();
+            YOTOFramework.uIMgr.ClearUI();
             scenesMap[scene].Onload();
             scenesMap[scene].OnAdd();
             scenesMap[scene].OnInit();

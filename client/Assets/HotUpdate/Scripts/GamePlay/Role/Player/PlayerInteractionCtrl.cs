@@ -19,8 +19,8 @@ public class PlayerInteractionCtrl : CtrlBase
         base.Init(character);
         interactionLayer = LayerMask.GetMask("Tools");
        
-            YOTOFramework.Instance.eventMgr.AddEventListener(EventType.UseItem, UseItemAction);
-            YOTOFramework.Instance.eventMgr.AddEventListener(EventType.Cooking, CookingAction);
+            YOTOFramework.eventMgr.AddEventListener(EventType.UseItem, UseItemAction);
+            YOTOFramework.eventMgr.AddEventListener(EventType.Cooking, CookingAction);
         
      
     }

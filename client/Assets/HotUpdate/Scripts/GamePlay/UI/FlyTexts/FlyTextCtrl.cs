@@ -40,7 +40,7 @@ public class FlyTextCtrl : PoolBaseGameObject
             if (time > 1)
             {
                 transform.position = Vector3.zero;
-                YOTOFramework.Instance.poolMgr.GetGameObjectPool(GameObjectPoolType.FlyingText).Set<FlyTextCtrl>(this);
+                YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.FlyingText).Set<FlyTextCtrl>(this);
 
                 time = 0;
             }

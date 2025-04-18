@@ -17,7 +17,7 @@ public class CommonPanel : MonoBehaviour
         {
             if (parent != null)
             {
-                YOTOFramework.Instance.uIMgr.Hide(parent.uiType); 
+                YOTOFramework.uIMgr.Hide(parent.uiType); 
             }
 
         });

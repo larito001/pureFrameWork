@@ -24,7 +24,7 @@ public class PlayerNetCtrl : CtrlBase
     public override void YOTONetUpdate()
     {
     
-        if (!YOTOFramework.Instance.netMgr.isLogin)
+        if (!YOTOFramework.netMgr.isLogin)
         {
             return;
         }

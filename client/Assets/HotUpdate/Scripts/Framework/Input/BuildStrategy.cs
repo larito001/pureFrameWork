@@ -13,7 +13,7 @@ public class BuildStrategy : MInput.IBuildActions
         if (context.phase == InputActionPhase.Performed)
         {
             Debug.Log("Touch!!!");
-            YOTOFramework.Instance.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.Touch, context.ReadValue<Vector2>());
+            YOTOFramework.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.Touch, context.ReadValue<Vector2>());
         }
 
 

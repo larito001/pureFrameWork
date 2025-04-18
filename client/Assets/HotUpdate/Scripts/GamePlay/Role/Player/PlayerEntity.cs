@@ -39,23 +39,23 @@ public class PlayerEntity : CharacterBase
         orgPosition = pos;
         Debug.Log("InitPlayer");
         isRunning = true;
-        YOTOFramework.Instance.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Move, (ve) =>
+        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Move, (ve) =>
         {
             moveInput = ve;
         });
  
-        YOTOFramework.Instance.eventMgr.AddEventListener(YOTO.EventType.Sprint, () =>
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Sprint, () =>
         {
             isSpinting = true;
         });
      
         //*****************************************
-        YOTOFramework.Instance.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Roles/player.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
+        YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Roles/player.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
             {
            
                 character = UnityEngine.Object.Instantiate(obj);
                 character.transform.position = orgPosition;
-                camera = YOTOFramework.Instance.cameraMgr.getMainCamera();
+                camera = YOTOFramework.cameraMgr.getMainCamera();
                 AddComponent();
 
             });
