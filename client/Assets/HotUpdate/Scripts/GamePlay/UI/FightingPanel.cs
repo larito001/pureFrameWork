@@ -17,7 +17,6 @@ public class FightingPanel : UIPageBase
 
     public override void OnShow()
     {
-      
     }
 
     public override void OnHide()

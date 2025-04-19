@@ -163,7 +163,7 @@ public class UIPageHandler
     {
         Debug.Log($"[UIPageHandler] OnHide Start: key={key}, hasUI={uIPageBase != null}, hasCanvasGroup={uIPageBase?.canvasGroup != null}");
         shouldBeHidden = true; // 设置隐藏标记
-        if (uIPageBase != null && uIPageBase.gameObject != null && uIPageBase.canvasGroup != null)
+        if (uIPageBase != null)
         {
             Disable();
             uIPageBase.OnHide();
@@ -174,24 +174,19 @@ public class UIPageHandler
 
     private void Disable()
     {
-        if (uIPageBase != null && uIPageBase.gameObject != null && uIPageBase.canvasGroup != null)
+        if (uIPageBase != null)
         {
-            uIPageBase.canvasGroup.alpha = 0;
-            uIPageBase.canvasGroup.interactable = false;
-            uIPageBase.canvasGroup.blocksRaycasts = false;
-            uIPageBase.isEnable = false;
+            uIPageBase.Exit();
+     
             Debug.Log($"[UIPageHandler] UI Disabled: key={key}");
         }
     }
 
     private void Enable()
     {
-        if (uIPageBase != null && uIPageBase.gameObject != null && uIPageBase.canvasGroup != null)
+        if (uIPageBase != null)
         {
-            uIPageBase.isEnable = true;
-            uIPageBase.canvasGroup.alpha = 1;
-            uIPageBase.canvasGroup.interactable = true;
-            uIPageBase.canvasGroup.blocksRaycasts = true;
+            uIPageBase.Enter();
             Debug.Log($"[UIPageHandler] UI Enabled: key={key}");
         }
     }
