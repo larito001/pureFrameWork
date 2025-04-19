@@ -79,30 +79,42 @@ public class PlayerAnimatorCtrl : CtrlBase
                     animator.SetFloat("MoveSpeed", 0, 0.1f, deltaTime);
                     break;
                 case LocalmotionState.Walk:
-                        animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.walkSpeed, 0.1f, deltaTime);
+                        animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.walkSpeed, 0.5f, deltaTime);
                     break;
                 case LocalmotionState.Run:
                
-                    animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.runSpeed, 0.1f, deltaTime);
+                    animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.runSpeed, 0.5f, deltaTime);
                     break;
             }
             
         }
         
-        if (armState==ArmState.Aim)
+        if (armState == ArmState.Aim)
         {
             animator.SetBool("isAming", true);
-            animator.SetFloat("HorizontalSpeed",    characterBase.playerMovement.x * characterBase.runSpeed, 0.1f, deltaTime);
-            if(characterBase.lookPos!=UnityEngine.Vector3.zero)
-            characterBase.character.transform.LookAt(characterBase.lookPos);
+            animator.SetFloat("HorizontalSpeed", characterBase.playerMovement.x * characterBase.runSpeed, 0.5f, deltaTime);
+    
+            if (characterBase.lookPos != UnityEngine.Vector3.zero)
+            {
+                // Calculate the direction vector to rotate towards
+                UnityEngine.Vector3 dir = characterBase.lookPos - characterBase.character.transform.position;
+                dir.y = 0f;  // Optional: keeps the rotation on the y-axis (horizontal only)
+        
+                // Get the rotation angle
+                float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        
+                // Rotate the character towards the target direction
+                characterBase.character.transform.rotation = Quaternion.Slerp(characterBase.character.transform.rotation, Quaternion.Euler(0, angle, 0), deltaTime*5f); // You can adjust the `10f` to control the rotation speed
+            }
         }
-        else if ( armState == ArmState.Normal)
+        else if (armState == ArmState.Normal)
         {
             animator.SetBool("isAming", false);
             float rad = Mathf.Atan2(characterBase.playerMovement.x, characterBase.playerMovement.z);
             animator.SetFloat("RotateSpeed", rad, 0.1f, deltaTime);
             characterBase.character.transform.Rotate(0, rad * 360 * deltaTime, 0f);
         }
+
     }
 
     private void OnAnimatorMove()

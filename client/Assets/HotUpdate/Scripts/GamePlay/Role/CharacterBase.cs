@@ -7,7 +7,7 @@ public abstract class CharacterBase : BaseEntity
     public bool isRunning;
     public bool isSpinting;
     public float walkSpeed = 2.5f;
-    public float runSpeed = 5.5f;
+    public float runSpeed = 10f;
 
 
     public Vector3 playerMovement;
