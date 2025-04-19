@@ -14,12 +14,14 @@ namespace YOTO
        Loading,
        //touch
        Touch,
+       TouchPress,
        TouchRelease,
        TouchMove,
        Scroll,
        UseItem,
        Cooking,
-       
+       Fire,
+       FireRelease,
        RefreshMousePos,
        
        //net:

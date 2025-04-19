@@ -8,6 +8,7 @@ namespace YOTO
     public class GamePlayInputStrategy : MInput.IGamePlayActionActions
     {
 
+        private bool isAming = false;
         public void OnScroll(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Performed)
@@ -18,10 +19,7 @@ namespace YOTO
 
         }
 
-        public void OnFire(InputAction.CallbackContext context)
-        {
-         
-        }
+      
 
         public void OnLook(InputAction.CallbackContext context)
         {
@@ -46,22 +44,38 @@ namespace YOTO
          
              if (context.phase == InputActionPhase.Performed)
              {
-                 Debug.Log("Touch!!!");
                  YOTOFramework.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.Touch, context.ReadValue<Vector2>());
              }
          
          
          }
 
-        //这个方法获取开始点击和结束
-        public void OnClick(InputAction.CallbackContext context)
+        public void OnTouchAddition(InputAction.CallbackContext context)
         {
-            if (context.phase == InputActionPhase.Canceled) // 松开触发事件
+            if (context.phase == InputActionPhase.Performed)
+            {
+                YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.TouchPress);
+            }else if (context.phase == InputActionPhase.Canceled) // 松开触发事件
             {
                 Debug.Log("Touch Released!!!");
-                YOTOFramework.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.TouchRelease, context.ReadValue<Vector2>());
+
+                YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.TouchRelease);
             }
         }
+
+        public void OnFire(InputAction.CallbackContext context)
+        {
+             if (context.phase == InputActionPhase.Performed)
+            {
+                YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.Fire);
+            }
+             else if (context.phase == InputActionPhase.Canceled) // 松开触发事件
+             {
+                 YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.FireRelease);
+             }
+        }
+
+
         //public void OnTouch(InputAction.CallbackContext context)
         //{
         //    if (context.phase == InputActionPhase.Performed)
@@ -69,17 +83,6 @@ namespace YOTO
         //        YOTOFramework.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.Touch, context.ReadValue<Vector2>());
         //    }
         //}
-
-        public void OnTouchMove(InputAction.CallbackContext context)
-        {
-            if (context.phase == InputActionPhase.Started)
-            {
-                YOTOFramework.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.TouchMove, context.ReadValue<Vector2>());
-               
-            }
-
-        }
-
         public void OnSprint(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Performed)

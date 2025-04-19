@@ -46,15 +46,6 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""TouchMove"",
-                    ""type"": ""Value"",
-                    ""id"": ""3cde0e66-0da3-4b8d-877a-af55dcdd1246"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Scroll"",
                     ""type"": ""Value"",
                     ""id"": ""2b704236-c0df-4a7e-bcfb-788e12452184"",
@@ -100,9 +91,18 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Click"",
+                    ""name"": ""TouchAddition"",
                     ""type"": ""Button"",
                     ""id"": ""2b9b7f4e-ee5e-4d64-9871-9008edd27986"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""c6cb5586-3cde-4a48-a13f-c5d7475c7a80"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -178,17 +178,6 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2481f42d-b11f-4a10-bcb0-4923a756ec99"",
-                    ""path"": ""<Touchscreen>/touch0/delta"",
-                    ""interactions"": ""Hold(duration=0.1,pressPoint=0.2)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TouchMove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""75f45e6f-1a8f-4a71-baa4-53950c7dfce3"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
@@ -244,12 +233,12 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c7bfa5a8-ee66-4abf-a004-d91426c7f9ba"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": ""Press(behavior=2)"",
+                    ""id"": ""796b12b7-bb63-4c56-a02e-67c338da0cab"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Click"",
+                    ""action"": ""Touch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -260,7 +249,29 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Click"",
+                    ""action"": ""TouchAddition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""33549652-1093-4cc4-add1-a0f02ceeffad"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchAddition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a13383b2-4486-4ce4-b992-061031b73a52"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press(pressPoint=1,behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -806,13 +817,13 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         m_GamePlayAction = asset.FindActionMap("GamePlayAction", throwIfNotFound: true);
         m_GamePlayAction_Move = m_GamePlayAction.FindAction("Move", throwIfNotFound: true);
         m_GamePlayAction_Look = m_GamePlayAction.FindAction("Look", throwIfNotFound: true);
-        m_GamePlayAction_TouchMove = m_GamePlayAction.FindAction("TouchMove", throwIfNotFound: true);
         m_GamePlayAction_Scroll = m_GamePlayAction.FindAction("Scroll", throwIfNotFound: true);
         m_GamePlayAction_Sprint = m_GamePlayAction.FindAction("Sprint", throwIfNotFound: true);
         m_GamePlayAction_UseItem = m_GamePlayAction.FindAction("UseItem", throwIfNotFound: true);
         m_GamePlayAction_Cooking = m_GamePlayAction.FindAction("Cooking", throwIfNotFound: true);
         m_GamePlayAction_Touch = m_GamePlayAction.FindAction("Touch", throwIfNotFound: true);
-        m_GamePlayAction_Click = m_GamePlayAction.FindAction("Click", throwIfNotFound: true);
+        m_GamePlayAction_TouchAddition = m_GamePlayAction.FindAction("TouchAddition", throwIfNotFound: true);
+        m_GamePlayAction_Fire = m_GamePlayAction.FindAction("Fire", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -888,26 +899,26 @@ public partial class @MInput: IInputActionCollection2, IDisposable
     private List<IGamePlayActionActions> m_GamePlayActionActionsCallbackInterfaces = new List<IGamePlayActionActions>();
     private readonly InputAction m_GamePlayAction_Move;
     private readonly InputAction m_GamePlayAction_Look;
-    private readonly InputAction m_GamePlayAction_TouchMove;
     private readonly InputAction m_GamePlayAction_Scroll;
     private readonly InputAction m_GamePlayAction_Sprint;
     private readonly InputAction m_GamePlayAction_UseItem;
     private readonly InputAction m_GamePlayAction_Cooking;
     private readonly InputAction m_GamePlayAction_Touch;
-    private readonly InputAction m_GamePlayAction_Click;
+    private readonly InputAction m_GamePlayAction_TouchAddition;
+    private readonly InputAction m_GamePlayAction_Fire;
     public struct GamePlayActionActions
     {
         private @MInput m_Wrapper;
         public GamePlayActionActions(@MInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_GamePlayAction_Move;
         public InputAction @Look => m_Wrapper.m_GamePlayAction_Look;
-        public InputAction @TouchMove => m_Wrapper.m_GamePlayAction_TouchMove;
         public InputAction @Scroll => m_Wrapper.m_GamePlayAction_Scroll;
         public InputAction @Sprint => m_Wrapper.m_GamePlayAction_Sprint;
         public InputAction @UseItem => m_Wrapper.m_GamePlayAction_UseItem;
         public InputAction @Cooking => m_Wrapper.m_GamePlayAction_Cooking;
         public InputAction @Touch => m_Wrapper.m_GamePlayAction_Touch;
-        public InputAction @Click => m_Wrapper.m_GamePlayAction_Click;
+        public InputAction @TouchAddition => m_Wrapper.m_GamePlayAction_TouchAddition;
+        public InputAction @Fire => m_Wrapper.m_GamePlayAction_Fire;
         public InputActionMap Get() { return m_Wrapper.m_GamePlayAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -923,9 +934,6 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @TouchMove.started += instance.OnTouchMove;
-            @TouchMove.performed += instance.OnTouchMove;
-            @TouchMove.canceled += instance.OnTouchMove;
             @Scroll.started += instance.OnScroll;
             @Scroll.performed += instance.OnScroll;
             @Scroll.canceled += instance.OnScroll;
@@ -941,9 +949,12 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Touch.started += instance.OnTouch;
             @Touch.performed += instance.OnTouch;
             @Touch.canceled += instance.OnTouch;
-            @Click.started += instance.OnClick;
-            @Click.performed += instance.OnClick;
-            @Click.canceled += instance.OnClick;
+            @TouchAddition.started += instance.OnTouchAddition;
+            @TouchAddition.performed += instance.OnTouchAddition;
+            @TouchAddition.canceled += instance.OnTouchAddition;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
         }
 
         private void UnregisterCallbacks(IGamePlayActionActions instance)
@@ -954,9 +965,6 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @TouchMove.started -= instance.OnTouchMove;
-            @TouchMove.performed -= instance.OnTouchMove;
-            @TouchMove.canceled -= instance.OnTouchMove;
             @Scroll.started -= instance.OnScroll;
             @Scroll.performed -= instance.OnScroll;
             @Scroll.canceled -= instance.OnScroll;
@@ -972,9 +980,12 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Touch.started -= instance.OnTouch;
             @Touch.performed -= instance.OnTouch;
             @Touch.canceled -= instance.OnTouch;
-            @Click.started -= instance.OnClick;
-            @Click.performed -= instance.OnClick;
-            @Click.canceled -= instance.OnClick;
+            @TouchAddition.started -= instance.OnTouchAddition;
+            @TouchAddition.performed -= instance.OnTouchAddition;
+            @TouchAddition.canceled -= instance.OnTouchAddition;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
         }
 
         public void RemoveCallbacks(IGamePlayActionActions instance)
@@ -1123,13 +1134,13 @@ public partial class @MInput: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnTouchMove(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnUseItem(InputAction.CallbackContext context);
         void OnCooking(InputAction.CallbackContext context);
         void OnTouch(InputAction.CallbackContext context);
-        void OnClick(InputAction.CallbackContext context);
+        void OnTouchAddition(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

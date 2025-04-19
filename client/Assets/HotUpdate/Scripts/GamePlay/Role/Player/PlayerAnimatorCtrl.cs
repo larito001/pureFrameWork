@@ -9,6 +9,7 @@ public class PlayerAnimatorCtrl : CtrlBase
     LocalmotionState localmotionState = LocalmotionState.Idle;
     ArmState armState = ArmState.Normal;
     PlayerPose playerPose = PlayerPose.Stand;
+    public float RotateSpeed=10;
 
     public enum PlayerPose
     {
@@ -104,7 +105,7 @@ public class PlayerAnimatorCtrl : CtrlBase
                 float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
         
                 // Rotate the character towards the target direction
-                characterBase.character.transform.rotation = Quaternion.Slerp(characterBase.character.transform.rotation, Quaternion.Euler(0, angle, 0), deltaTime*5f); // You can adjust the `10f` to control the rotation speed
+                characterBase.character.transform.rotation = Quaternion.Slerp(characterBase.character.transform.rotation, Quaternion.Euler(0, angle, 0), deltaTime*RotateSpeed); // You can adjust the `10f` to control the rotation speed
             }
         }
         else if (armState == ArmState.Normal)

@@ -16,8 +16,13 @@ public class PlayerEntity : CharacterBase
     private Vector3 target; 
     public bool canMove = true;
     public Vector3 orgPosition;
-    public bool isAming = true;
+    public bool isAming = false;
     public Vector3 lookPos;
+    private bool isTouching = false;
+    private bool isFireing = false;
+    private float waitTime = 0.5f;
+    private float currentTime = 0;
+    //todo:Gunparent
     public PlayerEntity(): base()
     {
     }
@@ -51,12 +56,32 @@ public class PlayerEntity : CharacterBase
         {
             lookPos = pos;
             lookPos.y = character.transform.position.y;
-            isAming = true;
+ 
         });
-        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.TouchRelease, (pos) =>
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
+        {
+            isAming = true;
+            isFireing = true;
+        });
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.FireRelease, () =>
+        {
+            if (!isTouching)
+            {
+                isAming = false;
+         
+            }
+            isFireing = false;
+        });
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchPress, () =>
+        {
+            isTouching = true;
+            isAming = isTouching;
+        });
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchRelease, () =>
         {
             lookPos = Vector3.zero;
-            isAming = false;
+            isTouching = false;
+            isAming = isTouching;
         });
         orgPosition = pos;
         Debug.Log("InitPlayer");
@@ -125,6 +150,31 @@ public class PlayerEntity : CharacterBase
 
     public override void YOTOUpdate(float deltaTime)
     {
+        if (isAming)
+        {
+            if (currentTime<=waitTime)
+            {
+                currentTime += deltaTime;
+            }   
+        }
+        else
+        {
+            currentTime = 0;
+        }
+        if (isFireing)
+        {
+            if (currentTime>=waitTime)
+            {
+                //todo:开火，子弹间隔，帮我写，在发射子弹的地方写好todo我创建子弹就好了
+                Debug.Log("开火！！");
+                //Gun.TryShot();
+            }
+        }
+       
+      
+    
+        
+        
         if (animatorCtrl)
         {
             animatorCtrl.YOTOUpdate(deltaTime);

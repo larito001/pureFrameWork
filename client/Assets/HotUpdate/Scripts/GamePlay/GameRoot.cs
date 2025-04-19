@@ -13,7 +13,7 @@ public class GameRoot : SingletonMono<GameRoot>
     public void Init()
     {
         FlyTextMgr.Instance.Init();
-        TouchSimulation.Enable();
+        // TouchSimulation.Enable();
         YOTOFramework.sceneMgr.LoadScene(Scenes.Start);
         Debug.Log("GameRoot 加载完成");
     }
