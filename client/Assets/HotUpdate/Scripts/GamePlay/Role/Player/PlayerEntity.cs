@@ -16,6 +16,8 @@ public class PlayerEntity : CharacterBase
     private Vector3 target; 
     public bool canMove = true;
     public Vector3 orgPosition;
+    public bool isAming = true;
+    public Vector3 lookPos;
     public PlayerEntity(): base()
     {
     }
@@ -28,14 +30,34 @@ public class PlayerEntity : CharacterBase
             playerMovement=Vector3.zero;
          return;   
         }
-        playerMovement = cameraForwordProjection * moveInput.y + camera.transform.right * moveInput.x;
-    
+
+        if (isAming)
+        {
+            playerMovement = new Vector3(moveInput.x, 0, moveInput.y);  
+        }
+        else
+        {
+            playerMovement = cameraForwordProjection * moveInput.y + camera.transform.right * moveInput.x; 
+        }
+       
+       
        playerMovement = character.transform.InverseTransformVector(playerMovement);
 
 
     }
     public override void Init(Vector3 pos)
     {
+        YOTOFramework.eventMgr.AddEventListener<Vector3>(YOTO.EventType.RefreshMousePos, (pos) =>
+        {
+            lookPos = pos;
+            lookPos.y = character.transform.position.y;
+            isAming = true;
+        });
+        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.TouchRelease, (pos) =>
+        {
+            lookPos = Vector3.zero;
+            isAming = false;
+        });
         orgPosition = pos;
         Debug.Log("InitPlayer");
         isRunning = true;

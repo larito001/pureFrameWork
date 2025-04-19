@@ -89,6 +89,24 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Touch"",
+                    ""type"": ""Value"",
+                    ""id"": ""2b387656-3bd3-4f31-9666-b2bd439c9020"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b9b7f4e-ee5e-4d64-9871-9008edd27986"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -212,32 +230,37 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""action"": ""Cooking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Build"",
-            ""id"": ""acc7c2c5-9bae-4a2f-b0ac-5d03a6829957"",
-            ""actions"": [
-                {
-                    ""name"": ""Touch"",
-                    ""type"": ""Value"",
-                    ""id"": ""a70033d6-1d06-4a92-8391-3a14f019606a"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""b4dcbac8-5753-4256-ba6f-a363022a30fe"",
+                    ""id"": ""6912c6d5-96c3-41e5-ab28-bba932e56c47"",
                     ""path"": ""<Touchscreen>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Touch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c7bfa5a8-ee66-4abf-a004-d91426c7f9ba"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""27ce20b9-cda4-4914-8611-a37bfdf4df0b"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -788,9 +811,8 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         m_GamePlayAction_Sprint = m_GamePlayAction.FindAction("Sprint", throwIfNotFound: true);
         m_GamePlayAction_UseItem = m_GamePlayAction.FindAction("UseItem", throwIfNotFound: true);
         m_GamePlayAction_Cooking = m_GamePlayAction.FindAction("Cooking", throwIfNotFound: true);
-        // Build
-        m_Build = asset.FindActionMap("Build", throwIfNotFound: true);
-        m_Build_Touch = m_Build.FindAction("Touch", throwIfNotFound: true);
+        m_GamePlayAction_Touch = m_GamePlayAction.FindAction("Touch", throwIfNotFound: true);
+        m_GamePlayAction_Click = m_GamePlayAction.FindAction("Click", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -871,6 +893,8 @@ public partial class @MInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_GamePlayAction_Sprint;
     private readonly InputAction m_GamePlayAction_UseItem;
     private readonly InputAction m_GamePlayAction_Cooking;
+    private readonly InputAction m_GamePlayAction_Touch;
+    private readonly InputAction m_GamePlayAction_Click;
     public struct GamePlayActionActions
     {
         private @MInput m_Wrapper;
@@ -882,6 +906,8 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         public InputAction @Sprint => m_Wrapper.m_GamePlayAction_Sprint;
         public InputAction @UseItem => m_Wrapper.m_GamePlayAction_UseItem;
         public InputAction @Cooking => m_Wrapper.m_GamePlayAction_Cooking;
+        public InputAction @Touch => m_Wrapper.m_GamePlayAction_Touch;
+        public InputAction @Click => m_Wrapper.m_GamePlayAction_Click;
         public InputActionMap Get() { return m_Wrapper.m_GamePlayAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -912,6 +938,12 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Cooking.started += instance.OnCooking;
             @Cooking.performed += instance.OnCooking;
             @Cooking.canceled += instance.OnCooking;
+            @Touch.started += instance.OnTouch;
+            @Touch.performed += instance.OnTouch;
+            @Touch.canceled += instance.OnTouch;
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
         }
 
         private void UnregisterCallbacks(IGamePlayActionActions instance)
@@ -937,6 +969,12 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Cooking.started -= instance.OnCooking;
             @Cooking.performed -= instance.OnCooking;
             @Cooking.canceled -= instance.OnCooking;
+            @Touch.started -= instance.OnTouch;
+            @Touch.performed -= instance.OnTouch;
+            @Touch.canceled -= instance.OnTouch;
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
         }
 
         public void RemoveCallbacks(IGamePlayActionActions instance)
@@ -954,52 +992,6 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         }
     }
     public GamePlayActionActions @GamePlayAction => new GamePlayActionActions(this);
-
-    // Build
-    private readonly InputActionMap m_Build;
-    private List<IBuildActions> m_BuildActionsCallbackInterfaces = new List<IBuildActions>();
-    private readonly InputAction m_Build_Touch;
-    public struct BuildActions
-    {
-        private @MInput m_Wrapper;
-        public BuildActions(@MInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Touch => m_Wrapper.m_Build_Touch;
-        public InputActionMap Get() { return m_Wrapper.m_Build; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(BuildActions set) { return set.Get(); }
-        public void AddCallbacks(IBuildActions instance)
-        {
-            if (instance == null || m_Wrapper.m_BuildActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_BuildActionsCallbackInterfaces.Add(instance);
-            @Touch.started += instance.OnTouch;
-            @Touch.performed += instance.OnTouch;
-            @Touch.canceled += instance.OnTouch;
-        }
-
-        private void UnregisterCallbacks(IBuildActions instance)
-        {
-            @Touch.started -= instance.OnTouch;
-            @Touch.performed -= instance.OnTouch;
-            @Touch.canceled -= instance.OnTouch;
-        }
-
-        public void RemoveCallbacks(IBuildActions instance)
-        {
-            if (m_Wrapper.m_BuildActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IBuildActions instance)
-        {
-            foreach (var item in m_Wrapper.m_BuildActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_BuildActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public BuildActions @Build => new BuildActions(this);
 
     // UI
     private readonly InputActionMap m_UI;
@@ -1136,10 +1128,8 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnUseItem(InputAction.CallbackContext context);
         void OnCooking(InputAction.CallbackContext context);
-    }
-    public interface IBuildActions
-    {
         void OnTouch(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

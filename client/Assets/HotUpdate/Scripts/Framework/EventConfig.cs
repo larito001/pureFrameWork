@@ -14,10 +14,13 @@ namespace YOTO
        Loading,
        //touch
        Touch,
+       TouchRelease,
        TouchMove,
        Scroll,
        UseItem,
        Cooking,
+       
+       RefreshMousePos,
        
        //net:
        RoomListResponse,

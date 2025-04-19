@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vector3 = System.Numerics.Vector3;
 
 public class PlayerAnimatorCtrl : CtrlBase
 {
@@ -8,6 +9,7 @@ public class PlayerAnimatorCtrl : CtrlBase
     LocalmotionState localmotionState = LocalmotionState.Idle;
     ArmState armState = ArmState.Normal;
     PlayerPose playerPose = PlayerPose.Stand;
+
     public enum PlayerPose
     {
         Crouch,
@@ -38,7 +40,15 @@ public class PlayerAnimatorCtrl : CtrlBase
     }
     public void SwitchPlayerState()
     {
-       
+        if (characterBase.isAming)
+        {
+            armState = ArmState.Aim;
+        }
+        else
+        {
+            armState = ArmState.Normal;
+        }
+        
         if (characterBase.playerMovement.magnitude == 0)
         {
             localmotionState = LocalmotionState.Idle;
@@ -54,9 +64,6 @@ public class PlayerAnimatorCtrl : CtrlBase
             localmotionState = LocalmotionState.Run;
             //Debug.Log("run��" + characterBase.playerMovement);
         }
-   
-        
-            armState = ArmState.Normal;
         
     }
     void SetAnimator(float deltaTime)
@@ -65,29 +72,35 @@ public class PlayerAnimatorCtrl : CtrlBase
         
         if (playerPose == PlayerPose.Stand)
         {
-            animator.SetFloat("PlayerState", 0, 0.1f, deltaTime);
+            // animator.SetFloat("PlayerState", 0, 0.1f, deltaTime);
             switch (localmotionState)
             {
                 case LocalmotionState.Idle:
                     animator.SetFloat("MoveSpeed", 0, 0.1f, deltaTime);
                     break;
                 case LocalmotionState.Walk:
-                        animator.SetFloat("MoveSpeed", characterBase.playerMovement.magnitude * characterBase.walkSpeed, 0.1f, deltaTime);
-                    
+                        animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.walkSpeed, 0.1f, deltaTime);
                     break;
                 case LocalmotionState.Run:
                
-                    animator.SetFloat("MoveSpeed", characterBase.playerMovement.magnitude * characterBase.runSpeed, 0.1f, deltaTime);
+                    animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.runSpeed, 0.1f, deltaTime);
                     break;
             }
+            
         }
-     
-
-        if (armState == ArmState.Normal)
+        
+        if (armState==ArmState.Aim)
         {
+            animator.SetBool("isAming", true);
+            animator.SetFloat("HorizontalSpeed",    characterBase.playerMovement.x * characterBase.runSpeed, 0.1f, deltaTime);
+            if(characterBase.lookPos!=UnityEngine.Vector3.zero)
+            characterBase.character.transform.LookAt(characterBase.lookPos);
+        }
+        else if ( armState == ArmState.Normal)
+        {
+            animator.SetBool("isAming", false);
             float rad = Mathf.Atan2(characterBase.playerMovement.x, characterBase.playerMovement.z);
             animator.SetFloat("RotateSpeed", rad, 0.1f, deltaTime);
-            ////Debug.Log("rad:" + rad);
             characterBase.character.transform.Rotate(0, rad * 360 * deltaTime, 0f);
         }
     }

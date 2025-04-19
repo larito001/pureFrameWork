@@ -39,7 +39,29 @@ namespace YOTO
                 YOTOFramework.eventMgr.TriggerEvent<Vector2>(EventType.Move, context.ReadValue<Vector2>());
             }
         }
+        
+        //这个只有在拖、移动的时候触发
+        public void OnTouch(InputAction.CallbackContext context)
+         {
+         
+             if (context.phase == InputActionPhase.Performed)
+             {
+                 Debug.Log("Touch!!!");
+                 YOTOFramework.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.Touch, context.ReadValue<Vector2>());
+             }
+         
+         
+         }
 
+        //这个方法获取开始点击和结束
+        public void OnClick(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Canceled) // 松开触发事件
+            {
+                Debug.Log("Touch Released!!!");
+                YOTOFramework.eventMgr.TriggerEvent<Vector2>(YOTO.EventType.TouchRelease, context.ReadValue<Vector2>());
+            }
+        }
         //public void OnTouch(InputAction.CallbackContext context)
         //{
         //    if (context.phase == InputActionPhase.Performed)

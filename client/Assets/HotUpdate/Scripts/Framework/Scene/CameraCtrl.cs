@@ -54,7 +54,7 @@ public class CameraCtrl
     {
  
         Vector3 dir=new Vector3(pos.x,pos.y, vCamera.m_Lens.NearClipPlane);
-        //Debug.Log("TOUCH" + dir);
+        Debug.Log("TOUCH" + dir);
         Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
         Ray uiRay = YOTOFramework.cameraMgr.getUICamera().ScreenPointToRay(dir);
         RaycastHit hitInfo;//
@@ -63,21 +63,21 @@ public class CameraCtrl
         List<RaycastResult> results = new List<RaycastResult>();
 
         // ִ��UI���߼��
-        graphicRaycaster.Raycast(pointerEventData, results);
-        if (results.Count > 0)
-        {
-            //Debug.Log("TOUCH" + hitInfo.point);
-            //BuildSystem.Instance.mapCtrl.SetPos(hitInfo.point);
-            //BattleSystem.Instance.playerEntity?.MoveTarget(hitInfo.point);
-            Debug.Log("�㵽UI��");
-        }
-        else
+        // graphicRaycaster.Raycast(pointerEventData, results);
+        // if (results.Count > 0)
+        // {
+        //     //Debug.Log("TOUCH" + hitInfo.point);
+        //
+        //     //BattleSystem.Instance.playerEntity?.MoveTarget(hitInfo.point);
+        //     Debug.Log("�㵽UI��");
+        // }
+        // else
         {
             Debug.Log("���߼��");
             if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("Ground")))
             {
             
-         
+                YOTOFramework.eventMgr.TriggerEvent<Vector3>(YOTO.EventType.RefreshMousePos, hitInfo.point);
             }
         }
    

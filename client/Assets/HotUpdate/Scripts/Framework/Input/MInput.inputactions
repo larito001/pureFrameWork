@@ -67,6 +67,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Touch",
+                    "type": "Value",
+                    "id": "2b387656-3bd3-4f31-9666-b2bd439c9020",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "2b9b7f4e-ee5e-4d64-9871-9008edd27986",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -190,32 +208,37 @@
                     "action": "Cooking",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Build",
-            "id": "acc7c2c5-9bae-4a2f-b0ac-5d03a6829957",
-            "actions": [
-                {
-                    "name": "Touch",
-                    "type": "Value",
-                    "id": "a70033d6-1d06-4a92-8391-3a14f019606a",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "b4dcbac8-5753-4256-ba6f-a363022a30fe",
+                    "id": "6912c6d5-96c3-41e5-ab28-bba932e56c47",
                     "path": "<Touchscreen>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Touch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c7bfa5a8-ee66-4abf-a004-d91426c7f9ba",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "27ce20b9-cda4-4914-8611-a37bfdf4df0b",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

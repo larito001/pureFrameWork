@@ -9,7 +9,7 @@ namespace YOTO{
     {
         public MInput input;
         private GamePlayInputStrategy gamePlayInputStrategy;
-        private BuildStrategy buildStrategy;
+        // private BuildStrategy buildStrategy;
         
         public GamePlayInputStrategy GamePlayInput
         {
@@ -17,13 +17,13 @@ namespace YOTO{
             return gamePlayInputStrategy;
             }
         }
-        public BuildStrategy BuildInput
-        {
-            get
-            {
-                return buildStrategy;
-            }
-        }
+        // public BuildStrategy BuildInput
+        // {
+        //     get
+        //     {
+        //         return buildStrategy;
+        //     }
+        // }
         public void Init()
         {
 
@@ -31,9 +31,9 @@ namespace YOTO{
           
             input =new MInput();
             gamePlayInputStrategy=new GamePlayInputStrategy();
-            buildStrategy=new BuildStrategy();
+            // buildStrategy=new BuildStrategy();
             input.GamePlayAction.SetCallbacks(gamePlayInputStrategy);
-            input.Build.SetCallbacks(buildStrategy);
+            // input.Build.SetCallbacks(buildStrategy);
             //EnableBuildInput();
             EnableGamePlayInput();
 
@@ -47,16 +47,16 @@ namespace YOTO{
         {
             input.GamePlayAction.Disable();
         }
-        public void EnableBuildInput()
-        {
-            input.Build.Enable();
-            Debug.Log("InputEnable" + input.Build.enabled);
-
-        }
-        public void DisableBuildInput()
-        {
-            input.Build.Disable();
-        }
+        // public void EnableBuildInput()
+        // {
+        //     input.Build.Enable();
+        //     Debug.Log("InputEnable" + input.Build.enabled);
+        //
+        // }
+        // public void DisableBuildInput()
+        // {
+        //     input.Build.Disable();
+        // }
     }   
 
 }
