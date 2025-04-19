@@ -7,6 +7,7 @@ using EventType = YOTO.EventType;
 
 public class NormalScene: VirtualSceneBase
 {
+    private PlayerEntity player;
     //注册事件
     public override void OnAdd()
     {
@@ -28,6 +29,8 @@ public class NormalScene: VirtualSceneBase
         EmergencyManager.Instance.Init();
         FlyTextMgr.Instance.AddText("游戏开始!",Vector3.zero,FlyTextType.Normal);
         YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
+        player = new PlayerEntity();
+        player.Init(new Vector3());
     }
 
     public override void UnLoad()

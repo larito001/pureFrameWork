@@ -50,7 +50,7 @@ public class PlayerEntity : CharacterBase
         });
      
         //*****************************************
-        YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Roles/player.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
+        YOTOFramework.resMgr.LoadGameObject("Assets/PolygonApocalypse/Prefabs/Characters/SM_Chr_Teen_Male_01.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
             {
            
                 character = UnityEngine.Object.Instantiate(obj);
