@@ -25,10 +25,9 @@ public class PlayerMoveCtrl : CtrlBase
         {
             rigidbody = characterBase.character.AddComponent<Rigidbody>();
         }
-        YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/VFX/smoke_1.prefab",Vector3.zero ,Quaternion.identity,(obj,pos,rot) => {
-            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).SetPrefab(obj.GetComponent<VFXBase>());
-        });
-   
+        // YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/VFX/smoke_1.prefab",Vector3.zero ,Quaternion.identity,(obj,pos,rot) => {
+        // YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).SetPrefab(obj.GetComponent<VFXBase>());
+        // });
     }
    public void Sprint()
     {

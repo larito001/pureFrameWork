@@ -16,13 +16,16 @@ public class PlayerEntity : CharacterBase
     private Vector3 target; 
     public bool canMove = true;
     public Vector3 orgPosition;
-    public bool isAming = false;
+    public bool isAming = true;
     public Vector3 lookPos;
     private bool isTouching = false;
     private bool isFireing = false;
     private float waitTime = 0.5f;
     private float currentTime = 0;
-
+    private Transform headTarget;
+    private bool isInit = false;
+    private float headRotationSpeed = 10;
+    
     private HandRoot handPos;
     //todo:Gunparent
     public PlayerEntity(): base()
@@ -56,9 +59,11 @@ public class PlayerEntity : CharacterBase
     {
         YOTOFramework.eventMgr.AddEventListener<Vector3>(YOTO.EventType.RefreshMousePos, (pos) =>
         {
+            if (!isInit) return;
             lookPos = pos;
             lookPos.y = character.transform.position.y;
- 
+       
+      
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
         {
@@ -107,8 +112,9 @@ public class PlayerEntity : CharacterBase
                 camera = YOTOFramework.cameraMgr.getMainCamera();
                 AddComponent();
                 handPos=character.GetComponentInChildren<HandRoot>();
-                GunEntity gun = new GunEntity(handPos);
-                
+                // GunEntity gun = new GunEntity(handPos);
+                headTarget= character.gameObject.transform.Find("HeadTarget");
+                isInit = true;
             });
     
     } 
@@ -155,6 +161,27 @@ public class PlayerEntity : CharacterBase
 
     public override void YOTOUpdate(float deltaTime)
     {
+        
+        if (isAming&&isInit)
+        {
+            Vector3 direction = lookPos - headTarget.position;
+            direction.y = 0f; // 忽略Y轴的高度差，保证只在水平面旋转
+
+            if (direction.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                Quaternion smoothedRotation = Quaternion.Slerp(
+                    headTarget.rotation,
+                    targetRotation,
+                    Time.deltaTime * headRotationSpeed
+                );
+
+                // 只保留 Y 轴旋转（绕Y轴的欧拉角），防止头部抬头或低头
+                Vector3 euler = smoothedRotation.eulerAngles;
+                headTarget.rotation = Quaternion.Euler(0f, euler.y, 0f);
+            }
+        }
+        
         if (isAming)
         {
             if (currentTime<=waitTime)
