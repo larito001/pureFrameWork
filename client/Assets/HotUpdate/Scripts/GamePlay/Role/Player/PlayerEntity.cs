@@ -22,6 +22,8 @@ public class PlayerEntity : CharacterBase
     private bool isFireing = false;
     private float waitTime = 0.5f;
     private float currentTime = 0;
+
+    private HandRoot handPos;
     //todo:Gunparent
     public PlayerEntity(): base()
     {
@@ -104,8 +106,11 @@ public class PlayerEntity : CharacterBase
                 character.transform.position = orgPosition;
                 camera = YOTOFramework.cameraMgr.getMainCamera();
                 AddComponent();
-
+                handPos=character.GetComponentInChildren<HandRoot>();
+                GunEntity gun = new GunEntity(handPos);
+                
             });
+    
     } 
     public override void AddComponent()
     {
