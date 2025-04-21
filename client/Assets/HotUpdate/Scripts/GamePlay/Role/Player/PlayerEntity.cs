@@ -158,29 +158,48 @@ public class PlayerEntity : CharacterBase
     {
 
     }
-
+    private float maxHeadYaw = 60f; // 最大左右旋转角度，单位是度
     public override void YOTOUpdate(float deltaTime)
     {
-        
-        if (isAming&&isInit)
+        if (!isInit) return;
+        if (isAming)
         {
             Vector3 direction = lookPos - headTarget.position;
-            direction.y = 0f; // 忽略Y轴的高度差，保证只在水平面旋转
+            direction.y = 0f;
 
             if (direction.sqrMagnitude > 0.001f)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                Quaternion smoothedRotation = Quaternion.Slerp(
+                // 计算目标方向相对于角色前方的角度差
+                Vector3 characterForward = character.transform.forward;
+                characterForward.y = 0f;
+                characterForward.Normalize();
+
+                Vector3 targetDirection = direction.normalized;
+                float angleToTarget = Vector3.SignedAngle(characterForward, targetDirection, Vector3.up);
+
+                // 限制在 [-maxHeadYaw, maxHeadYaw] 之间
+                float clampedAngle = Mathf.Clamp(angleToTarget, -maxHeadYaw, maxHeadYaw);
+
+                // 计算目标旋转（绕Y轴旋转）
+                Quaternion targetRotation = Quaternion.Euler(0f, character.transform.eulerAngles.y + clampedAngle, 0f);
+
+                // 插值旋转，让头部平滑转向目标方向（受限）
+                headTarget.rotation = Quaternion.Slerp(
                     headTarget.rotation,
                     targetRotation,
                     Time.deltaTime * headRotationSpeed
                 );
-
-                // 只保留 Y 轴旋转（绕Y轴的欧拉角），防止头部抬头或低头
-                Vector3 euler = smoothedRotation.eulerAngles;
-                headTarget.rotation = Quaternion.Euler(0f, euler.y, 0f);
             }
+        } else
+        {
+            // 没在瞄准时，默认看向正前方（归位）
+            headTarget.rotation = Quaternion.Slerp(
+                headTarget.rotation,
+                Quaternion.Euler(0f, character.transform.eulerAngles.y, 0f),
+                Time.deltaTime * headRotationSpeed
+            );
         }
+
         
         if (isAming)
         {
