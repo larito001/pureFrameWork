@@ -107,6 +107,15 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""5ad36394-775c-4322-bc85-eaa8aacefb42"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -272,6 +281,17 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""852f2636-3a5f-4cbc-90eb-7740828a86a2"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -824,6 +844,7 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         m_GamePlayAction_Touch = m_GamePlayAction.FindAction("Touch", throwIfNotFound: true);
         m_GamePlayAction_TouchAddition = m_GamePlayAction.FindAction("TouchAddition", throwIfNotFound: true);
         m_GamePlayAction_Fire = m_GamePlayAction.FindAction("Fire", throwIfNotFound: true);
+        m_GamePlayAction_Reload = m_GamePlayAction.FindAction("Reload", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -906,6 +927,7 @@ public partial class @MInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_GamePlayAction_Touch;
     private readonly InputAction m_GamePlayAction_TouchAddition;
     private readonly InputAction m_GamePlayAction_Fire;
+    private readonly InputAction m_GamePlayAction_Reload;
     public struct GamePlayActionActions
     {
         private @MInput m_Wrapper;
@@ -919,6 +941,7 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         public InputAction @Touch => m_Wrapper.m_GamePlayAction_Touch;
         public InputAction @TouchAddition => m_Wrapper.m_GamePlayAction_TouchAddition;
         public InputAction @Fire => m_Wrapper.m_GamePlayAction_Fire;
+        public InputAction @Reload => m_Wrapper.m_GamePlayAction_Reload;
         public InputActionMap Get() { return m_Wrapper.m_GamePlayAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -955,6 +978,9 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         private void UnregisterCallbacks(IGamePlayActionActions instance)
@@ -986,6 +1012,9 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         public void RemoveCallbacks(IGamePlayActionActions instance)
@@ -1141,6 +1170,7 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         void OnTouch(InputAction.CallbackContext context);
         void OnTouchAddition(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

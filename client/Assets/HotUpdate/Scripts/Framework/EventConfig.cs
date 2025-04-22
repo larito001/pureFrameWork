@@ -23,6 +23,7 @@ namespace YOTO
        Fire,
        FireRelease,
        RefreshMousePos,
+       TryReload,
        
        //net:
        RoomListResponse,

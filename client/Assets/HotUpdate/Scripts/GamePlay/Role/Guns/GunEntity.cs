@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using YOTO;
 
 public class GunEntity : BaseEntity
 {
+
+    private PlayerEntity player;
     private HandRoot handRoot;
-    public GunEntity(HandRoot handPos)
+    private TwoBoneIKConstraint leftHand;
+    public GunEntity(TwoBoneIKConstraint leftHand ,HandRoot handRoot)
     {
-        handRoot = handPos;
+        this.leftHand = leftHand;
+        this.handRoot = handRoot;
     }
     private GameObject gun;
     protected override void YOTOOnload()
@@ -17,11 +22,20 @@ public class GunEntity : BaseEntity
         {
             gun = UnityEngine.Object.Instantiate(obj);
             gun.transform.SetParent(handRoot.transform);
+            var LeftHandTarget = gun.transform.Find("LeftHandTarget");
+           
+            leftHand.data.target = LeftHandTarget;
             gun.transform.localPosition = Vector3.zero;
             gun.transform.localRotation = Quaternion.identity;
+            player.builder.Build();
         });
     }
 
+    public void Init(PlayerEntity entity)
+    {
+        player = entity;
+
+    }
     public override void YOTOStart()
     {
   

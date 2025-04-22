@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
+using UnityEngine.Events;
+using YOTO;
 using Vector3 = System.Numerics.Vector3;
 
 public class PlayerAnimatorCtrl : CtrlBase
@@ -10,7 +13,10 @@ public class PlayerAnimatorCtrl : CtrlBase
     ArmState armState = ArmState.Normal;
     PlayerPose playerPose = PlayerPose.Stand;
     public float RotateSpeed=10;
-
+    public TwoBoneIKConstraint rightHand;
+    public TwoBoneIKConstraint leftHand;
+    private float reloadTimer = 0f;
+    private float reloadDuration = 4f;
     public enum PlayerPose
     {
         Crouch,
@@ -34,10 +40,15 @@ public class PlayerAnimatorCtrl : CtrlBase
     {
         base.Init(character);
         characterBase.character.TryGetComponent<Animator>(out animator);
+   
         if (!animator)
         {
             animator = characterBase.character.AddComponent<Animator>();
         }
+
+        var Rig = characterBase.character.transform.Find("Rigs");
+        rightHand = Rig.Find("RightHand").GetComponent<TwoBoneIKConstraint>();
+        leftHand = Rig.Find("LeftHand").GetComponent<TwoBoneIKConstraint>();
     }
     public void SwitchPlayerState()
     {
@@ -118,6 +129,38 @@ public class PlayerAnimatorCtrl : CtrlBase
 
     }
 
+    private bool isRelongding = false;
+    private bool isLerpingWeight = false;
+    private float lerpDuration = 0.5f;
+    private float lerpTimer = 0f;
+    private float startWeight = 0f;
+    private float targetWeight = 1f;
+
+    public void ReLoad(UnityAction callback)
+    {
+        if (isRelongding) return;
+        lerpTimer = 0f;
+        startWeight = 1f;
+        targetWeight = 0f;
+        isLerpingWeight = true;
+        isRelongding = true;
+        animator.SetBool("isReloding",true);
+
+        // 触发 DelayCall（执行动画时长）
+        YOTOFramework.timeMgr.DelayCall(() =>
+        {
+            animator.SetBool("isReloding",false);
+            callback?.Invoke();
+
+            // 启动权重插值（从 0 → 1）
+            lerpTimer = 0f;
+            startWeight = 0f;
+            targetWeight = 1f;
+            isLerpingWeight = true;
+            isRelongding = false;
+        }, 4);
+    }
+
     private void OnAnimatorMove()
     {
         //����״̬
@@ -130,6 +173,22 @@ public class PlayerAnimatorCtrl : CtrlBase
         characterBase.CulculateDir();
         SwitchPlayerState();
         SetAnimator(deltaTime);
+        if (isLerpingWeight)
+        {
+            lerpTimer += Time.deltaTime;
+            float t = Mathf.Clamp01(lerpTimer / lerpDuration);
+            float weight = Mathf.Lerp(startWeight, targetWeight, t);
+            rightHand.weight = weight;
+            leftHand.weight = weight;
+
+            if (t >= 1f)
+            {
+                rightHand.weight = targetWeight;
+                leftHand.weight = targetWeight;
+                isLerpingWeight = false;
+
+            }
+        }
     }
 
     public override void YOTONetUpdate()

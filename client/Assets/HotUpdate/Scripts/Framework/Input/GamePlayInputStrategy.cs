@@ -106,5 +106,13 @@ namespace YOTO
                 YOTOFramework.eventMgr.TriggerEvent(EventType.Cooking);
             }
         }
+
+        public void OnReload(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                YOTOFramework.eventMgr.TriggerEvent(EventType.TryReload);
+            }
+        }
     }
 }
