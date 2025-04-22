@@ -27,9 +27,11 @@ public class PlayerEntity : CharacterBase
     private bool isInit = false;
     private float headRotationSpeed = 10;
 
+    
     private HandRoot handPos;
     public RigBuilder builder;
 
+    private GunEntity gun;
     //todo:Gunparent
     public PlayerEntity() : base()
     {
@@ -111,7 +113,7 @@ public class PlayerEntity : CharacterBase
                 builder = character.GetComponent<RigBuilder>();
                 headTarget = character.gameObject.transform.Find("HeadTarget");
                 isInit = true;
-                GunEntity gun = new GunEntity(animatorCtrl.leftHand, handPos);
+                gun = new GunEntity(animatorCtrl.leftHand, handPos);
                 gun.Init(this);
             });
     }
@@ -218,8 +220,8 @@ public class PlayerEntity : CharacterBase
             if (currentTime >= waitTime)
             {
                 //todo:开火，子弹间隔，帮我写，在发射子弹的地方写好todo我创建子弹就好了
-                Debug.Log("开火！！");
-                //Gun.TryShot();
+
+                gun.TryShot();
             }
         }
 

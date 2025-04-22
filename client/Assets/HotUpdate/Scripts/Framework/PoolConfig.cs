@@ -8,7 +8,7 @@ namespace YOTO
     {
         FlyingText,
         ProgressLine,
-        Smoke_FVX,
+        BulletObject,
     }
     public enum ObjectPoolType
     {

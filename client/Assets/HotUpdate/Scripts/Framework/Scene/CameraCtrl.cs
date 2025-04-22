@@ -73,7 +73,6 @@ public class CameraCtrl
         // }
         // else
         {
-            Debug.Log("���߼��");
             if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("Ground")))
             {
             

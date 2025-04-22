@@ -10,6 +10,12 @@ public class GunEntity : BaseEntity
     private PlayerEntity player;
     private HandRoot handRoot;
     private TwoBoneIKConstraint leftHand;
+    
+    public float fireRate = 0.2f; // 每发子弹的时间间隔
+    private float fireTimer = 0f;
+
+    private bool canFire = true; // 是否允许发射
+    private bool isFiring = false; // 当前是否处于开火状态
     public GunEntity(TwoBoneIKConstraint leftHand ,HandRoot handRoot)
     {
         this.leftHand = leftHand;
@@ -18,6 +24,10 @@ public class GunEntity : BaseEntity
     private GameObject gun;
     protected override void YOTOOnload()
     {
+        YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
+        {
+            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).SetPrefab(obj.GetComponent<BulletBase>());
+        });
         YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Role/Gun/SM_Wep_AssaultRifle_02.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
         {
             gun = UnityEngine.Object.Instantiate(obj);
@@ -36,6 +46,27 @@ public class GunEntity : BaseEntity
         player = entity;
 
     }
+
+    public void TryShot()
+    {
+        if (!canFire) return;
+
+        if (fireTimer >= fireRate)
+        {
+            fireTimer = 0f;
+
+            SpawnBullet();
+        }
+    }
+    // 子弹生成接口（你来实现）
+    protected virtual void SpawnBullet()
+    {
+        // TODO: 子类或外部继承/实现生成子弹逻辑
+                    Debug.Log("开火！！");
+        var bullet=  YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
+        var rig =bullet.gameObject.AddComponent<Rigidbody>();
+        rig.velocity=new Vector3(100f,0f,0f);
+    }
     public override void YOTOStart()
     {
   
@@ -43,7 +74,11 @@ public class GunEntity : BaseEntity
 
     public override void YOTOUpdate(float deltaTime)
     {
-       
+        // 计时器增加
+        if (fireTimer < fireRate)
+        {
+            fireTimer += Time.deltaTime;
+        }
     }
 
     public override void YOTONetUpdate()

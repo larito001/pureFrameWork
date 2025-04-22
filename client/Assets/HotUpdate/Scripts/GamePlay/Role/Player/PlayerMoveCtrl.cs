@@ -43,7 +43,7 @@ public class PlayerMoveCtrl : CtrlBase
     {
         WaitForSeconds wait =    new WaitForSeconds(0.1f);
         while (true) {
-            VFXBase vfx = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).Get<VFXBase>();
+            VFXBase vfx = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<VFXBase>();
             vfx.transform.position = transform.position;
             vfx.PlayVFX();
             vfxs.Add(vfx);
@@ -80,10 +80,10 @@ public class PlayerMoveCtrl : CtrlBase
         }
 
 
-        for (int i = 0; i < vfxs.Count; i++)
-        {
-            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).Set<VFXBase>(vfxs[i]);
-        }
+        // for (int i = 0; i < vfxs.Count; i++)
+        // {
+        //     YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).Set<VFXBase>(vfxs[i]);
+        // }
         vfxs.Clear();
         fvxIE = null;
         sprintIE = null;
@@ -103,7 +103,7 @@ public class PlayerMoveCtrl : CtrlBase
             if (characterBase.isSpinting)
             {
                 characterBase.isSpinting = false;
-                Sprint();
+                // Sprint();
             }
             velocity = characterBase.animationVelocity;
             velocity.y = rigidbody.velocity.y;
