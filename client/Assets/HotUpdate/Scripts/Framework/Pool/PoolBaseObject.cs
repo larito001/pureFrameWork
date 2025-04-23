@@ -9,21 +9,23 @@ public abstract class PoolBaseObject
     public bool  __isRecycle { get; set; }
     public bool isRecycle { get { return __isRecycle; } private set { } }
     public abstract void ResetAll();
+    public abstract void OnStart();
 
 }
 public abstract class PoolBaseGameObject : MonoBehaviour
 {
     /// <summary>
-    /// в╒рБё╛гК╡╩р╙отй╫пч╦д
+    /// в╒О©╫Бё╛О©╫К╡╩р╙О©╫О©╫й╫О©╫ч╦О©╫
     /// </summary>
     public bool __isRecycle { get; set; }
     /// <summary>
-    ///╤ах║в╢л╛ё╛пХр╙тзй╧сцж╝г╟ё╛╪Л╡Ийг╥Яря╬╜╠╩╩ьйуакё╛хГ╧Шц╩╠╩╩ьйуё╛╬м╥епд╣Всц║ё
-    ///╥юж╧г╟цФря╬╜╩ьйуак╣╚сж╣Уакр╩╢н╣дгИ©Ж╥╒иЗ
+    ///О©╫О©╫х║в╢л╛О©╫О©╫О©╫О©╫р╙О©╫О©╫й╧О©╫О©╫ж╝г╟О©╫О©╫О©╫О©╫О©╫О©╫г╥О©╫О©╫я╬О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫кёО©╫О©╫О©╫О©╫ц╩О©╫О©╫О©╫О©╫О©╫уёО©╫О©╫м╥О©╫О©╫д╣О©╫О©╫ц║О©╫
+    ///О©╫О©╫ж╧г╟О©╫О©╫О©╫я╬О©╫О©╫О©╫О©╫О©╫О©╫к╣О©╫О©╫ж╣О©╫О©╫О©╫р╩О©╫н╣О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
     /// </summary>
     public bool isRecycle { get { return  __isRecycle; } private set { } }
     /// <summary>
-    /// гКв╒рБё╛╢к╥╫╥╗╩Атз╥ехК║╒х║ЁЖ║╒йукУ║╒гЕ©уй╠╣Всцё╛╬║а©╠ёж╓╡╩╩А╠╗╢Мё╩╠╩дз╡©ю╧╫ь╨С╩Ажуж╧уШ╦Ж╤тоСЁь║ё
+    /// О©╫О©╫в╒О©╫Бё╛О©╫к╥О©╫О©╫О©╫О©╫О©╫О©╫з╥О©╫О©╫К║╒х║О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫й╠О©╫О©╫О©╫цёО©╫О©╫О©╫О©╫О©╫О©╫О©╫ж╓О©╫О©╫О©╫А╠╗О©╫О©╫О©╫О©╫О©╫О©╫О©╫з╡О©╫О©╫О©╫О©╫ь╨О©╫О©╫О©╫О©╫ж╧О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ь║О©╫
     /// </summary>
     public abstract void ResetAll();
+    public abstract void OnStart();
 }

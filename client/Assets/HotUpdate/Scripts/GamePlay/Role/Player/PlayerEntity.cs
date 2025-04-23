@@ -17,7 +17,10 @@ public class PlayerEntity : CharacterBase
     private Vector3 target;
     public bool canMove = true;
     public Vector3 orgPosition;
+    
     public bool isAming = true;
+    public bool isShooting = false;
+    
     public Vector3 lookPos;
     private bool isTouching = false;
     private bool isFireing = false;
@@ -62,7 +65,14 @@ public class PlayerEntity : CharacterBase
 
     public override void Init(Vector3 pos)
     {
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TryReload, () => { animatorCtrl.ReLoad(() => { }); });
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TryReload, () =>
+        {
+            gun.canFire = false;
+            animatorCtrl.ReLoad(() =>
+            {
+                gun.canFire = true;
+            });
+        });
         YOTOFramework.eventMgr.AddEventListener<Vector3>(YOTO.EventType.RefreshMousePos, (pos) =>
         {
             if (!isInit) return;
@@ -215,12 +225,13 @@ public class PlayerEntity : CharacterBase
             currentTime = 0;
         }
 
+        isShooting = false;
         if (isFireing)
         {
             if (currentTime >= waitTime)
             {
                 //todo:开火，子弹间隔，帮我写，在发射子弹的地方写好todo我创建子弹就好了
-
+                isShooting = true;
                 gun.TryShot();
             }
         }

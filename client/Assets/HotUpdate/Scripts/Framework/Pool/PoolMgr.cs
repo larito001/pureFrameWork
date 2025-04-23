@@ -110,7 +110,7 @@ namespace YOTO
                 deItem.transform.localPosition = Vector3.zero;
                 try
                 {
-                    deItem.ResetAll();
+                    deItem.OnStart();
                     deItem.gameObject.SetActive(true);
                     deItem.__isRecycle = false;
                     objs.Add(deItem.GetComponent<T>());
@@ -298,7 +298,7 @@ namespace YOTO
                     T obj = new T();
                     try
                     {
-                        obj.ResetAll();
+                        obj.OnStart();
                         obj.__isRecycle = false;
                         objs.Add(obj);
                         outerCount++;

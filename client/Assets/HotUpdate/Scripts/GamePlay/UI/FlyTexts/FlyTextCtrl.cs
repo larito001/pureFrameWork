@@ -15,6 +15,12 @@ public class FlyTextCtrl : PoolBaseGameObject
     {
        
     }
+
+    public override void OnStart()
+    {
+        
+    }
+
     public void Fly(FlyTextData data)
     {
         transform.localPosition = data.pos;

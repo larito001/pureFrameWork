@@ -4,62 +4,62 @@ using UnityEngine;
 [RequireComponent(typeof(CanvasRenderer))]
 public class UGUIFloatingTextBatch : PoolBaseGameObject
 {
-    public Font font ; // ×ÖÌå
-    public Material fontMaterial; // ×ÖÌåµÄ²ÄÖÊ
-    public Color color = Color.white; // ÎÄ±¾ÑÕÉ«
-    public float floatSpeed = 50f; // »ù´¡Æ®¶¯ËÙ¶È
-    public float fadeDuration = 10f; // µ­³öÊ±³¤
-    public int numberOfTexts = 1000; // Éú³ÉµÄÎÄ±¾ÊýÁ¿
+    public Font font ; // ï¿½ï¿½ï¿½ï¿½
+    public Material fontMaterial; // ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½
+    public Color color = Color.white; // ï¿½Ä±ï¿½ï¿½ï¿½É«
+    public float floatSpeed = 50f; // ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ù¶ï¿½
+    public float fadeDuration = 10f; // ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+    public int numberOfTexts = 1000; // ï¿½ï¿½ï¿½Éµï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½
     public int currentNum = 1;
     private Mesh mesh;
     private CanvasRenderer canvasRenderer;
     private float timer = 0;
     public List<string> texts = new List<string>();
 
-    // Ã¿¸ö×Ö·ûµÄ¶ÀÁ¢ÐÐÎª
+    // Ã¿ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½Îª
     private Vector3[] positions;
     private Color[] colors;
-    private float[] alphas; // ÓÃÓÚ¿ØÖÆÃ¿¸ö×Ö·ûµÄÍ¸Ã÷¶È
+    private float[] alphas; // ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½
 
 
     int totalCharacters;
-    Vector3[] vertices; // Ã¿¸ö×Ö·û4¸ö¶¥µã
+    Vector3[] vertices; // Ã¿ï¿½ï¿½ï¿½Ö·ï¿½4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     Vector2[] uvs;
-    int[] triangles; // Ã¿¸ö×Ö·û2¸öÈý½ÇÐÎ
+    int[] triangles; // Ã¿ï¿½ï¿½ï¿½Ö·ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     Color[] meshColors;
     Vector3 org;
     void Start()
     {
-        Debug.Log("Éú³É");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½");
         currentNum = texts.Count;
         org = transform.position;
-        // ÎªÃ¿¸ö "Hello" Éú³ÉÍø¸ñÐÅÏ¢
+        // ÎªÃ¿ï¿½ï¿½ "Hello" ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
         totalCharacters = 10 * numberOfTexts;
-        vertices = new Vector3[totalCharacters * 4]; // Ã¿¸ö×Ö·û4¸ö¶¥µã
+        vertices = new Vector3[totalCharacters * 4]; // Ã¿ï¿½ï¿½ï¿½Ö·ï¿½4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         uvs = new Vector2[vertices.Length];
-        triangles = new int[totalCharacters * 6]; // Ã¿¸ö×Ö·û2¸öÈý½ÇÐÎ
+        triangles = new int[totalCharacters * 6]; // Ã¿ï¿½ï¿½ï¿½Ö·ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         meshColors = new Color[vertices.Length];
 
-        // ³õÊ¼»¯Î»ÖÃºÍÑÕÉ«Êý¾Ý
+        // ï¿½ï¿½Ê¼ï¿½ï¿½Î»ï¿½Ãºï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
         positions = new Vector3[numberOfTexts];
         colors = new Color[numberOfTexts];
         alphas = new float[numberOfTexts];
 
         for (int i = 0; i < numberOfTexts; i++)
         {
-            // Ëæ»ú³õÊ¼Î»ÖÃ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Î»ï¿½ï¿½
             positions[i] = new Vector3(Random.Range(-500, 500), Random.Range(-300, 300), 0);
-            colors[i] = color; // ³õÊ¼»¯ÑÕÉ«ÎªÈ«°×
-            alphas[i] = 1f; // ³õÊ¼Í¸Ã÷¶ÈÎª1£¨²»Í¸Ã÷£©
+            colors[i] = color; // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½É«ÎªÈ«ï¿½ï¿½
+            alphas[i] = 1f; // ï¿½ï¿½Ê¼Í¸ï¿½ï¿½ï¿½ï¿½Îª1ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½
         }
 
-        // »ñÈ¡CanvasRenderer×é¼þ
+        // ï¿½ï¿½È¡CanvasRendererï¿½ï¿½ï¿½
         canvasRenderer = GetComponent<CanvasRenderer>();
 
-        // Éú³É³õÊ¼µÄ×ÖÌåÍø¸ñ
+        // ï¿½ï¿½ï¿½É³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         GenerateMesh();
 
-        // ÉèÖÃ²ÄÖÊ£ºÈç¹ûÃ»ÓÐÖ¸¶¨×ÖÌå²ÄÖÊ£¬Ê¹ÓÃ×ÖÌå×Ô´øµÄÄ¬ÈÏ²ÄÖÊ
+        // ï¿½ï¿½ï¿½Ã²ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½Ä¬ï¿½Ï²ï¿½ï¿½ï¿½
         if (fontMaterial != null)
         {
             canvasRenderer.SetMaterial(fontMaterial, null);
@@ -76,7 +76,7 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
         transform.position += Vector3.up * floatSpeed * Time.deltaTime;
         timer += Time.deltaTime;
 
-        //Èç¹ûÊ±¼ä³¬¹ýµ­³öÊ±³¤£¬Ïú»ÙÎïÌå
+        //ï¿½ï¿½ï¿½Ê±ï¿½ä³¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (timer >= fadeDuration)
         {
             transform.position = org;
@@ -84,7 +84,7 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
         }
 
     }
-    //ÖØ»æ
+    //ï¿½Ø»ï¿½
     public void GenerateMesh()
     {
         if (mesh == null)
@@ -97,7 +97,7 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
 
         for (int i = 0; i < texts.Count; i++)
         {
-            // ÎªÃ¿¸ö "Hello" ÉèÖÃÍø¸ñ
+            // ÎªÃ¿ï¿½ï¿½ "Hello" ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             Vector3 startPosition = positions[i];
 
             for (int j = 0; j < texts[i].Length; j++)
@@ -106,7 +106,7 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
                 font.RequestCharactersInTexture(c.ToString(), font.fontSize, FontStyle.Normal);
                 font.GetCharacterInfo(c, out CharacterInfo characterInfo, font.fontSize);
 
-                // ÉèÖÃÃ¿¸ö×Ö·ûµÄ¶¥µã
+                // ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½
                 float xMin = startPosition.x + xOffset + characterInfo.minX;
                 float xMax = startPosition.x + xOffset + characterInfo.maxX;
                 float yMin = startPosition.y + characterInfo.minY;
@@ -117,19 +117,19 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
                 vertices[vertexOffset + 2] = new Vector3(xMax, yMax, 0);
                 vertices[vertexOffset + 3] = new Vector3(xMax, yMin, 0);
 
-                // ÉèÖÃUV×ø±ê
+                // ï¿½ï¿½ï¿½ï¿½UVï¿½ï¿½ï¿½ï¿½
                 uvs[vertexOffset] = characterInfo.uvBottomLeft;
                 uvs[vertexOffset + 1] = characterInfo.uvTopLeft;
                 uvs[vertexOffset + 2] = characterInfo.uvTopRight;
                 uvs[vertexOffset + 3] = characterInfo.uvBottomRight;
 
-                // ÉèÖÃ³õÊ¼ÑÕÉ«
+                // ï¿½ï¿½ï¿½Ã³ï¿½Ê¼ï¿½ï¿½É«
                 meshColors[vertexOffset] = colors[i];
                 meshColors[vertexOffset + 1] = colors[i];
                 meshColors[vertexOffset + 2] = colors[i];
                 meshColors[vertexOffset + 3] = colors[i];
 
-                // ÉèÖÃÈý½ÇÐÎ
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 triangles[triangleOffset] = vertexOffset;
                 triangles[triangleOffset + 1] = vertexOffset + 1;
                 triangles[triangleOffset + 2] = vertexOffset + 2;
@@ -140,20 +140,20 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
                 vertexOffset += 4;
                 triangleOffset += 6;
 
-                xOffset += characterInfo.advance; // ÏÂÒ»¸ö×Ö·ûµÄXÆ«ÒÆÁ¿
+                xOffset += characterInfo.advance; // ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½XÆ«ï¿½ï¿½ï¿½ï¿½
             }
 
-            // ÖØÖÃ xOffset£¬¿ªÊ¼ÏÂÒ»×é "Hello"
+            // ï¿½ï¿½ï¿½ï¿½ xOffsetï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ò»ï¿½ï¿½ "Hello"
             xOffset = 0f;
         }
 
-        // ½«Éú³ÉµÄ¶¥µã¡¢UV×ø±ê¡¢Èý½ÇÐÎºÍÑÕÉ«¸³Öµ¸øÍø¸ñ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ÉµÄ¶ï¿½ï¿½ã¡¢UVï¿½ï¿½ï¿½ê¡¢ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½É«ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         mesh.vertices = vertices;
         mesh.uv = uvs;
         mesh.triangles = triangles;
         mesh.colors = meshColors;
 
-        // Ê¹ÓÃCanvasRenderer½«Íø¸ñÉèÖÃÎªUIÔªËØ
+        // Ê¹ï¿½ï¿½CanvasRendererï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªUIÔªï¿½ï¿½
         canvasRenderer.SetMesh(mesh);
     }
 
@@ -162,7 +162,12 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
     
     }
 
-    //Ë¢ÐÂ£¬ÔÝÊ±²»ÓÃ
+    public override void OnStart()
+    {
+        
+    }
+
+    //Ë¢ï¿½Â£ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
     //void UpdateMesh()
     //{
     //    Vector3[] vertices = mesh.vertices;
@@ -189,7 +194,7 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
     //            vertices[vertexOffset + 2] = new Vector3(xMax, yMax, 0);
     //            vertices[vertexOffset + 3] = new Vector3(xMax, yMin, 0);
 
-    //            // ¸üÐÂÑÕÉ«
+    //            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
     //            meshColors[vertexOffset] = colors[i];
     //            meshColors[vertexOffset + 1] = colors[i];
     //            meshColors[vertexOffset + 2] = colors[i];
@@ -199,15 +204,15 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
     //            xOffset += characterInfo.advance;
     //        }
 
-    //        // ÖØÖÃ xOffset
+    //        // ï¿½ï¿½ï¿½ï¿½ xOffset
     //        xOffset = 0f;
     //    }
 
-    //    // ¸üÐÂÍø¸ñµÄ¶¥µãºÍÑÕÉ«
+    //    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
     //    mesh.vertices = vertices;
     //    mesh.colors = meshColors;
 
-    //    // ¸üÐÂCanvasRenderer
+    //    // ï¿½ï¿½ï¿½ï¿½CanvasRenderer
     //    canvasRenderer.SetMesh(mesh);
     //}
 }

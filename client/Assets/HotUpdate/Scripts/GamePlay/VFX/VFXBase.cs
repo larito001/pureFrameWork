@@ -9,6 +9,12 @@ public class VFXBase : PoolBaseGameObject
     {
      
     }
+
+    public override void OnStart()
+    {
+        
+    }
+
     public void PlayVFX()
     {
         if (par == null)

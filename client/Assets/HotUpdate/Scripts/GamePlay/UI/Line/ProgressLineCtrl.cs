@@ -16,4 +16,9 @@ public class ProgressLineCtrl : PoolBaseGameObject
   {
     slider.value = 0;
   }
+
+  public override void OnStart()
+  {
+    
+  }
 }

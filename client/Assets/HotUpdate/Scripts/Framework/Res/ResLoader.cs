@@ -31,7 +31,7 @@ namespace YOTO
 
             }
       
-           // Debug.Log("ÄãºÃ");
+           // Debug.Log("ï¿½ï¿½ï¿½");
             if (callback != null)
             {
                 var handle = Addressables.LoadAssetAsync<T>(path);
@@ -45,9 +45,14 @@ namespace YOTO
             ID =-1;
         }
 
+        public override void OnStart()
+        {
+            
+        }
+
         ~ ResLoader()
         {
-            //Debug.Log("Îö¹¹º¯Êý");
+            //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
                 if (handle.IsValid())
                 {
                     Addressables.Release(handle);

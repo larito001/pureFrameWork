@@ -17,6 +17,7 @@ public class PlayerAnimatorCtrl : CtrlBase
     public TwoBoneIKConstraint leftHand;
     private float reloadTimer = 0f;
     private float reloadDuration = 4f;
+
     public enum PlayerPose
     {
         Crouch,
@@ -52,6 +53,7 @@ public class PlayerAnimatorCtrl : CtrlBase
     }
     public void SwitchPlayerState()
     {
+        
         if (characterBase.isAming)
         {
             armState = ArmState.Aim;
@@ -78,9 +80,13 @@ public class PlayerAnimatorCtrl : CtrlBase
         }
         
     }
-    void SetAnimator(float deltaTime)
+
+    public void TryShoot()
     {
-       
+        animator.SetTrigger("ShootingTrigger");
+    }
+    void SetAnimator(float deltaTime)
+    { 
         
         if (playerPose == PlayerPose.Stand)
         {
@@ -145,20 +151,21 @@ public class PlayerAnimatorCtrl : CtrlBase
         isLerpingWeight = true;
         isRelongding = true;
         animator.SetBool("isReloding",true);
-
-        // 触发 DelayCall（执行动画时长）
         YOTOFramework.timeMgr.DelayCall(() =>
         {
             animator.SetBool("isReloding",false);
-            callback?.Invoke();
-
             // 启动权重插值（从 0 → 1）
             lerpTimer = 0f;
             startWeight = 0f;
             targetWeight = 1f;
             isLerpingWeight = true;
             isRelongding = false;
-        }, 4);
+        }, 4f);
+        // 触发 DelayCall（执行动画时长）
+        YOTOFramework.timeMgr.DelayCall(() =>
+        {
+            callback?.Invoke();
+        }, 4.5f);
     }
 
     private void OnAnimatorMove()
@@ -186,7 +193,7 @@ public class PlayerAnimatorCtrl : CtrlBase
                 rightHand.weight = targetWeight;
                 leftHand.weight = targetWeight;
                 isLerpingWeight = false;
-
+                
             }
         }
     }

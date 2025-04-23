@@ -119,6 +119,7 @@ Transform:
   - {fileID: 4999854736595556}
   - {fileID: 4314251694239610}
   - {fileID: 4080805208174116}
+  - {fileID: 6549724887215821875}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33069117661738342
@@ -451,3 +452,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4225424073553050}
   m_LocalEulerAnglesHint: {x: -1.349, y: 354.607, z: 181.059}
+--- !u!1 &6502508057397577665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6549724887215821875}
+  m_Layer: 0
+  m_Name: FirePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6549724887215821875
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6502508057397577665}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.062, z: 0.5382}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4225424073553050}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
