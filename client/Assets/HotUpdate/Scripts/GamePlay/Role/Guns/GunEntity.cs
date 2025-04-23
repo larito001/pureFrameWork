@@ -61,11 +61,22 @@ public class GunEntity : BaseEntity
     // 子弹生成接口（你来实现）
     protected virtual void SpawnBullet()
     {
-        // TODO: 子类或外部继承/实现生成子弹逻辑
-                    Debug.Log("开火！！");
-        var bullet=  YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
-        var rig =bullet.gameObject.AddComponent<Rigidbody>();
-        rig.velocity=new Vector3(100f,0f,0f);
+        // 获取子弹对象
+        var bullet = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
+
+        // 设置发射方向
+        var shootDirection = player.character.transform.forward;
+
+        // 设置子弹位置：角色前方 + Y轴偏移（比如 +1.0f 高一点）
+        Vector3 spawnPos = player.character.transform.position + shootDirection * 1.0f + Vector3.up * 1.0f;
+        bullet.transform.position = spawnPos;
+
+        // 设置子弹朝向
+        bullet.transform.rotation = Quaternion.LookRotation(shootDirection);
+
+        // 添加刚体
+        var rig = bullet.gameObject.AddComponent<Rigidbody>();
+        rig.velocity = shootDirection * 50f;
     }
     public override void YOTOStart()
     {
