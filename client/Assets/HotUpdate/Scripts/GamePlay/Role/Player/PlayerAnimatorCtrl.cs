@@ -95,12 +95,14 @@ public class PlayerAnimatorCtrl : CtrlBase
             {
                 case LocalmotionState.Idle:
                     animator.SetFloat("MoveSpeed", 0, 0.1f, deltaTime);
+                    animator.SetBool("isMoving",false);
                     break;
                 case LocalmotionState.Walk:
+                    animator.SetBool("isMoving",true);
                         animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.walkSpeed, 0.5f, deltaTime);
                     break;
                 case LocalmotionState.Run:
-               
+                    animator.SetBool("isMoving",true);
                     animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.runSpeed, 0.5f, deltaTime);
                     break;
             }
