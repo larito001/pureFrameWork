@@ -12,7 +12,7 @@ public class PlayerAnimatorCtrl : CtrlBase
     LocalmotionState localmotionState = LocalmotionState.Idle;
     ArmState armState = ArmState.Normal;
     PlayerPose playerPose = PlayerPose.Stand;
-    public float RotateSpeed=10;
+    public float RotateSpeed = 2;
     public TwoBoneIKConstraint rightHand;
     public TwoBoneIKConstraint leftHand;
     private float reloadTimer = 0f;
@@ -113,7 +113,32 @@ public class PlayerAnimatorCtrl : CtrlBase
         {
             animator.SetBool("isAming", true);
             animator.SetFloat("HorizontalSpeed", characterBase.playerMovement.x * characterBase.runSpeed, 0.5f, deltaTime);
-    
+            if (characterBase.playerMovement.magnitude == 0)
+            {
+                // 获取目标方向
+                UnityEngine.Vector3 dir = characterBase.lookPos - characterBase.character.transform.position;
+                dir.y = 0f; // 保证只在水平面上旋转
+
+                // 当前角色的正前方向
+                UnityEngine.Vector3  forward = characterBase.character.transform.forward;
+
+                // 计算目标方向的旋转角度（弧度）
+                float angleRad = Mathf.Atan2(dir.x, dir.z); // 正值表示右转，负值表示左转
+
+                // 获取角色当前朝向的角度
+                float currentRad = Mathf.Atan2(forward.x, forward.z);
+
+                // 计算当前朝向与目标朝向的差值（夹角）
+                float deltaRad = Mathf.DeltaAngle(currentRad * Mathf.Rad2Deg, angleRad * Mathf.Rad2Deg) * Mathf.Deg2Rad;
+
+                // 将方向差值传递给动画
+                animator.SetFloat("RotateSpeed", deltaRad*5f, 0.2f, deltaTime);
+
+                // 实际旋转角色（你也可以用 Quaternion.Slerp 替代以获得更柔和效果）
+                characterBase.character.transform.Rotate(0, deltaRad * Mathf.Rad2Deg * deltaTime * RotateSpeed, 0f);
+            }
+      
+
             if (characterBase.lookPos != UnityEngine.Vector3.zero)
             {
                 // Calculate the direction vector to rotate towards
@@ -131,9 +156,11 @@ public class PlayerAnimatorCtrl : CtrlBase
         {
             animator.SetBool("isAming", false);
             float rad = Mathf.Atan2(characterBase.playerMovement.x, characterBase.playerMovement.z);
-            animator.SetFloat("RotateSpeed", rad, 0.1f, deltaTime);
+            animator.SetFloat("RotateSpeed", rad, 0.2f, deltaTime);
             characterBase.character.transform.Rotate(0, rad * 360 * deltaTime, 0f);
-        }
+        }     
+     
+    
 
     }
 
