@@ -36,8 +36,10 @@ public class PlayerEntity : CharacterBase
 
     private GunEntity gun;
     //todo:Gunparent
+    private NavTarget navTarget;
     public PlayerEntity() : base()
     {
+        navTarget=NavMapManager.Instance.GetTarget(false,new Vector3(100,0,10));
     }
 
     public override void CulculateDir()
@@ -264,6 +266,11 @@ public class PlayerEntity : CharacterBase
 
     public override void YOTOFixedUpdate(float deltaTime)
     {
+        if (character != null&&navTarget!=null)
+        {
+            navTarget.SetPos(character.transform.position);
+        }
+    
     }
 
     public override void YOTOOnHide()
