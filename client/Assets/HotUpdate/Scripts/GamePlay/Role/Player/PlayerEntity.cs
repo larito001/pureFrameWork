@@ -70,6 +70,7 @@ public class PlayerEntity : CharacterBase
     {
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TryReload, () =>
         {
+            if (!isInit) return;
             gun.canFire = false;
             animatorCtrl.ReLoad(() =>
             {
@@ -83,12 +84,13 @@ public class PlayerEntity : CharacterBase
             lookPos.y = character.transform.position.y;
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
-        {
+        { if (!isInit) return;
             isAming = true;
             isFireing = true;
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.FireRelease, () =>
         {
+            if (!isInit) return;
             if (!isTouching)
             {
                 isAming = false;
@@ -98,11 +100,13 @@ public class PlayerEntity : CharacterBase
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchPress, () =>
         {
+            if (!isInit) return;
             isTouching = true;
             isAming = isTouching;
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchRelease, () =>
         {
+            if (!isInit) return;
             lookPos = Vector3.zero;
             isTouching = false;
             isAming = isTouching;
@@ -110,9 +114,17 @@ public class PlayerEntity : CharacterBase
         orgPosition = pos;
         Debug.Log("InitPlayer");
         isRunning = true;
-        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Move, (ve) => { moveInput = ve; });
+        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Move, (ve) =>
+        {
+            if (!isInit) return;
+            moveInput = ve;
+        });
 
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Sprint, () => { isSpinting = true; });
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Sprint, () =>
+        {
+            if (!isInit) return;
+            isSpinting = true;
+        });
 
         //*****************************************
         YOTOFramework.resMgr.LoadGameObject("Assets/PolygonApocalypse/Prefabs/Characters/SM_Chr_Teen_Male_01.prefab",
