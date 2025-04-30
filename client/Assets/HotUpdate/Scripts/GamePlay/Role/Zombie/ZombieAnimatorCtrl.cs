@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class ZombieAnimatorCtrl : MonoBehaviour
 {
-    
+
     [SerializeField]
     AnimatedMeshAnimator BodyMeshAnimator;
 

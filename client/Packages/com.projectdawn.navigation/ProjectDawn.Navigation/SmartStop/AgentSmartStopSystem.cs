@@ -51,7 +51,7 @@ namespace ProjectDawn.Navigation
                     return;
 
                 // Check if give up needs destination update
-                if (smartStop.GiveUpStop.Enabled && math.any(body.Destination != timer.Destination))
+                if (smartStop.GiveUpStop.Enabled && math.any((bool2)(body.Destination != VectorUtils.ToVector3(timer.Destination))))
                 {
                     timer.Destination = body.Destination;
                     timer.Progress = 0.0f;

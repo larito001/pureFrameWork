@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using YOTO;
 
-public abstract  class BaseEntity 
+public abstract  class BaseEntity :PoolBaseObject
 {
     private static int  ids=0;
     public int  _entityID;

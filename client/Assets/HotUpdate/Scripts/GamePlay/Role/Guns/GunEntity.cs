@@ -17,7 +17,7 @@ public class GunEntity : BaseEntity
     public bool canFire = true; // 是否允许发射
     private bool isFiring = false; // 当前是否处于开火状态
     private Transform firePos;
-    private Queue<BulletBase> bullets = new Queue<BulletBase>();
+    private Queue<BulletEntity> bullets = new Queue<BulletEntity>();
     
     public GunEntity(TwoBoneIKConstraint leftHand ,HandRoot handRoot)
     {
@@ -78,25 +78,11 @@ public class GunEntity : BaseEntity
         fire.Stop();
         fire.Play();
         // 获取子弹对象
-        var bullet = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
+       var bullet= YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.BulletEntity).Get<BulletEntity>();
+       bullet.FireFromTo( firePos.position,player.character.transform.forward);
+        // var bullet = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
         bullets.Enqueue(bullet);
-        // 设置发射方向
-        var shootDirection = player.character.transform.forward;
-        bullet.trail.enabled = false;
-        // 设置子弹位置：角色前方 + Y轴偏移（比如 +1.0f 高一点）
-        bullet.transform.position = firePos.position;
-        bullet.trail.Clear();
-        bullet.trail.time = 0.1f; 
-        // 设置子弹朝向
-        bullet.transform.rotation = Quaternion.LookRotation(shootDirection);
-        bullet.trail.enabled = true;
-        // 添加刚体
-        Rigidbody temp;
-        if (!bullet.gameObject.TryGetComponent<Rigidbody>(out  temp))
-        {
-            temp =bullet.gameObject.AddComponent<Rigidbody>();
-        }
-        temp.velocity = shootDirection * 50f; 
+       
       
     }
     public override void YOTOStart()
@@ -111,12 +97,12 @@ public class GunEntity : BaseEntity
         {
             var current = bullets.Peek();
             long currentTime = System.DateTime.Now.Ticks / 10000;  // 当前时间戳，单位为毫秒
-            long elapsedTime = currentTime - current.startTime;  // 时间差，单位为毫秒
+            long elapsedTime = currentTime - current.GetStartTime();  // 时间差，单位为毫秒
 
-            if (elapsedTime > 5000)  // 如果超过 5 秒（5000 毫秒）
+            if (elapsedTime > 3000)  // 如果超过 5 秒（5000 毫秒）
             {
-                // 处理超过 5 秒后的操作
-                YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Set<BulletBase>(bullets.Dequeue());
+                bullets.Dequeue();
+                YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.BulletEntity).Set<BulletEntity>(current);
             }
         }
         // 计时器增加
@@ -148,6 +134,16 @@ public class GunEntity : BaseEntity
 
     public override void SetRotation(Quaternion rot)
     {
-        throw new System.NotImplementedException();
+ 
+    }
+
+    public override void ResetAll()
+    {
+ 
+    }
+
+    public override void OnStart()
+    {
+      
     }
 }

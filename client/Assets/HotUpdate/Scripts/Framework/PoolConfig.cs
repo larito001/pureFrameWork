@@ -13,6 +13,7 @@ namespace YOTO
     public enum ObjectPoolType
     {
         Loader,
+        BulletEntity,
 
         ObjectB,
         ObjectC

@@ -1,5 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace ProjectDawn.Navigation
 {
@@ -19,7 +20,7 @@ namespace ProjectDawn.Navigation
         /// <summary>
         /// Final destination that agent will attempt to reach.
         /// </summary>
-        public float3 Destination;
+        public Vector3 Destination;
         /// <summary>
         /// The distance between the agent's position and the destination.
         /// With NavMesh this value will return partial remaining distance not full path.

@@ -281,7 +281,7 @@ namespace YOTO
 
                     try
                     {
-                        obj.ResetAll();
+                        obj.OnStart();
                         obj.__isRecycle = false;
                         objs.Add(obj);
                         pool.Dequeue(); // 取出后将其移出队列

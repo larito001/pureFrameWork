@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Transforms;
-using Unity.Mathematics;
 using Unity.Burst;
+using Unity.Mathematics;
 
 namespace ProjectDawn.Navigation
 {
@@ -29,7 +29,7 @@ namespace ProjectDawn.Navigation
                 if (body.IsStopped)
                     return;
 
-                float3 towards = body.Destination - transform.Position;
+                float3 towards =VectorUtils.ToFloat3( body.Destination )- transform.Position;
                 float distance = math.length(towards);
                 float3 desiredDirection = distance > math.EPSILON ? towards / distance : float3.zero;
                 body.Force = desiredDirection;
