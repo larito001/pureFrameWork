@@ -15,6 +15,7 @@ public abstract  class BaseEntity :PoolBaseObject
     }
     public  BaseEntity()
     {
+        _entityID=ids++;
         //Debug.Log("���������");
         YOTOOnload();
         _isLoaded = true;

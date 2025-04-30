@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-public class ZombieAnimatorCtrl : MonoBehaviour
+public class ZombieAnimatorCtrl :PoolBaseGameObject
 {
 
     [SerializeField]
@@ -27,7 +27,7 @@ public class ZombieAnimatorCtrl : MonoBehaviour
 
     public void EnemyDie()
     {
-        BodyMeshAnimator.Play("Die", 0);
+        BodyMeshAnimator.Play("Die",0);
     }
     public void EnemyAtk()
     {
@@ -40,5 +40,14 @@ public class ZombieAnimatorCtrl : MonoBehaviour
     public void EnemyIdel()
     {
         BodyMeshAnimator.Play("Idle", 0);
+    }
+
+    public override void ResetAll()
+    {
+        
+    }
+
+    public override void OnStart()
+    {
     }
 }

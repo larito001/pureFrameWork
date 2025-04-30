@@ -82,7 +82,7 @@ public class GunEntity : BaseEntity
        bullet.FireFromTo( firePos.position,player.character.transform.forward);
         // var bullet = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
         bullets.Enqueue(bullet);
-       
+       EnemyManager.Instance.SetTarget(this.player.character.transform);
       
     }
     public override void YOTOStart()

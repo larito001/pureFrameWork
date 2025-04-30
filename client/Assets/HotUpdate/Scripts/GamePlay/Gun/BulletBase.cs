@@ -8,7 +8,16 @@ public class BulletBase : PoolBaseGameObject
     public ParticleSystem particle;
     public TrailRenderer trail;
 
-  
+    private void OnTriggerEnter(Collider other)
+    {
+        ZombieColliderCtrl ctrl;
+       if ( other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
+       {
+           EnemyManager.Instance.Hurt(ctrl.entityId,999);
+       }
+
+    }
+
     private void Start()
     {
         

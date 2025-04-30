@@ -12,8 +12,12 @@ public class StartPanel : UIPageBase
     {
         startBtn.onClick.AddListener(() =>
         {
-            YOTOFramework.sceneMgr.LoadScene(Scenes.Normal);
-            CloseSelf();
+           
+            YOTOFramework.timeMgr.DelayCall(() =>
+            {
+                YOTOFramework.sceneMgr.LoadScene(Scenes.Normal); 
+                CloseSelf();
+            },2.2f);
         });
         treeBtn.onClick.AddListener(() =>
         {

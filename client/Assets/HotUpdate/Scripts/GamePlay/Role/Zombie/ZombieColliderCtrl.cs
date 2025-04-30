@@ -6,6 +6,12 @@ using UnityEngine;
 public class ZombieColliderCtrl : MonoBehaviour
 {
     private BoxCollider collider;
+    public int entityId;
+
+    public void Stop()
+    {
+        collider.enabled = false;
+    }
     private void Start()
     {
         collider = gameObject.GetComponent<BoxCollider>();

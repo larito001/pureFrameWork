@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8289246309530975569}
   - component: {fileID: 1597709348182824359}
   - component: {fileID: -7196513206824186389}
+  - component: {fileID: 1462346333174594270}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -170,7 +171,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particle: {fileID: 3816345899432704242}
   trail: {fileID: 1597709348182824359}
-  startTime: 0
+--- !u!65 &1462346333174594270
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8153783995986858990}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 2.1799998}
+  m_Center: {x: 0, y: 0, z: 0.59}
 --- !u!1001 &3905888806753757638
 PrefabInstance:
   m_ObjectHideFlags: 0

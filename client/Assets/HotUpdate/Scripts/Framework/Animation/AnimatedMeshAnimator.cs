@@ -5,7 +5,7 @@ using UnityEngine;
 public class AnimatedMeshAnimator : MonoBehaviour
 {
     [SerializeField]
-    List<AnimationFrameInfo> FrameInformations;
+   public List<AnimationFrameInfo> FrameInformations;
     [SerializeField]
     MaterialPropertyBlockController PropertyBlockController;
 
@@ -20,8 +20,9 @@ public class AnimatedMeshAnimator : MonoBehaviour
     public void Play(string animationName, float offsetSeconds)
     {
         var frameInformation = FrameInformations.First(x => x.Name == animationName);
-
-        PropertyBlockController.SetFloat("_OffsetSeconds", offsetSeconds);
+        float timeNow = Time.time;
+        float offset = -(timeNow % (frameInformation.FrameCount / 30f));
+        PropertyBlockController.SetFloat("_OffsetSeconds", offset+offsetSeconds);
         PropertyBlockController.SetFloat("_StartFrame", frameInformation.StartFrame);
         PropertyBlockController.SetFloat("_EndFrame", frameInformation.EndFrame);
         PropertyBlockController.SetFloat("_FrameCount", frameInformation.FrameCount);
@@ -39,4 +40,5 @@ public class AnimatedMeshAnimator : MonoBehaviour
 
         IsPlaying = false;
     }
+
 }

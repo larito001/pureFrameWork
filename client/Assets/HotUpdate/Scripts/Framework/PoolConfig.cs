@@ -9,12 +9,13 @@ namespace YOTO
         FlyingText,
         ProgressLine,
         BulletObject,
+        NormalZombie,
     }
     public enum ObjectPoolType
     {
         Loader,
         BulletEntity,
-
+        NormalZombieEntity,
         ObjectB,
         ObjectC
     }

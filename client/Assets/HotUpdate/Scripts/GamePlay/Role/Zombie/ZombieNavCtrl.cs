@@ -14,6 +14,10 @@ public class ZombieNavCtrl : MonoBehaviour
 
     }
 
+    public void Stop()
+    {
+        agent.Stop();
+    }
     public void SetTarget(UnityEngine.Vector3 Target)
     {
         Target = Target;
