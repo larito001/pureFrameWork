@@ -53,7 +53,7 @@ public class EnemyManager : SingletonMono<EnemyManager>
     private void Complete()
     {
         zombieEntities.Clear();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 1000; i++)
         {
             ZombieEntity z = YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalZombieEntity).Get<ZombieEntity>();
 
