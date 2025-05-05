@@ -27,7 +27,7 @@ public class GunEntity : BaseEntity
     private GameObject gun;
     protected override void YOTOOnload()
     {
-      
+        VFXManager.Instance.Init();
         YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
         {
             YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).SetPrefab(obj.GetComponent<BulletBase>());
@@ -102,7 +102,8 @@ public class GunEntity : BaseEntity
             if (elapsedTime > 3000)  // 如果超过 5 秒（5000 毫秒）
             {
                 bullets.Dequeue();
-                YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.BulletEntity).Set<BulletEntity>(current);
+                current.Remove();
+
             }
         }
         // 计时器增加

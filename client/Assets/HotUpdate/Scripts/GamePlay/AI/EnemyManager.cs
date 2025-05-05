@@ -46,14 +46,22 @@ public class EnemyManager : SingletonMono<EnemyManager>
         if (zombieEntities.ContainsKey(id))
         {
             // YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalZombieEntity).Set(zombieEntities[id]);
-            zombieEntities[id].Die();
+            zombieEntities[id].Hurt(hurt);
+            
+        }
+    }
+
+    public void RemoveZombie(int id)
+    {
+        if (zombieEntities.ContainsKey(id))
+        {
             zombieEntities.Remove(id);
         }
     }
     private void Complete()
     {
         zombieEntities.Clear();
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 10; i++)
         {
             ZombieEntity z = YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalZombieEntity).Get<ZombieEntity>();
 

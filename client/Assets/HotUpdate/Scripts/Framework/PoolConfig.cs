@@ -9,7 +9,9 @@ namespace YOTO
         FlyingText,
         ProgressLine,
         BulletObject,
+        BulletImpact,
         NormalZombie,
+        
     }
     public enum ObjectPoolType
     {

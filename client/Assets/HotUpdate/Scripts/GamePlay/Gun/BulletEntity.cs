@@ -27,6 +27,15 @@ public class BulletEntity :BaseEntity
         temp.velocity = dir * 50f;
     }
 
+    public void Remove()
+    {
+        if (!this.__isRecycle)
+        {
+            VFXManager.Instance.PlayVFX("impact",bulletBase.transform.position,bulletBase.transform.rotation);
+            YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.BulletEntity).Set<BulletEntity>(this);
+        }
+       
+    }
     public long GetStartTime()
     {
         return startTime;
@@ -82,6 +91,7 @@ public class BulletEntity :BaseEntity
     public override void OnStart()
     {
         bulletBase= YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
+        bulletBase.Init(this);
         // 使用 DateTime.Now 获取当前时间，然后转换为毫秒
         startTime = System.DateTime.Now.Ticks / 10000; // 每 10000 Ticks 等于 1 毫秒
     }

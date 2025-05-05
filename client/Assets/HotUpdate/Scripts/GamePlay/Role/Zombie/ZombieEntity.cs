@@ -10,6 +10,7 @@ public class ZombieEntity : BaseEntity
 {
     ZombieAnimatorCtrl zombieBase;
 
+    public float HP = 100;
     public void SetTarget(Transform target)
     {
         zombieBase.GetComponent<ZombieNavCtrl>().SetTarget(target.position);  
@@ -37,6 +38,15 @@ public class ZombieEntity : BaseEntity
             GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
     }
 
+    public void Hurt(float hurt)
+    {
+        HP -= hurt;
+        if (HP <= 0)
+        {
+            Die();
+        }
+    }
+
     public void Die()
     {
         zombieBase.EnemyDie();
@@ -47,6 +57,7 @@ public class ZombieEntity : BaseEntity
             YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalZombieEntity).Set(this);
             
         },2.2f);
+        EnemyManager.Instance.RemoveZombie(_entityID);
     }
     protected override void YOTOOnload()
     {

@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YOTO;
 
 public class VFXBase : PoolBaseGameObject
 {
-    ParticleSystem par;
+    public List<ParticleSystem> particleSystems = new List<ParticleSystem>();
     public override void ResetAll()
     {
      
@@ -17,12 +18,20 @@ public class VFXBase : PoolBaseGameObject
 
     public void PlayVFX()
     {
-        if (par == null)
+        for (var i = 0; i < particleSystems.Count; i++)
         {
-            par = gameObject.GetComponent<ParticleSystem>();
+            particleSystems[i].Play();
+            if (i == 0)
+            {
+                YOTOFramework.timeMgr.DelayCall(Remove,particleSystems[i].duration);
+            }
+    
         }
-        par.Play();
-      
+    }
 
+    private void Remove()
+    { 
+        if(!this.__isRecycle)
+        YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletImpact).Set(this);
     }
 }
