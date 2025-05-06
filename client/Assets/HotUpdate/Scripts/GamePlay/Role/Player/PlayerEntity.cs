@@ -53,15 +53,15 @@ public class PlayerEntity : CharacterBase
             return;
         }
 
-        if (isAming)
-        {
-            playerMovement = new Vector3(moveInput.x, 0, moveInput.y);
-        }
-        else
-        {
-            playerMovement = cameraForwordProjection * moveInput.y + camera.transform.right * moveInput.x;
-        }
-
+        // if (isAming)
+        // {
+        //     playerMovement = new Vector3(moveInput.x, 0, moveInput.y);
+        // }
+        // else
+        // {
+        //  
+        // }
+        playerMovement = cameraForwordProjection * moveInput.y + camera.transform.right * moveInput.x;
 
         playerMovement = character.transform.InverseTransformVector(playerMovement);
     }
@@ -155,6 +155,16 @@ public class PlayerEntity : CharacterBase
         moveCtrl.Init(this);
         interactionCtrl.Init(this);
         Debug.Log("AddComponent Finish");
+
+       var mCamera= YOTOFramework.cameraMgr.getVirtualCamera("MainCameraVirtual");
+       mCamera.m_Lens.FieldOfView = 60;
+       mCamera.m_Follow=character.transform;
+       mCamera.m_LookAt = character.transform;
+      var body=  mCamera.AddCinemachineComponent<CinemachineFramingTransposer>();
+      body.m_TrackedObjectOffset= new Vector3(0, 2, 0);
+      body.m_DeadZoneWidth = 0.1f;
+      body.m_DeadZoneHeight = 0.1f;
+      body.m_CameraDistance = 10;
     }
 
 

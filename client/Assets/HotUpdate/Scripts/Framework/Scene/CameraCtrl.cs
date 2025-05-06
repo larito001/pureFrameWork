@@ -54,7 +54,7 @@ public class CameraCtrl
     {
  
         Vector3 dir=new Vector3(pos.x,pos.y, vCamera.m_Lens.NearClipPlane);
-        Debug.Log("TOUCH" + dir);
+        // Debug.Log("TOUCH" + dir);
         Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
         Ray uiRay = YOTOFramework.cameraMgr.getUICamera().ScreenPointToRay(dir);
         RaycastHit hitInfo;//

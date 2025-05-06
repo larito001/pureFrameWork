@@ -30,8 +30,9 @@ public class NormalScene: VirtualSceneBase
         FlyTextMgr.Instance.AddText("游戏开始!",Vector3.zero,FlyTextType.Normal);
         YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
         player = new PlayerEntity();
+       var org= GameObject.Find("PlayerOrgPos");
         EnemyManager.Instance.Init();
-        player.Init(new Vector3());
+        player.Init(org.transform.position);
     }
 
     public override void UnLoad()

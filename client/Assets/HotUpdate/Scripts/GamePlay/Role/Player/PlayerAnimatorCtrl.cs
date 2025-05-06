@@ -99,11 +99,11 @@ public class PlayerAnimatorCtrl : CtrlBase
                     break;
                 case LocalmotionState.Walk:
                     animator.SetBool("isMoving",true);
-                        animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.walkSpeed, 0.5f, deltaTime);
+                        animator.SetFloat("MoveSpeed", Mathf.Min(characterBase.playerMovement.z * characterBase.walkSpeed,2) , 0.1f, deltaTime);
                     break;
                 case LocalmotionState.Run:
                     animator.SetBool("isMoving",true);
-                    animator.SetFloat("MoveSpeed", characterBase.playerMovement.z * characterBase.runSpeed, 0.5f, deltaTime);
+                    animator.SetFloat("MoveSpeed",Mathf.Min(characterBase.playerMovement.z * characterBase.runSpeed,2) , 0.1f, deltaTime);
                     break;
             }
             
@@ -137,8 +137,6 @@ public class PlayerAnimatorCtrl : CtrlBase
                 // 实际旋转角色（你也可以用 Quaternion.Slerp 替代以获得更柔和效果）
                 characterBase.character.transform.Rotate(0, deltaRad * Mathf.Rad2Deg * deltaTime * RotateSpeed, 0f);
             }
-      
-
             if (characterBase.lookPos != UnityEngine.Vector3.zero)
             {
                 // Calculate the direction vector to rotate towards
@@ -158,6 +156,7 @@ public class PlayerAnimatorCtrl : CtrlBase
             float rad = Mathf.Atan2(characterBase.playerMovement.x, characterBase.playerMovement.z);
             animator.SetFloat("RotateSpeed", rad, 0.2f, deltaTime);
             characterBase.character.transform.Rotate(0, rad * 360 * deltaTime, 0f);
+            Debug.Log("rad"+characterBase.playerMovement.x+":"+characterBase.playerMovement.z+":"+rad);
         }     
      
     
