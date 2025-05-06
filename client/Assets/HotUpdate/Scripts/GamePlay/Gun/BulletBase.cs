@@ -22,9 +22,17 @@ public class BulletBase : PoolBaseGameObject
            if (bulletEntity != null)
            {
                bulletEntity.Remove();
+               bulletEntity=null;
            }
-       
-           bulletEntity=null;
+       }
+       else if (other.gameObject.layer == 6)
+       {
+           if (bulletEntity != null)
+           {
+               bulletEntity.Remove();
+               bulletEntity=null;  
+           }
+  
        }
        
     }
