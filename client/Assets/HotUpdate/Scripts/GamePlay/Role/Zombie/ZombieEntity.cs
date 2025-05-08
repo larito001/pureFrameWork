@@ -34,8 +34,11 @@ public class ZombieEntity : BaseEntity
         zombieBase.gameObject.SetActive(true);
     
         zombieBase.GetComponent<ZombieColliderCtrl>().entityId = this._entityID;
-        zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =
-            GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
+        zombieBase.EnemyRun();
+        zombieBase.GetComponent<ZombieColliderCtrl>().Run();
+        HP = 100;
+        // zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =
+        //     GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
     }
 
     public void Hurt(float hurt)

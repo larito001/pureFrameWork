@@ -61,19 +61,15 @@ public class EnemyManager : SingletonMono<EnemyManager>
     private void Complete()
     {
         zombieEntities.Clear();
-        for (int i = 0; i < 10; i++)
+        YOTOFramework.timeMgr.LoopCall(() =>
         {
             ZombieEntity z = YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalZombieEntity).Get<ZombieEntity>();
-
-            // 使用 Unity 的随机函数生成坐标
-            float x = UnityEngine.Random.Range(0f, 300f);
-            float zPos = UnityEngine.Random.Range(0f, 300f);
-
             // 设置位置，假设僵尸在地面上（y轴为0）
-            z.SetPosition(new Vector3(x, 0f, zPos));
+            z.SetPosition(new Vector3(-29, 0f, -50));
 
             zombieEntities.Add(z._entityID, z);
-        }
+        },1);
+  
        
     }
 

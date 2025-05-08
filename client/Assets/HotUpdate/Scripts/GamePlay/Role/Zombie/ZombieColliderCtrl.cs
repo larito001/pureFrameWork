@@ -8,6 +8,11 @@ public class ZombieColliderCtrl : MonoBehaviour
     private BoxCollider collider;
     public int entityId;
 
+    public void Run()
+    {
+        if(collider != null)
+        collider.enabled = true;
+    }
     public void Stop()
     {
         collider.enabled = false;
