@@ -11,9 +11,19 @@ public class ZombieEntity : BaseEntity
     ZombieAnimatorCtrl zombieBase;
 
     public float HP = 100;
-    public void SetTarget(Transform target)
+    private Transform target;
+    public void SetTarget(Transform t)
     {
-        zombieBase.GetComponent<ZombieNavCtrl>().SetTarget(target.position);  
+        if (zombieBase != null)
+        {
+            zombieBase.GetComponent<ZombieNavCtrl>().SetTarget(t.position);
+            target = null;
+        }
+        else
+        {
+           this.target=t;
+        }
+      
     }
     public override void ResetAll()
     {
@@ -37,6 +47,10 @@ public class ZombieEntity : BaseEntity
         zombieBase.EnemyRun();
         zombieBase.GetComponent<ZombieColliderCtrl>().Run();
         HP = 100;
+        if (this.target)
+        {
+            SetTarget(target);
+        }
         // zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =
         //     GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
     }

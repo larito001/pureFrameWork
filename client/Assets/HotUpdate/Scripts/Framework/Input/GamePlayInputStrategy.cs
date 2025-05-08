@@ -54,9 +54,9 @@ namespace YOTO
             if (context.phase == InputActionPhase.Performed)
             {
                  YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.TouchPress);
+
             }else if (context.phase == InputActionPhase.Canceled) // 松开触发事件
             {
-                // Debug.Log("Touch Released!!!");
 
                 YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.TouchRelease);
             }
@@ -113,5 +113,6 @@ namespace YOTO
                 YOTOFramework.eventMgr.TriggerEvent(EventType.TryReload);
             }
         }
+        
     }
 }

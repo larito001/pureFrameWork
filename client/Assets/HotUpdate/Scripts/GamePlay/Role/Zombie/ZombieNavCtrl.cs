@@ -8,7 +8,7 @@ public class ZombieNavCtrl : MonoBehaviour
 {
     private UnityEngine.Vector3 Target;
     private AgentAuthoring agent;
-    private void Start()
+    private void Awake()
     {
         agent= transform.GetComponent<AgentAuthoring>();
 
@@ -20,11 +20,15 @@ public class ZombieNavCtrl : MonoBehaviour
     }
     public void SetTarget(UnityEngine.Vector3 Target)
     {
-        Target = Target;
-        var body = agent.EntityBody;
-        body.Destination =Target;
-        body.IsStopped = false;
-        agent.EntityBody = body;
+        if (agent)
+        {
+            this.Target = Target;
+            var body = agent.EntityBody;
+            body.Destination =Target;
+            body.IsStopped = false;
+            agent.EntityBody = body;  
+        }
+    
     }
 
 }

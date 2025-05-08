@@ -94,7 +94,7 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""name"": ""TouchAddition"",
                     ""type"": ""Button"",
                     ""id"": ""2b9b7f4e-ee5e-4d64-9871-9008edd27986"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -103,7 +103,7 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""name"": ""Fire"",
                     ""type"": ""Button"",
                     ""id"": ""c6cb5586-3cde-4a48-a13f-c5d7475c7a80"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -112,7 +112,7 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""name"": ""Reload"",
                     ""type"": ""Button"",
                     ""id"": ""5ad36394-775c-4322-bc85-eaa8aacefb42"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false

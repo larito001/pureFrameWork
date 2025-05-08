@@ -10,9 +10,10 @@ public class CameraMgr
     private Camera mainCamera;
     private Camera uiCamera;
 
+    private bool isInit = false;
     private Dictionary<string, CinemachineVirtualCamera> cameraMap = new Dictionary<string, CinemachineVirtualCamera>(2);
     private Dictionary<string, CinemachineFreeLook> cameraMapFreeLook = new Dictionary<string, CinemachineFreeLook>(2);
-
+    
     public Camera getMainCamera()
     {
         return mainCamera;
@@ -43,6 +44,7 @@ public class CameraMgr
        
         //getVirtualCameraFreeLook("MainCameraVirtual");
         //����ui���
+        isInit = true;
     }
     public CinemachineVirtualCamera getVirtualCamera(string name)
     {
@@ -62,8 +64,7 @@ public class CameraMgr
     }
     public static CinemachineVirtualCamera CreateCinemachineCamera(string name, Vector3 position)
     {
-
-        // ����һ���µ��������
+        
         GameObject cameraObject;
         cameraObject = GameObject.Find(name);
         CinemachineVirtualCamera vcam;
@@ -101,5 +102,15 @@ public class CameraMgr
         cameraObject.transform.position = position;
 
         return vcam;
+    }
+
+    public void LateUpdate()
+    {
+        if (isInit)
+        {
+            uiCamera.transform.position = mainCamera.transform.position;
+            uiCamera.transform.rotation = mainCamera.transform.rotation;
+        }
+       
     }
 }

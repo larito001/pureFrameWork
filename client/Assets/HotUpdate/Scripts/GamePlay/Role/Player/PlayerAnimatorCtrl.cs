@@ -156,7 +156,6 @@ public class PlayerAnimatorCtrl : CtrlBase
             float rad = Mathf.Atan2(characterBase.playerMovement.x, characterBase.playerMovement.z);
             animator.SetFloat("RotateSpeed", rad, 0.2f, deltaTime);
             characterBase.character.transform.Rotate(0, rad * 360 * deltaTime, 0f);
-            Debug.Log("rad"+characterBase.playerMovement.x+":"+characterBase.playerMovement.z+":"+rad);
         }     
      
     

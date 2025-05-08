@@ -69,10 +69,12 @@ namespace YOTO
             poolMgr.Update(dt);
             entityMgr._Update(dt);
             sceneMgr.Update(dt);
+      
         }
 
         private void LateUpdate()
         {
+            cameraMgr.LateUpdate();
         }
 
         private void OnDestroy()
