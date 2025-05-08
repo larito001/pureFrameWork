@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using YOTO;
 
-public class BuildStrategy : MInput.IBuildActions
+public class BuildStrategy 
 {
 
     public void OnTouch(InputAction.CallbackContext context)

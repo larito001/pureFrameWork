@@ -17,7 +17,6 @@ public class StartPanel : UIPageBase
         });
         treeBtn.onClick.AddListener(() =>
         {
-            YOTOFramework.uIMgr.Show(UIEnum.SkillTreePanel);
         });
     }
 

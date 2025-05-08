@@ -19,7 +19,6 @@ public class StartScene : VirtualSceneBase
 
     public override void OnInit()
     {
-        YOTOFramework.uIMgr.Show(UIEnum.StartPanel);
     }
 
     public override void UnLoad()

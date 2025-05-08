@@ -27,7 +27,6 @@ public class NormalScene: VirtualSceneBase
         //加载事件系统
         EmergencyManager.Instance.Init();
         FlyTextMgr.Instance.AddText("游戏开始!",Vector3.zero,FlyTextType.Normal);
-        YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
     }
 
     public override void UnLoad()
