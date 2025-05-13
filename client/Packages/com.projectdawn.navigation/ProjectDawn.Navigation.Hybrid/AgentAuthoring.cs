@@ -58,6 +58,11 @@ namespace ProjectDawn.Navigation.Hybrid
         [SerializeField]
         protected NavigationLayers m_Layers = NavigationLayers.Default;
 
+
+        public float GetStopDistance()
+        {
+            return StoppingDistance;
+        }
         /// <summary>
         /// Returns default component of <see cref="Agent"/>.
         /// </summary>

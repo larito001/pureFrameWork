@@ -18,6 +18,7 @@ public class EnemyManager : SingletonMono<EnemyManager>
     {
         zombieEntities.Clear();
         num=zombies.Count;
+  
         for (var i = 0; i < zombies.Count; i++)
         {
             YOTOFramework.resMgr.LoadGameObject(zombies[i],
@@ -61,14 +62,21 @@ public class EnemyManager : SingletonMono<EnemyManager>
     private void Complete()
     {
         zombieEntities.Clear();
-        YOTOFramework.timeMgr.LoopCall(() =>
+        var poss= GameObject.Find("EnemyOrgPos");
+        var posTransforms= poss.GetComponentsInChildren<Transform>();
+        for (var i = 0; i < posTransforms.Length; i++)
         {
-            ZombieEntity z = YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalZombieEntity).Get<ZombieEntity>();
-            // 设置位置，假设僵尸在地面上（y轴为0）
-            z.SetPosition(new Vector3(-29, 0f, -50));
+           var pos = posTransforms[i].position;
+            YOTOFramework.timeMgr.LoopCall(() =>
+            {
+                ZombieEntity z = YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalZombieEntity).Get<ZombieEntity>();
+                // 设置位置，假设僵尸在地面上（y轴为0）
+                z.SetPosition( pos  );
 
-            zombieEntities.Add(z._entityID, z);
-        },1);
+                zombieEntities.Add(z._entityID, z);
+            },1,10);
+        }
+
   
        
     }

@@ -56,7 +56,7 @@ MonoBehaviour:
   Speed: 3.5
   Acceleration: 8
   AngularSpeed: 120
-  StoppingDistance: 0.1
+  StoppingDistance: 2
   AutoBreaking: 1
   m_Layers: 1
 --- !u!114 &1880343011627637561
@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BodyMeshAnimator: {fileID: 5265328886741665320}
+  state: 3
 --- !u!114 &5220408293837921923
 MonoBehaviour:
   m_ObjectHideFlags: 0

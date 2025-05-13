@@ -8,22 +8,13 @@ using YOTO;
 
 public class ZombieEntity : BaseEntity
 {
-    ZombieAnimatorCtrl zombieBase;
-
+  public  ZombieAnimatorCtrl zombieBase;
+  public   ZombieNavCtrl zombieNav;
     public float HP = 100;
     private Transform target;
     public void SetTarget(Transform t)
     {
-        if (zombieBase != null)
-        {
-            zombieBase.GetComponent<ZombieNavCtrl>().SetTarget(t.position);
-            target = null;
-        }
-        else
-        {
-           this.target=t;
-        }
-      
+        this.target=t;
     }
     public override void ResetAll()
     {
@@ -42,7 +33,8 @@ public class ZombieEntity : BaseEntity
       
         zombieBase=    YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.NormalZombie).Get<ZombieAnimatorCtrl>();
         zombieBase.gameObject.SetActive(true);
-    
+        zombieNav=  zombieBase.GetComponent<ZombieNavCtrl>();
+        zombieNav.Init(this);
         zombieBase.GetComponent<ZombieColliderCtrl>().entityId = this._entityID;
         zombieBase.EnemyRun();
         zombieBase.GetComponent<ZombieColliderCtrl>().Run();
@@ -51,8 +43,7 @@ public class ZombieEntity : BaseEntity
         {
             SetTarget(target);
         }
-        // zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =
-        //     GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
+         zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group = GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
     }
 
     public void Hurt(float hurt)
@@ -66,8 +57,9 @@ public class ZombieEntity : BaseEntity
 
     public void Die()
     {
+ 
+        zombieNav.Stop();
         zombieBase.EnemyDie();
-        zombieBase.GetComponent<ZombieNavCtrl>().Stop();
         zombieBase.GetComponent<ZombieColliderCtrl>().Stop();
         YOTOFramework.timeMgr.DelayCall(() =>
         {
@@ -86,9 +78,19 @@ public class ZombieEntity : BaseEntity
        
     }
 
+    private float timer = 0;
     public override void YOTOUpdate(float deltaTime)
     {
-       
+        if (HP>0&&zombieNav&&target)
+        {
+            timer+=deltaTime;
+            if (timer >1)
+            {
+                timer = 0;
+                zombieNav.SetTarget(target.position);
+            }
+      
+        }
     }
 
     public override void YOTONetUpdate()

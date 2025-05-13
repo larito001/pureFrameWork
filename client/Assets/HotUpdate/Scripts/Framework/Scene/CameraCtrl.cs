@@ -51,7 +51,7 @@ public class CameraCtrl
         // �����ƶ����
         vCamera.transform.position += currentVelocity * Time.deltaTime;
     }
-
+    List<TowerBase> towers =new List<TowerBase>();
     private void Press()
     {
         Vector3 dir=new Vector3(touchPosition.x,touchPosition.y, vCamera.m_Lens.NearClipPlane);
@@ -60,6 +60,20 @@ public class CameraCtrl
         if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("BaseOfTower")))
         {
             Debug.Log("tower hit");
+            TowerBase tower;
+            if (hitInfo.transform.TryGetComponent<TowerBase>(out tower))
+            {
+                tower.OnEnter();
+                towers.Add(tower);
+            }
+        }
+        else
+        {
+            for (var i = 0; i < towers.Count; i++)
+            {
+                towers[i].OnExit();
+            }
+            towers.Clear();
         }
     }
     private void Touch(Vector2 pos)
@@ -88,7 +102,7 @@ public class CameraCtrl
         {
        if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("Ground")))
             {
-                Debug.Log("Ground hit");
+                // Debug.Log("Ground hit");
                 YOTOFramework.eventMgr.TriggerEvent<Vector3>(YOTO.EventType.RefreshMousePos, hitInfo.point);
             }
           
