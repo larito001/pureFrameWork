@@ -17,6 +17,8 @@ namespace YOTO
     {
         Loader,
         BulletEntity,
+        NormalTowerBulletEntity,
+        NormalGunBullet,
         NormalZombieEntity,
         ObjectB,
         ObjectC

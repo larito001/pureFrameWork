@@ -27,6 +27,7 @@ public class GunEntity : BaseEntity
     private GameObject gun;
     protected override void YOTOOnload()
     {
+        TowerManager.Instance.GenerateTower();
         VFXManager.Instance.Init();
         YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
         {
@@ -75,10 +76,11 @@ public class GunEntity : BaseEntity
     // 子弹生成接口（你来实现）
     protected virtual void SpawnBullet()
     {
+       
         fire.Stop();
         fire.Play();
         // 获取子弹对象
-       var bullet= YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.BulletEntity).Get<BulletEntity>();
+       var bullet= YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.BulletEntity).Get<NormalGunBullet>();
        bullet.FireFromTo( firePos.position,player.character.transform.forward);
         // var bullet = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
         bullets.Enqueue(bullet);

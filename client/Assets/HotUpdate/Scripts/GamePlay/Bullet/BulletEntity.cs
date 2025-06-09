@@ -5,9 +5,9 @@ using YOTO;
 
 public class BulletEntity :BaseEntity
 {
-    private BulletBase bulletBase;
+    protected BulletBase bulletBase;
     private long startTime;
-    public void FireFromTo(Vector3 pos,Vector3 dir)
+    public virtual void FireFromTo(Vector3 pos,Vector3 dir)
     {
         if(!bulletBase) return ;
         bulletBase.trail.enabled = false;
@@ -24,17 +24,12 @@ public class BulletEntity :BaseEntity
         {
             temp =bulletBase.gameObject.AddComponent<Rigidbody>();
         }
-        temp.velocity = dir * 50f;
+        temp.velocity = dir.normalized * 50f;
     }
 
-    public void Remove()
+    public virtual void Remove()
     {
-        if (!this.__isRecycle)
-        {
-            VFXManager.Instance.PlayVFX("impact",bulletBase.transform.position,bulletBase.transform.rotation);
-            YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.BulletEntity).Set<BulletEntity>(this);
-        }
-       
+        
     }
     public long GetStartTime()
     {

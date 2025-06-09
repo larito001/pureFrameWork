@@ -33,6 +33,15 @@ public class EnemyManager : SingletonMono<EnemyManager>
        
     }
 
+    public ZombieEntity GetEnemey()
+    {
+        foreach (var keyValuePair in zombieEntities)
+        {
+            return keyValuePair.Value;
+        }
+        return null;
+    }
+
     private void PopList()
     {
         num--;
