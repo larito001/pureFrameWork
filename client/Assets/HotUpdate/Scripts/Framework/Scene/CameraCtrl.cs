@@ -28,7 +28,8 @@ public class CameraCtrl
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire,Press);
         //YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.TouchMove, CameraMove);
         YOTOFramework.eventMgr.AddEventListener<float>(YOTO.EventType.Scroll, CameraSclae);
-        graphicRaycaster = YOTOFramework.uIMgr.UIRoot.GetComponent<GraphicRaycaster>();
+  
+        graphicRaycaster = YOTOFramework.uIMgr.topTipsLayer.GetComponent<GraphicRaycaster>();
         pointerEventData = new PointerEventData(EventSystem.current);
     }
 
@@ -53,28 +54,39 @@ public class CameraCtrl
     }
     List<TowerBase> towers =new List<TowerBase>();
     private void Press()
-    {
-        Vector3 dir=new Vector3(touchPosition.x,touchPosition.y, vCamera.m_Lens.NearClipPlane);
-        Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
-        RaycastHit hitInfo;
-        if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("BaseOfTower")))
+    {    
+        List<RaycastResult> results = new List<RaycastResult>();
+        graphicRaycaster.Raycast(pointerEventData, results);
+        if (results.Count > 0)
         {
-            Debug.Log("tower hit");
-            TowerBase tower;
-            if (hitInfo.transform.TryGetComponent<TowerBase>(out tower))
-            {
-                tower.OnEnter();
-                towers.Add(tower);
-            }
+       
+            Debug.Log("点到UI");
         }
         else
         {
-            for (var i = 0; i < towers.Count; i++)
+            Vector3 dir=new Vector3(touchPosition.x,touchPosition.y, vCamera.m_Lens.NearClipPlane);
+            Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
+            RaycastHit hitInfo;
+            if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("BaseOfTower")))
             {
-                towers[i].OnExit();
+                Debug.Log("tower hit");
+                TowerBase tower;
+                if (hitInfo.transform.TryGetComponent<TowerBase>(out tower))
+                {
+                    tower.OnEnter();
+                    towers.Add(tower);
+                }
             }
-            towers.Clear();
+            else
+            {
+                for (var i = 0; i < towers.Count; i++)
+                {
+                    towers[i].OnExit();
+                }
+                towers.Clear();
+            }
         }
+     
     }
     private void Touch(Vector2 pos)
     {

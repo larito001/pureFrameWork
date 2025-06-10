@@ -27,7 +27,7 @@ public class GunEntity : BaseEntity
     private GameObject gun;
     protected override void YOTOOnload()
     {
-        TowerManager.Instance.GenerateTower();
+   
         VFXManager.Instance.Init();
         YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
         {

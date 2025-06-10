@@ -9,6 +9,15 @@ using YOTO;
 
 public class PlayerEntity : CharacterBase
 {
+    
+    public float HP;
+
+    public float ATK;
+    public float DEF;
+    public float SPEED;
+    public float CRT;//暴击率
+    public float CDMG;//暴击伤害
+    
     public PlayerAnimatorCtrl animatorCtrl;
     public PlayerMoveCtrl moveCtrl;
     public PlayerInteractionCtrl interactionCtrl;

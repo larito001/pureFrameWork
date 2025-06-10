@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,15 +17,17 @@ public class TowerBase : MonoBehaviour
     public void OnExit()
     {
         canavs.SetActive(false);
+        
     }
-    
-    void Start()
+
+    private void Start()
     {
         towerButton1.onClick.AddListener(Generate);
     }
 
     private void Generate()
     {
+        TowerManager.Instance.GenerateTower(this.transform.position);
         //todo：生成防御塔，使用框架生成
     }
 }
