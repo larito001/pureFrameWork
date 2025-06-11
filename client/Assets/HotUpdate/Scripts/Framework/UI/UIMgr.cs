@@ -3,29 +3,101 @@ using UnityEngine;
 using UnityEngine.UI;
 using YOTO;
 
-public enum Layer
+public enum UILayerEnum
 {
-    StaticUI,
-    MoveUI
+    Normal,
+    Top,
+    Tips
 }
 
-public enum UIType
+public class UILayer
 {
-    Stack = 0,  // 栈式UI，优先级更高
-    Normal = 1, // 普通UI，优先级较低
+    
+    public Dictionary<UIEnum, UIPageHandler> handlers = new Dictionary<UIEnum, UIPageHandler>();
+    GameObject uiRoot;
+    public GameObject layerRoot;
+    private UILayerEnum layer;
+    public void Init(GameObject root,UILayerEnum layerEnum)
+    {
+        layer = layerEnum;
+        uiRoot = root;
+        layerRoot = new GameObject(layer.ToString());
+        layerRoot.layer = LayerMask.NameToLayer("UI");
+        layerRoot.transform.SetParent(root.transform, false);
+        // 添加Canvas组件
+        Canvas canvas = layerRoot.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        canvas.worldCamera = YOTOFramework.cameraMgr.getUICamera();
+        canvas.overrideSorting = true; // 重要：启用排序覆盖
+        canvas.sortingOrder = ((int)layer * 100);
+        CanvasScaler scaler = layerRoot.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(2532, 1170);
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        scaler.matchWidthOrHeight = 0;
+        // 添加其他必要组件
+        layerRoot.AddComponent<GraphicRaycaster>();
+    }
+    
+    public void Show(UIInfo info)
+    {
+        UIPageHandler newHandler;
+         if (!handlers.TryGetValue(info.uiEnum, out newHandler) || newHandler == null)
+         {
+             // Debug.LogError($"[UILayer] Show: Failed to get handler for {info.uiEnum}");
+             newHandler = new UIPageHandler();
+             newHandler.Init(info.key,info.uiEnum);
+             handlers.Add(info.uiEnum,newHandler);
+         }
+         // 设置加载完成的回调
+         newHandler.SetLoadCallback(() =>
+         {
+         });
+         // 开始加载新UI
+         newHandler.Load(this);
+    }
+
+    public void Hide(UIEnum uIEnum)
+    {
+        if (!handlers.ContainsKey(uIEnum))
+        {
+            return;
+        }
+
+        if (handlers.TryGetValue(uIEnum, out UIPageHandler handler))
+        {
+            handler.OnHide();
+        }
+    }
+
+    public void Clear()
+    {
+        foreach (var uiPageHandler in handlers)
+        {
+            uiPageHandler.Value.Distory();
+        }
+        handlers.Clear();
+    }
 }
 
 public class UIMgr
 {
     // 使用UIEnum作为键，因为它是枚举类型，不会有值相等性的问题
-    private Dictionary<UIType, UITypeBase> uiTypeMap = new Dictionary<UIType, UITypeBase>();  // 修改为使用UIType作为键
     UIConfig uIConfig = null;
     public GameObject UIRoot;
-    public GameObject topTipsLayer;
-    
-    // 用于存储不同层级的Canvas引用
-    private Dictionary<Layer, Dictionary<UIType, Canvas>> uiLayers = new Dictionary<Layer, Dictionary<UIType, Canvas>>();
 
+    // 用于存储不同层级的Canvas引用
+    private Dictionary<UILayerEnum, UILayer> uiLayers = new Dictionary<UILayerEnum, UILayer>();
+
+    public UILayer GetLayer(UILayerEnum layerEnum)
+    {
+        if (uiLayers.ContainsKey(layerEnum))
+        {
+            return uiLayers[layerEnum];
+        }
+
+        return null;
+    }
     private void SetUILayer(GameObject obj)
     {
         obj.layer = LayerMask.NameToLayer("UI");
@@ -38,111 +110,27 @@ public class UIMgr
     public void Init()
     {
         uIConfig = new UIConfig();
-
-        // 创建主UIRoot
         UIRoot = new GameObject("UIRoot");
         UIRoot.layer = LayerMask.NameToLayer("UI");
-        
         GameObject.DontDestroyOnLoad(UIRoot);
-        //生成提示词层
- 
-        // 创建StaticUI和MoveUI根节点
-        foreach (Layer layer in System.Enum.GetValues(typeof(Layer)))
+        foreach (UILayerEnum layer in System.Enum.GetValues(typeof(UILayerEnum)))
         {
-            GameObject layerObj = new GameObject(layer.ToString());
-            layerObj.layer = LayerMask.NameToLayer("UI");
-            layerObj.transform.SetParent(UIRoot.transform, false);
-            
-            Dictionary<UIType, Canvas> typeCanvases = new Dictionary<UIType, Canvas>();
-            uiLayers[layer] = typeCanvases;
-      
-            // 为每个层级创建Stack和Normal类型的Canvas
-            foreach (UIType type in System.Enum.GetValues(typeof(UIType)))
-            {
-                GameObject typeObj = new GameObject(type.ToString());
-                typeObj.layer = LayerMask.NameToLayer("UI");
-                typeObj.transform.SetParent(layerObj.transform, false);
-                
-                // 添加Canvas组件
-                Canvas canvas = typeObj.AddComponent<Canvas>();
-                canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                canvas.worldCamera = YOTOFramework.cameraMgr.getUICamera();
-                canvas.overrideSorting = true;  // 重要：启用排序覆盖
-                canvas.sortingOrder = ((int)layer * 100) + (10 - (int)type * 5);
-                CanvasScaler scaler = typeObj.AddComponent<CanvasScaler>();
-                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                scaler.referenceResolution = new Vector2(2532, 1170);
-                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                scaler.matchWidthOrHeight = 0;
-                // 添加其他必要组件
-                typeObj.AddComponent<GraphicRaycaster>();
-                
-                typeCanvases[type] = canvas;
-
-                // 为每种UIType创建一个管理器实例
-                if (!uiTypeMap.ContainsKey(type))
-                {
-                    UITypeBase typeBase = null;
-                    if (type == UIType.Normal)
-                    {
-                        typeBase = new NormalPage();
-                    }
-                    else if (type == UIType.Stack)
-                    {
-                        typeBase = new StackPage();
-                    }
-                    if (typeBase != null)
-                    {
-                        typeBase.Init(typeObj);
-                        uiTypeMap.Add(type, typeBase);
-                    }
-                }
-            }
+            UILayer layertemp = new UILayer();
+            layertemp.Init(UIRoot,layer);
+            uiLayers.Add(layer,layertemp);
         }
-        topTipsLayer = new GameObject("topTipsLayer");
-        topTipsLayer.layer = LayerMask.NameToLayer("UI");
-  
-        topTipsLayer.transform.SetParent(UIRoot.transform, false);
-        Canvas tipCanvas = topTipsLayer.AddComponent<Canvas>();     
-        tipCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        tipCanvas.worldCamera = YOTOFramework.cameraMgr.getUICamera();
-        tipCanvas.overrideSorting = true;  // 重要：启用排序覆盖
-        tipCanvas.sortingOrder = (999 *10);
-        CanvasScaler scalerTips = topTipsLayer.AddComponent<CanvasScaler>();
-        scalerTips.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scalerTips.referenceResolution = new Vector2(2532, 1170);
-        scalerTips.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scalerTips.matchWidthOrHeight = 1;
-        topTipsLayer.AddComponent<GraphicRaycaster>();
+
     }
 
     public void Show(UIEnum uiEnum)
     {
         Debug.Log($"[UIMgr] Show: uiEnum={uiEnum}");
         UIInfo point = uIConfig.uiConfigDic[uiEnum];
-        UIPageHandler handler = null;
 
-        // 获取对应类型的UI管理器
-        UITypeBase type = uiTypeMap[point.type];
-        if (type == null)
+        if (uiLayers.ContainsKey(point.layer))
         {
-            Debug.LogError($"[UIMgr] Failed to get UI type handler for {uiEnum}");
-            return;
+            uiLayers[point.layer].Show(point);
         }
-
-        if (type.handlers.ContainsKey(uiEnum))
-        {
-            handler = type.handlers[uiEnum];
-            handler.Init(point.key, point.isStatic);
-        }
-        else
-        {
-            handler = new UIPageHandler();
-            handler.Init(point.key, point.isStatic);
-            type.handlers.Add(uiEnum, handler);
-        }
-
-        type.Show(uiEnum);
     }
 
     public void OnUILoaded(GameObject uiObject)
@@ -158,7 +146,7 @@ public class UIMgr
         Debug.Log($"[UIMgr] Hide: uiEnum={uiEnum}");
         if (uIConfig.uiConfigDic.TryGetValue(uiEnum, out UIInfo point))
         {
-            if (uiTypeMap.TryGetValue(point.type, out UITypeBase type))
+            if (uiLayers.TryGetValue(point.layer, out UILayer type))
             {
                 type?.Hide(uiEnum);
             }
@@ -168,9 +156,9 @@ public class UIMgr
     public void ClearUI()
     {
         Debug.Log("[UIMgr] Clearing all UIs");
-        
+
         // 遍历所有UI类型，调用它们的Clear方法
-        foreach (var typeBase in uiTypeMap.Values)
+        foreach (var typeBase in uiLayers.Values)
         {
             if (typeBase != null)
             {

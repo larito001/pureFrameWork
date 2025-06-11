@@ -21,7 +21,7 @@ public class ProgressLineMgr : Singleton<ProgressLineMgr>
    //获取
     public int GetProgress()
     {
-        ProgressLineCtrl proline=     YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.ProgressLine).Get<ProgressLineCtrl>(YOTOFramework.uIMgr.topTipsLayer.transform);
+        ProgressLineCtrl proline=     YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.ProgressLine).Get<ProgressLineCtrl>(YOTOFramework.uIMgr.GetLayer(UILayerEnum.Tips).layerRoot.transform);
         progressLineDict.Add(id,proline);
         return id++;//返回id
     }
@@ -29,7 +29,7 @@ public class ProgressLineMgr : Singleton<ProgressLineMgr>
     public void SetProgress(int id, Vector3 worldPos,float progress)
     {
         var proline = progressLineDict[id];
-        Canvas canvas = YOTOFramework.uIMgr.topTipsLayer.GetComponent<Canvas>();
+        Canvas canvas = YOTOFramework.uIMgr.GetLayer(UILayerEnum.Tips).layerRoot.GetComponent<Canvas>();
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
         
         // 获取主相机和UI相机

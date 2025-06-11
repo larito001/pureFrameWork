@@ -15,17 +15,15 @@ public enum PageState
 public class UIPageHandler 
 {
     UIPageBase uIPageBase;
-    Transform parent;
+    UILayer layer;
     private string key;
-    private bool isStatic;
     private Action onLoadComplete;  // 加载完成的回调
     public PageState curState = PageState.UnLoad;
     private bool shouldBeHidden = false; // 新增：标记是否应该被隐藏
-
-    public void Init(string key,bool isStatic)
+    private UIEnum type;
+    public void Init(string key,UIEnum t)
     {
-        Debug.Log($"[UIPageHandler] Init: key={key}, isStatic={isStatic}");
-        this.isStatic=isStatic; 
+        this.type = t;
         this.key = key;
         shouldBeHidden = false; // 初始化时重置标记
         
@@ -42,16 +40,16 @@ public class UIPageHandler
         onLoadComplete = callback;
     }
 
-    public void Load(Transform parent)
+    public void Load(UILayer layer)
     {
+        this.layer = layer;
         Debug.Log($"[UIPageHandler] Load Start: key={key}, currentState={curState}");
-        this.parent = parent;
 
         // 检查现有UI是否可用
         if (uIPageBase != null && uIPageBase.gameObject != null)
         {
             Debug.Log($"[UIPageHandler] Reusing existing UI: key={key}");
-            uIPageBase.transform.SetParent(parent, false);
+            uIPageBase.transform.SetParent(layer.layerRoot.transform, false);
             onLoadComplete?.Invoke();
             Show();
             return;
@@ -60,22 +58,8 @@ public class UIPageHandler
         if (curState != PageState.Loading)
         {
             curState = PageState.Loading;
-            if (isStatic)
-            {
-                Debug.Log($"[UIPageHandler] Loading Static UI: key={key}");
-                GameObject prefab = Resources.Load<GameObject>(key);
-                if (prefab == null)
-                {
-                    Debug.LogError($"[UIPageHandler] Failed to load static UI prefab: key={key}");
-                    return;
-                }
-                OnLoaded(prefab);
-            }
-            else
-            {
-                Debug.Log($"[UIPageHandler] Loading Dynamic UI: key={key}");
-                YOTOFramework.resMgr.LoadUI(key, OnLoaded);
-            }
+            Debug.Log($"[UIPageHandler] Loading Dynamic UI: key={key}");
+            YOTOFramework.resMgr.LoadUI(key, OnLoaded);
         }
         else
         {
@@ -95,7 +79,7 @@ public class UIPageHandler
 
         try
         {
-            UIPageBase page = UnityEngine.Object.Instantiate(prefab, parent).GetComponent<UIPageBase>();
+            UIPageBase page = UnityEngine.Object.Instantiate(prefab,this.layer.layerRoot.transform).GetComponent<UIPageBase>();
             if (page == null)
             {
                 Debug.LogError($"[UIPageHandler] Failed to get UIPageBase component: key={key}");
@@ -114,7 +98,7 @@ public class UIPageHandler
             
             // 确保UI初始状态是隐藏的
             Disable();
-            
+            uIPageBase.uiType = type;
             uIPageBase.OnLoad();
             YOTOFramework.uIMgr.OnUILoaded(uIPageBase.gameObject);
             
@@ -162,7 +146,7 @@ public class UIPageHandler
     {
         Debug.Log($"[UIPageHandler] OnHide Start: key={key}, hasUI={uIPageBase != null}, hasCanvasGroup={uIPageBase?.canvasGroup != null}");
         shouldBeHidden = true; // 设置隐藏标记
-        if (uIPageBase != null && uIPageBase.gameObject != null && uIPageBase.canvasGroup != null)
+        if (uIPageBase != null)
         {
             Disable();
             uIPageBase.OnHide();
@@ -173,24 +157,19 @@ public class UIPageHandler
 
     private void Disable()
     {
-        if (uIPageBase != null && uIPageBase.gameObject != null && uIPageBase.canvasGroup != null)
+        if (uIPageBase != null)
         {
-            uIPageBase.canvasGroup.alpha = 0;
-            uIPageBase.canvasGroup.interactable = false;
-            uIPageBase.canvasGroup.blocksRaycasts = false;
-            uIPageBase.isEnable = false;
+            uIPageBase.Exit();
+     
             Debug.Log($"[UIPageHandler] UI Disabled: key={key}");
         }
     }
 
     private void Enable()
     {
-        if (uIPageBase != null && uIPageBase.gameObject != null && uIPageBase.canvasGroup != null)
+        if (uIPageBase != null)
         {
-            uIPageBase.isEnable = true;
-            uIPageBase.canvasGroup.alpha = 1;
-            uIPageBase.canvasGroup.interactable = true;
-            uIPageBase.canvasGroup.blocksRaycasts = true;
+            uIPageBase.Enter();
             Debug.Log($"[UIPageHandler] UI Enabled: key={key}");
         }
     }

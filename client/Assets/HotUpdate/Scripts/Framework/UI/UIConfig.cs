@@ -5,24 +5,22 @@ using UnityEngine;
 
 public struct UIInfo
 {
-    public UIInfo(UIType t, Layer l, string k,bool s=false)
+    public UIInfo(UIEnum e, UILayerEnum l, string k)
     {
-        isStatic = s;
-        type = t;
+
+        uiEnum = e;
         key = k;
         layer = l;
     }
-    public bool isStatic;
-    public UIType type;
+    public UIEnum uiEnum;
     public string key;//ab���������������
-    public Layer layer;
+    public UILayerEnum layer;
 
     public override bool Equals(object obj)
     {
         if (!(obj is UIInfo)) return false;
         UIInfo other = (UIInfo)obj;
-        return isStatic == other.isStatic && 
-               type == other.type && 
+        return layer == other.layer && 
                key == other.key && 
                layer == other.layer;
     }
@@ -30,8 +28,7 @@ public struct UIInfo
     public override int GetHashCode()
     {
         int hash = 17;
-        hash = hash * 23 + isStatic.GetHashCode();
-        hash = hash * 23 + type.GetHashCode();
+        hash = hash * 23 + layer.GetHashCode();
         hash = hash * 23 + (key != null ? key.GetHashCode() : 0);
         hash = hash * 23 + layer.GetHashCode();
         return hash;
@@ -41,7 +38,10 @@ public enum UIEnum
 {
     None = 0,
     StaticLoadingUI,
-
+    StartPanel,
+    SkillTreePanel,
+    FightingPanel,
+    FightingEndPanel
 }
 public class UIConfig
 {
@@ -49,8 +49,10 @@ public class UIConfig
     ///������ע��UI
     /// </summary>
     public readonly Dictionary<UIEnum, UIInfo> uiConfigDic = new Dictionary<UIEnum, UIInfo>() {
-         { UIEnum.StaticLoadingUI, new UIInfo( UIType.Normal,Layer.StaticUI,"StaticLoadingPage",true) },
-          
+         { UIEnum.FightingEndPanel, new UIInfo( UIEnum.FightingEndPanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/FightingEndPanel.prefab") },
+         { UIEnum.StartPanel, new UIInfo( UIEnum.StartPanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/StartPanel.prefab") },
+         { UIEnum.SkillTreePanel, new UIInfo(UIEnum.SkillTreePanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/SkillTreePanel.prefab") },
+         { UIEnum.FightingPanel, new UIInfo( UIEnum.FightingPanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/FightingPanel.prefab") },
     };
 
 }
