@@ -140,6 +140,7 @@ public class PlayerEntity : CharacterBase
             Vector3.zero, Quaternion.identity, (obj, pos, rot) =>
             {
                 character = UnityEngine.Object.Instantiate(obj);
+                character.SetActive(true);
                 character.transform.position = orgPosition;
                 camera = YOTOFramework.cameraMgr.getMainCamera();
                 AddComponent();
