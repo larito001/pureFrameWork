@@ -54,6 +54,7 @@ public class PlayerEntity : CharacterBase
             {
            
                 character = UnityEngine.Object.Instantiate(obj);
+                character.SetActive(true);
                 character.transform.position = orgPosition;
                 camera = YOTOFramework.cameraMgr.getMainCamera();
                 AddComponent();

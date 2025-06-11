@@ -12,11 +12,13 @@ public class StartPanel : UIPageBase
     {
         startBtn.onClick.AddListener(() =>
         {
-            YOTOFramework.sceneMgr.LoadScene(Scenes.Normal);
-            CloseSelf();
+           
+            YOTOFramework.sceneMgr.LoadScene(Scenes.Normal); 
+                         CloseSelf();
         });
         treeBtn.onClick.AddListener(() =>
         {
+            YOTOFramework.uIMgr.Show(UIEnum.SkillTreePanel);
         });
     }
 
