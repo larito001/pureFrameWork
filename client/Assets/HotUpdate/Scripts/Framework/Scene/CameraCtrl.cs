@@ -29,7 +29,7 @@ public class CameraCtrl
         //YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.TouchMove, CameraMove);
         YOTOFramework.eventMgr.AddEventListener<float>(YOTO.EventType.Scroll, CameraSclae);
   
-        graphicRaycaster = YOTOFramework.uIMgr.topTipsLayer.GetComponent<GraphicRaycaster>();
+        graphicRaycaster = YOTOFramework.uIMgr.GetLayer(UILayerEnum.Tips).layerRoot.GetComponent<GraphicRaycaster>();
         pointerEventData = new PointerEventData(EventSystem.current);
     }
 

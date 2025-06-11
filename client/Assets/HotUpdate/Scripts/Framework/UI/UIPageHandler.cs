@@ -15,18 +15,15 @@ public enum PageState
 public class UIPageHandler 
 {
     UIPageBase uIPageBase;
-    Transform parent;
+    UILayer layer;
     private string key;
-    private bool isStatic;
     private Action onLoadComplete;  // 加载完成的回调
     public PageState curState = PageState.UnLoad;
     private bool shouldBeHidden = false; // 新增：标记是否应该被隐藏
     private UIEnum type;
-    public void Init(string key,bool isStatic,UIEnum t)
+    public void Init(string key,UIEnum t)
     {
         this.type = t;
-        Debug.Log($"[UIPageHandler] Init: key={key}, isStatic={isStatic}");
-        this.isStatic=isStatic; 
         this.key = key;
         shouldBeHidden = false; // 初始化时重置标记
         
@@ -43,16 +40,16 @@ public class UIPageHandler
         onLoadComplete = callback;
     }
 
-    public void Load(Transform parent)
+    public void Load(UILayer layer)
     {
+        this.layer = layer;
         Debug.Log($"[UIPageHandler] Load Start: key={key}, currentState={curState}");
-        this.parent = parent;
 
         // 检查现有UI是否可用
         if (uIPageBase != null && uIPageBase.gameObject != null)
         {
             Debug.Log($"[UIPageHandler] Reusing existing UI: key={key}");
-            uIPageBase.transform.SetParent(parent, false);
+            uIPageBase.transform.SetParent(layer.layerRoot.transform, false);
             onLoadComplete?.Invoke();
             Show();
             return;
@@ -61,22 +58,8 @@ public class UIPageHandler
         if (curState != PageState.Loading)
         {
             curState = PageState.Loading;
-            if (isStatic)
-            {
-                Debug.Log($"[UIPageHandler] Loading Static UI: key={key}");
-                GameObject prefab = Resources.Load<GameObject>(key);
-                if (prefab == null)
-                {
-                    Debug.LogError($"[UIPageHandler] Failed to load static UI prefab: key={key}");
-                    return;
-                }
-                OnLoaded(prefab);
-            }
-            else
-            {
-                Debug.Log($"[UIPageHandler] Loading Dynamic UI: key={key}");
-                YOTOFramework.resMgr.LoadUI(key, OnLoaded);
-            }
+            Debug.Log($"[UIPageHandler] Loading Dynamic UI: key={key}");
+            YOTOFramework.resMgr.LoadUI(key, OnLoaded);
         }
         else
         {
@@ -96,7 +79,7 @@ public class UIPageHandler
 
         try
         {
-            UIPageBase page = UnityEngine.Object.Instantiate(prefab, parent).GetComponent<UIPageBase>();
+            UIPageBase page = UnityEngine.Object.Instantiate(prefab,this.layer.layerRoot.transform).GetComponent<UIPageBase>();
             if (page == null)
             {
                 Debug.LogError($"[UIPageHandler] Failed to get UIPageBase component: key={key}");
