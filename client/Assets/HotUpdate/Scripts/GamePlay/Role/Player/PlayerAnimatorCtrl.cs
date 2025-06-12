@@ -140,7 +140,7 @@ public class PlayerAnimatorCtrl : CtrlBase
             if (characterBase.lookPos != UnityEngine.Vector3.zero)
             {
                 // Calculate the direction vector to rotate towards
-                UnityEngine.Vector3 dir = characterBase.lookPos - characterBase.character.transform.position;
+                UnityEngine.Vector3 dir = characterBase.lookPos - characterBase.character.transform.position ;
                 dir.y = 0f;  // Optional: keeps the rotation on the y-axis (horizontal only)
         
                 // Get the rotation angle

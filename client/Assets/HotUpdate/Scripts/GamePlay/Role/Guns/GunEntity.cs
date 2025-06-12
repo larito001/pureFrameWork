@@ -16,7 +16,12 @@ public class GunEntity : BaseEntity
 
     public bool canFire = true; // 是否允许发射
     private bool isFiring = false; // 当前是否处于开火状态
-    private Transform firePos;
+
+    public Transform firePos
+    {
+        get;
+        private set;
+    }
     private Queue<BulletEntity> bullets = new Queue<BulletEntity>();
     
     public GunEntity(TwoBoneIKConstraint leftHand ,HandRoot handRoot)

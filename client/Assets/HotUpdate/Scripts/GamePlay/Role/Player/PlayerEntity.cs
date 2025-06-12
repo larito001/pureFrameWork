@@ -43,7 +43,7 @@ public class PlayerEntity : CharacterBase
     private HandRoot handPos;
     public RigBuilder builder;
 
-    private GunEntity gun;
+    public GunEntity gun;
     //todo:Gunparent
     // private NavTarget navTarget;
     public PlayerEntity() : base()
@@ -90,7 +90,7 @@ public class PlayerEntity : CharacterBase
         {
             if (!isInit) return;
             lookPos = pos;
-            lookPos.y = character.transform.position.y;
+            // lookPos.y = character.transform.position.y;
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
         { if (!isInit) return;
@@ -147,9 +147,9 @@ public class PlayerEntity : CharacterBase
                 handPos = character.GetComponentInChildren<HandRoot>();
                 builder = character.GetComponent<RigBuilder>();
                 headTarget = character.gameObject.transform.Find("HeadTarget");
-                isInit = true;
                 gun = new GunEntity(animatorCtrl.leftHand, handPos);
                 gun.Init(this);
+                isInit = true;
             });
     }
 

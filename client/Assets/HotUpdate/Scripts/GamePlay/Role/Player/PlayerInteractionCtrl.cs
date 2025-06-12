@@ -7,7 +7,7 @@ using EventType = YOTO.EventType;
 
 public class PlayerInteractionCtrl : CtrlBase
 {
-    public float distance = 2f; // 射线的检测距离
+    public float distance = 10f; // 射线的检测距离
     public LayerMask interactionLayer; // 可交互的层级
 
     private Ray ray; // 定义射线
@@ -126,6 +126,7 @@ public class PlayerInteractionCtrl : CtrlBase
 
         // 在场景中动态可视化射线
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + new Vector3(0, 1, 0), transform.position + new Vector3(0, 1, 0) + transform.forward * distance);
+        Gizmos.DrawLine(characterBase.gun.firePos.position ,characterBase.lookPos+new Vector3(0,1.5f,0));
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * distance);
     }
 }

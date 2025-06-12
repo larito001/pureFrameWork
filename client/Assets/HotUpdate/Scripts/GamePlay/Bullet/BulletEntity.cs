@@ -23,6 +23,7 @@ public class BulletEntity :BaseEntity
         if (!bulletBase.gameObject.TryGetComponent<Rigidbody>(out  temp))
         {
             temp =bulletBase.gameObject.AddComponent<Rigidbody>();
+            temp.useGravity = false;
         }
         temp.velocity = dir.normalized * 50f;
     }
