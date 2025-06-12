@@ -30,6 +30,7 @@ public class PlayerEntity : CharacterBase
     public bool isAming = true;
     public bool isShooting = false;
     
+    public Vector3 mousePoint;
     public Vector3 lookPos;
     private bool isTouching = false;
     private bool isFireing = false;
@@ -48,12 +49,15 @@ public class PlayerEntity : CharacterBase
     // private NavTarget navTarget;
     public PlayerEntity() : base()
     {
+        
+
         // navTarget=NavMapManager.Instance.GetTarget(false,new Vector3(100,0,10));
-    
+      //求Vector3.up和camera.transform.forward的夹角，然后根据三维的勾股定理，给出Height。height为直角边A，且为计算出的夹角的临边，已知夹角，已知直角三角形。知道对角的顶点位置lookPos，求另一个对角LookPos2
     }
 
     public override void CulculateDir()
     {
+        
         Vector3 cameraForwordProjection =
             new Vector3(camera.transform.forward.x, 0, camera.transform.forward.z).normalized;
         if (!canMove)
@@ -89,8 +93,14 @@ public class PlayerEntity : CharacterBase
         YOTOFramework.eventMgr.AddEventListener<Vector3>(YOTO.EventType.RefreshMousePos, (pos) =>
         {
             if (!isInit) return;
-            lookPos = pos;
-            // lookPos.y = character.transform.position.y;
+            mousePoint = pos;
+            Vector3 cameraPos = camera.transform.position;
+            Vector3 dir = mousePoint - cameraPos;
+            Vector3 dirNormalized = dir.normalized;
+            float angleRad = Vector3.Angle(dir, Vector3.up) * Mathf.Deg2Rad;
+            float height = 1.5f;
+            float len = height / Mathf.Cos(angleRad);
+            lookPos = mousePoint + dirNormalized * len;
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
         { if (!isInit) return;
@@ -116,7 +126,7 @@ public class PlayerEntity : CharacterBase
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchRelease, () =>
         {
             if (!isInit) return;
-            lookPos = Vector3.zero;
+            mousePoint = Vector3.zero;
             isTouching = false;
             isAming = isTouching;
         });
