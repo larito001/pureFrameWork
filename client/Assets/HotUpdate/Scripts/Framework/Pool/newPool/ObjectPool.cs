@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using YOTO;
 
 namespace HotUpdate.Scripts.Framework.Pool.newPool
@@ -114,7 +115,7 @@ namespace HotUpdate.Scripts.Framework.Pool.newPool
 
                 if (template != null)
                 {
-                    Destroy(template);
+                    Addressables.Release(template);
                     template = null;
                 }
 

@@ -9,9 +9,7 @@ public class StaticLoadingPage :MonoBehaviour
     public Canvas loadingCanvas;
     private void Start()
     {
-        GameObject.DontDestroyOnLoad(loadingCanvas.gameObject);
         size = progressImg.sizeDelta;
-
     }
 
     public void Loading(float progress)
@@ -19,7 +17,5 @@ public class StaticLoadingPage :MonoBehaviour
         Debug.Log($"当前进度： {progress * 100}%");
         size.x = progress * 1000;
         progressImg.sizeDelta = size;
-
-
     }
 }

@@ -115,12 +115,10 @@ public class CheckAssetsUpdate : MonoBehaviour
                 Debug.Log("加载游戏");
 
                 //GameRoot.Instance.Init();
+                loadPage?.Loading(1);
                 AsyncOperationHandle<SceneInstance> lastHandle= Addressables.LoadSceneAsync(FrameworkConfig.StartSceneName, LoadSceneMode.Single);
                 lastHandle.Completed += (o) =>
                 {
-                    loadPage.Loading(1);
-                    Destroy(loadPage.loadingCanvas.gameObject,2);
-
                 };
             }
             catch (Exception ex)
