@@ -6,27 +6,22 @@ using UnityEngine;
 using YOTO;
 
 
-public class FlyTextCtrl : PoolBaseGameObject
+public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
 {
+    public static  DataObjPool<FlyTextCtrl,Transform> pool=new DataObjPool<FlyTextCtrl, Transform>("FlyTextCtrl", 40);
     Vector3 speed;
     float time = 0;
     public TextMeshProUGUI tmp;
-    public override void ResetAll()
-    {
-       
-    }
-
-    public override void OnStart()
-    {
-        
-    }
-
+    private bool isInit=false;
+    private Transform root;
     public void Fly(FlyTextData data)
     {
-        transform.localPosition = data.pos;
-        tmp.text= data.text;   
-     
-        //YOTOFramework.poolMgr.GameObjectPool.Set<FlyTextCtrl>(this);
+        if (isInit)
+        {
+            objTrans.localPosition = data.pos;
+            tmp=objTrans.GetComponent<TextMeshProUGUI>();
+            tmp.text= data.text;   
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -39,18 +34,75 @@ public class FlyTextCtrl : PoolBaseGameObject
     // Update is called once per frame
     void Update()
     {
-        if (!isRecycle)
+        if (isInit)
         {
-            transform.position += speed*Time.deltaTime;
+            objTrans.position += speed*Time.deltaTime;
             time += Time.deltaTime;
             if (time > 1)
             {
-                transform.position = Vector3.zero;
-                YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.FlyingText).Set<FlyTextCtrl>(this);
-
+                objTrans.position = Vector3.zero;
+                RecoverObject();
                 time = 0;
             }
         }
         
     }
+
+    protected override void YOTOOnload()
+    {
+
+    }
+
+    public override void YOTOStart()
+    {
+
+    }
+
+    public override void YOTOUpdate(float deltaTime)
+    {
+
+    }
+
+    public override void YOTONetUpdate()
+    {
+    
+    }
+
+    public override void YOTOFixedUpdate(float deltaTime)
+    {
+ 
+    }
+
+    public override void YOTOOnHide()
+    {
+  
+    }
+
+    public override void SetPosition(Vector3 pos)
+    {
+    }
+
+    public override void SetRotation(Quaternion rot)
+    {
+
+    }
+
+    protected override void AfterInstanceGObj()
+    {
+        isInit = true;
+        objTrans.parent = root;
+    }
+
+    public void AfterIntoObjectPool()
+    {
+        isInit = false;
+    }
+
+    public void SetData(Transform serverData)
+    {
+        SetInVision(true);
+        SetPrefabBundlePath("Assets/HotUpdate/prefabs/FlyTextPrefab.prefab");
+        root = serverData;
+    }
+    
 }

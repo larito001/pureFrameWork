@@ -15,13 +15,13 @@ using Object = UnityEngine.Object;
 /// 回收调用逻辑
 /// 外部回收借口调用 ->RecoverObject ->BeforeRecover ->RecoverHud ->RecoverObjTrans ->AfterRecover
 /// </summary>
-public abstract class ObjectBase
+public abstract class ObjectBase:BaseEntity
 {
     #region priavte私有
     private string prefabPath;
     private bool isInVision = false;
     private bool isDrawed = false;
-    private Transform objTrans;
+    protected Transform objTrans;
     private ObjectPool.PoolBuffer poolBuffer;
     private Vector3 location;
     private bool isRecover;
@@ -200,9 +200,7 @@ public abstract class ObjectBase
     /// <summary>
     /// 实例化GObj之后调用
     /// </summary>
-    protected virtual void AfterInstanceGObj()
-    {
-    }
+    protected abstract void AfterInstanceGObj();
 
     /// <summary>
     /// 回收之前调用

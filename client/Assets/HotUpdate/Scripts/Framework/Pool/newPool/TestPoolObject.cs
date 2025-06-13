@@ -15,4 +15,49 @@ public class TestPoolObject : ObjectBase,PoolItem<Vector3>
         SetInVision(true);
         SetPrefabBundlePath("Assets/PolygonApocalypse/Prefabs/Characters/SM_Chr_Teen_Male_01.prefab");
     }
+
+    protected override void YOTOOnload()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void YOTOStart()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void YOTOUpdate(float deltaTime)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void YOTONetUpdate()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void YOTOFixedUpdate(float deltaTime)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void YOTOOnHide()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void SetPosition(Vector3 pos)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void SetRotation(Quaternion rot)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    protected override void AfterInstanceGObj()
+    {
+        
+    }
 }

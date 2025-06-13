@@ -8,8 +8,9 @@ using UnityEngine.Events;
 using UnityEngine.ResourceManagement.AsyncOperations;
 namespace YOTO
 {
-    public  class ResLoader<T>: PoolBaseObject
+    public  class ResLoader<T>: PoolItem<Vector3>
     {
+        public static  DataObjPool<ResLoader<T>,Vector3> pool=new DataObjPool<ResLoader<T>, Vector3>("ResLoader", 3);
         public long ID { get; private set; }
         static long index = 0;
         private List<string> loadKeys=new List<string>();
@@ -18,8 +19,7 @@ namespace YOTO
             ID = index++;
         }
         public    void Load<T>() { 
-        
-        
+            
         }
 
         AsyncOperationHandle<T> handle;
@@ -30,8 +30,6 @@ namespace YOTO
                 loadKeys.Add(path);
 
             }
-      
-           // Debug.Log("���");
             if (callback != null)
             {
                 var handle = Addressables.LoadAssetAsync<T>(path);
@@ -40,26 +38,23 @@ namespace YOTO
             }
         }
 
-        public override void ResetAll()
-        {
-            ID =-1;
-        }
-
-        public override void OnStart()
-        {
-            
-        }
-
         ~ ResLoader()
         {
-            //Debug.Log("��������");
                 if (handle.IsValid())
                 {
                     Addressables.Release(handle);
                 }
-   
         }
 
+        public void AfterIntoObjectPool()
+        {
+            ID =-1;
+        }
+
+        public void SetData(Vector3 serverData)
+        {
+         
+        }
     }
    
 

@@ -328,13 +328,5 @@ public class PlayerEntity : CharacterBase
     public override void SetRotation(Quaternion rot)
     {
     }
-
-    public override void ResetAll()
-    {
-        
-    }
-
-    public override void OnStart()
-    {
-    }
+    
 }

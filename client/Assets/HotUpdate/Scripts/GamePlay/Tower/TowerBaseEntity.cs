@@ -3,27 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using YOTO;
 
-public class TowerBaseEntity : BaseEntity
+public class TowerBaseEntity : ObjectBase,PoolItem<Vector3>
 {
+    public static  DataObjPool<TowerBaseEntity,Vector3> pool=new DataObjPool<TowerBaseEntity, Vector3>("TowerBaseEntity", 20);
     private Vector3 pos;
-    public override void ResetAll()
-    {
-        
-    }
-
-    public override void OnStart()
-    {
-        
-    }
-
     protected override void YOTOOnload()
     {
-        YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
-        {
-            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).SetPrefab(obj.GetComponent<BulletBase>());
-
-        });
-   
+        
     }
 
     public override void YOTOStart()
@@ -42,7 +28,8 @@ public class TowerBaseEntity : BaseEntity
             {
              
                var dir= e.zombieBase.transform.position-this.pos;
-               var bullet= YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalTowerBulletEntity).Get<NormalTowerBulletEntity>();
+               var  bullet = NormalGunBullet.pool.GetItem(Vector3.zero);
+               bullet.InstanceGObj();
                bullet.FireFromTo(this.pos +new Vector3(0,1,0), dir);
                Debug.Log("位置："+pos);
             }
@@ -77,5 +64,20 @@ public class TowerBaseEntity : BaseEntity
     public override void SetRotation(Quaternion rot)
     {
         
+    }
+
+    protected override void AfterInstanceGObj()
+    {
+        
+    }
+
+    public void AfterIntoObjectPool()
+    {
+     
+    }
+
+    public void SetData(Vector3 serverData)
+    {
+
     }
 }

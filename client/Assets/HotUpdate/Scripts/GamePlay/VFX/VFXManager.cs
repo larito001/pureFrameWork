@@ -23,16 +23,16 @@ public class VFXManager : Singleton<VFXManager>
     {
         if (VFXDic.ContainsKey(name))
         {
-          var vfx = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletImpact).Get<VFXBase>();
-          vfx.transform.position = pos;
-          vfx.transform.rotation = rot;
-          vfx.PlayVFX();
+          // var vfx = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletImpact).Get<VFXBase>();
+          // vfx.transform.position = pos;
+          // vfx.transform.rotation = rot;
+          // vfx.PlayVFX();
         }
     }
 
 
     private void LoadObj(GameObject obj ,Vector3 pos, Quaternion rot)
     {
-        YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletImpact).SetPrefab(obj.GetComponent<VFXBase>());
+        // YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletImpact).SetPrefab(obj.GetComponent<VFXBase>());
     }
 }

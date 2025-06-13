@@ -29,68 +29,7 @@ public class PlayerMoveCtrl : CtrlBase
         // YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).SetPrefab(obj.GetComponent<VFXBase>());
         // });
     }
-   public void Sprint()
-    {
-        if (sprintIE==null)
-        {
-            sprintIE = SprintIE();
-            fvxIE = FVXIE();
-            StartCoroutine(sprintIE);
-            StartCoroutine(fvxIE);
-        }
-    }
-    IEnumerator FVXIE()
-    {
-        WaitForSeconds wait =    new WaitForSeconds(0.1f);
-        while (true) {
-            VFXBase vfx = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<VFXBase>();
-            vfx.transform.position = transform.position;
-            vfx.PlayVFX();
-            vfxs.Add(vfx);
-            yield return wait;
-        }
-       
-    }
-    IEnumerator SprintIE()
-    {
-        float timer = 0;
-        Vector3 dir = velocity;
-
-
-
-        while (timer<0.5)
-        {
-            //Debug.Log("�����");
-            timer += Time.deltaTime;
-            
-            yield return null;
-            if (rigidbody)
-            {
-                rigidbody.AddForce(dir * 40);
-            }
-
-        }
-        timer = 0;
-        StopCoroutine(fvxIE);
-        while (timer<0.5f)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-     
-        }
-
-
-        // for (int i = 0; i < vfxs.Count; i++)
-        // {
-        //     YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).Set<VFXBase>(vfxs[i]);
-        // }
-        vfxs.Clear();
-        fvxIE = null;
-        sprintIE = null;
-
-    }
-
-   
+    
     public override void YOTOUpdate(float deltaTime)
     {
         if (!canMove)

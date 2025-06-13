@@ -10,7 +10,7 @@ namespace YOTO
         public static  TimeMgr timeMgr = new TimeMgr();
         public static  Logger logger = new Logger();
         public static  ToolMgr toolMgr = new ToolMgr();
-        public static  PoolMgr poolMgr = new PoolMgr();
+        // public static  PoolMgr poolMgr = new PoolMgr();
         public static  EventMgr eventMgr = new EventMgr();
         public static  StoreMgr storeMgr = new StoreMgr();
         public static  ResMgr resMgr = new ResMgr();
@@ -27,7 +27,7 @@ namespace YOTO
             if (!isInit)
             {
                 isInit = true;
-                poolMgr.Init();
+                // poolMgr.Init();
                 storeMgr.Init();
                 toolMgr.Init();
                 logger.Init();
@@ -66,7 +66,7 @@ namespace YOTO
         {
             float dt = Time.deltaTime;
             timeMgr.Update(dt);
-            poolMgr.Update(dt);
+            // poolMgr.Update(dt);
             entityMgr._Update(dt);
             sceneMgr.Update(dt);
       
@@ -84,7 +84,7 @@ namespace YOTO
             logger.OnDisable();
             gameInputMgr.DisableGamePlayInput();
             isInit = true;
-            poolMgr=null;
+            // poolMgr=null;
             storeMgr=null;
             toolMgr=null;
             logger=null;

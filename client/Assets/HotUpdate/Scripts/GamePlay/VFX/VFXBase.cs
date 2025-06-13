@@ -30,7 +30,7 @@ public class VFXBase : PoolBaseGameObject
 
     private void Remove()
     { 
-        if(!this.__isRecycle)
-        YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletImpact).Set(this);
+        // if(!this.__isRecycle)
+        // YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletImpact).Set(this);
     }
 }

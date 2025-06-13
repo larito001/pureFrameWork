@@ -31,7 +31,7 @@ public class NormalScene: VirtualSceneBase
         YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
         player = new PlayerEntity();
        var org= GameObject.Find("PlayerOrgPos");
-        // EnemyManager.Instance.Init();
+        EnemyManager.Instance.Init();
         player.Init(org.transform.position);
      // var obj= TestPoolObject.pool.GetItem(Vector3.zero);
      // obj.InstanceGObj();

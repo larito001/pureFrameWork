@@ -216,7 +216,7 @@ namespace HotUpdate.Scripts.Framework.Pool.newPool
                                 return;
                             }
                     
-                            templateObj.transform.SetParent(rootTrans, false);
+                            // templateObj.transform.SetParent(rootTrans, false);
                             templateObj.SetActive(false);
                             template = templateObj;
                             _isLoading = false;

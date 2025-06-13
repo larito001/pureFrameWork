@@ -33,11 +33,9 @@ public class GunEntity : BaseEntity
     protected override void YOTOOnload()
     {
    
-        VFXManager.Instance.Init();
-        YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
-        {
-            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).SetPrefab(obj.GetComponent<BulletBase>());
-        });
+        // VFXManager.Instance.Init();
+
+       
         YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Role/Gun/SM_Wep_AssaultRifle_02.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
         {
             gun = UnityEngine.Object.Instantiate(obj);
@@ -85,9 +83,9 @@ public class GunEntity : BaseEntity
         fire.Stop();
         fire.Play();
         // 获取子弹对象
-       var bullet= YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.BulletEntity).Get<NormalGunBullet>();
-       bullet.FireFromTo( firePos.position,player.character.transform.forward);
-        // var bullet = YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletObject).Get<BulletBase>();
+        var  bullet = NormalGunBullet.pool.GetItem(Vector3.zero);
+        bullet.InstanceGObj();
+        bullet.FireFromTo( firePos.position,player.character.transform.forward);
         bullets.Enqueue(bullet);
        EnemyManager.Instance.SetTarget(this.player.character.transform);
       
@@ -144,14 +142,5 @@ public class GunEntity : BaseEntity
     {
  
     }
-
-    public override void ResetAll()
-    {
- 
-    }
-
-    public override void OnStart()
-    {
-      
-    }
+    
 }

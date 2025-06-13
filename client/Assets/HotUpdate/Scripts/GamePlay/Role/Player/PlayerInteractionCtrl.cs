@@ -126,7 +126,6 @@ public class PlayerInteractionCtrl : CtrlBase
 
         // 在场景中动态可视化射线
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(characterBase.gun.firePos.position ,characterBase.lookPos+new Vector3(0,1.5f,0));
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * distance);
     }
 }

@@ -6,34 +6,24 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using YOTO;
 
-public class ZombieEntity : BaseEntity
+public class ZombieEntity : ObjectBase, PoolItem<Vector3>
 {
-  public  ZombieAnimatorCtrl zombieBase;
-  public   ZombieNavCtrl zombieNav;
+    public static DataObjPool<ZombieEntity, Vector3> pool = new DataObjPool<ZombieEntity, Vector3>("ZombieEntity", 50);
+    public ZombieAnimatorCtrl zombieBase;
+    public ZombieNavCtrl zombieNav;
     public float HP = 100;
     private Transform target;
+
     public void SetTarget(Transform t)
     {
-        this.target=t;
-    }
-    public override void ResetAll()
-    {
-        if (zombieBase)
-        {
-      
-            zombieBase.gameObject.SetActive(false);
-            YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.NormalZombie).Set<ZombieAnimatorCtrl>(zombieBase);
-            zombieBase = null;
-        }
-     
+        this.target = t;
     }
 
-    public override void OnStart()
+    protected override void AfterInstanceGObj()
     {
-      
-        zombieBase=    YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.NormalZombie).Get<ZombieAnimatorCtrl>();
+        zombieBase = objTrans.GetComponent<ZombieAnimatorCtrl>();
         zombieBase.gameObject.SetActive(true);
-        zombieNav=  zombieBase.GetComponent<ZombieNavCtrl>();
+        zombieNav = zombieBase.GetComponent<ZombieNavCtrl>();
         zombieNav.Init(this);
         zombieBase.GetComponent<ZombieColliderCtrl>().entityId = this._entityID;
         zombieBase.EnemyRun();
@@ -43,7 +33,9 @@ public class ZombieEntity : BaseEntity
         {
             SetTarget(target);
         }
-         zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group = GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
+
+        zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =
+            GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
     }
 
     public void Hurt(float hurt)
@@ -57,55 +49,46 @@ public class ZombieEntity : BaseEntity
 
     public void Die()
     {
- 
         zombieNav.Stop();
         zombieBase.EnemyDie();
         zombieBase.GetComponent<ZombieColliderCtrl>().Stop();
-        YOTOFramework.timeMgr.DelayCall(() =>
-        {
-            YOTOFramework.poolMgr.GetObjectPool(ObjectPoolType.NormalZombieEntity).Set(this);
-            
-        },2.2f);
         EnemyManager.Instance.RemoveZombie(_entityID);
+        Remove();
     }
+
     protected override void YOTOOnload()
     {
-    
     }
 
     public override void YOTOStart()
     {
-       
     }
 
     private float timer = 0;
+
     public override void YOTOUpdate(float deltaTime)
     {
-        if (HP>0&&zombieNav&&target)
+        if (HP > 0 && zombieNav && target)
         {
-            timer+=deltaTime;
-            if (timer >1)
+            timer += deltaTime;
+            if (timer > 1)
             {
                 timer = 0;
                 zombieNav.SetTarget(target.position);
             }
-      
         }
     }
 
     public override void YOTONetUpdate()
     {
-     
     }
 
     public override void YOTOFixedUpdate(float deltaTime)
     {
-        // Assets/HotUpdate/prefabs/Zombies/NormalZombie.prefab
     }
 
     public override void YOTOOnHide()
     {
-     
     }
 
     public override void SetPosition(Vector3 pos)
@@ -114,11 +97,24 @@ public class ZombieEntity : BaseEntity
         {
             zombieBase.transform.position = pos;
         }
-     
     }
 
     public override void SetRotation(Quaternion rot)
     {
-        
+    }
+    //如果继承，注意重写
+    public  void Remove()
+    {
+        RecoverObject();
+        pool.RecoverItem(this);
+    }
+    public void AfterIntoObjectPool()
+    {
+    }
+
+    public void SetData(Vector3 serverData)
+    {
+        SetInVision(true);
+        SetPrefabBundlePath("Assets/HotUpdate/prefabs/Zombies/NormalZombie.prefab");
     }
 }

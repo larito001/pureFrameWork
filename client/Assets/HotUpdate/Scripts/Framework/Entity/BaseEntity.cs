@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using YOTO;
 
-public abstract  class BaseEntity :PoolBaseObject
+public abstract  class BaseEntity 
 {
     private static int  ids=0;
     public int  _entityID;
@@ -30,7 +30,7 @@ public abstract  class BaseEntity :PoolBaseObject
     public abstract void SetPosition(Vector3 pos);
 
     public abstract void SetRotation(Quaternion rot);
-    public virtual void Hide()
+    private void Hide()
     {
         YOTOOnHide();
         _isLoaded = false;
@@ -39,8 +39,7 @@ public abstract  class BaseEntity :PoolBaseObject
     {
         Hide();
         YOTOFramework.entityMgr._RemoveEntity(this);
-     
-
+    
     }
 
 
