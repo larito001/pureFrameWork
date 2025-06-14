@@ -13,6 +13,11 @@ public abstract class BulletEntity :ObjectBase,PoolItem<Vector3>
     {
         bulletBase = objTrans.GetComponent<BulletBase>();
         bulletBase.Init(this);
+
+    }
+
+    public void SetStartTime()
+    {
         // 使用 DateTime.Now 获取当前时间，然后转换为毫秒
         startTime = System.DateTime.Now.Ticks / 10000; // 每 10000 Ticks 等于 1 毫秒
     }

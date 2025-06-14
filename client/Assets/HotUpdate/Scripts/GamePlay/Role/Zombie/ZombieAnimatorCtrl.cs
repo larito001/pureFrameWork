@@ -43,21 +43,21 @@ public class ZombieAnimatorCtrl :PoolBaseGameObject
     {
         if (state == ZombieState.Atk) return;
         state = ZombieState.Atk;
-        Debug.Log("Atk");
+        // Debug.Log("Atk");
         BodyMeshAnimator.Play("Atk", 0);
     }
     public void EnemyRun()
     {
         if (state == ZombieState.Run) return;
         state = ZombieState.Run;
-        Debug.Log("Run");
+        // Debug.Log("Run");
         BodyMeshAnimator.Play("Run", 0);
     }
     public void EnemyIdel()
     {
         if (state == ZombieState.Idel) return;
         state = ZombieState.Idel;
-        Debug.Log("Idel");
+        // Debug.Log("Idel");
         BodyMeshAnimator.Play("Idel", 0);
     }
 
