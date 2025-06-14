@@ -26,7 +26,7 @@ public class UILayer
         layerRoot.transform.SetParent(root.transform, false);
         // 添加Canvas组件
         Canvas canvas = layerRoot.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.worldCamera = YOTOFramework.cameraMgr.getUICamera();
         canvas.overrideSorting = true; // 重要：启用排序覆盖
         canvas.sortingOrder = ((int)layer * 100);

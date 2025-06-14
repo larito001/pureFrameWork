@@ -9,45 +9,30 @@ using YOTO;
 public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
 {
     public static  DataObjPool<FlyTextCtrl,Transform> pool=new DataObjPool<FlyTextCtrl, Transform>("FlyTextCtrl", 40);
-    Vector3 speed;
+    float speed;
     float time = 0;
     public TextMeshProUGUI tmp;
     private bool isInit=false;
     private Transform root;
+    private FlyTextData data;
+    private RectTransform rct;
+    private bool isFly = false;
+    private Vector3 currentPos;
     public void Fly(FlyTextData data)
     {
+        currentPos=data.pos; 
         if (isInit)
         {
-            objTrans.localPosition = data.pos;
+            // rct.anchoredPosition  = data.pos;
             tmp=objTrans.GetComponent<TextMeshProUGUI>();
             tmp.text= data.text;   
         }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        speed=new Vector3(0,10,0);
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (isInit)
+        else
         {
-            objTrans.position += speed*Time.deltaTime;
-            time += Time.deltaTime;
-            if (time > 1)
-            {
-                objTrans.position = Vector3.zero;
-                RecoverObject();
-                time = 0;
-            }
+            this.data = data;
+            isFly = true;
         }
-        
     }
-
     protected override void YOTOOnload()
     {
 
@@ -55,12 +40,28 @@ public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
 
     public override void YOTOStart()
     {
-
+      
     }
 
     public override void YOTOUpdate(float deltaTime)
     {
-
+        if (isInit)
+        {
+            // 使用 localPosition 进行移动
+            currentPos.y += speed; // 改成你想要的值
+            rct.anchoredPosition = currentPos;
+            time+=deltaTime;
+            if (time > 2)
+            {
+                // 重置位置时也使用局部坐标
+                rct.anchoredPosition = Vector3.zero;
+                // 必须同时重置其他变换
+                rct.localRotation = Quaternion.identity;
+                RecoverObject();
+                pool.RecoverItem(this);
+                time = 0;
+            }
+        }
     }
 
     public override void YOTONetUpdate()
@@ -89,13 +90,22 @@ public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
 
     protected override void AfterInstanceGObj()
     {
+        speed = 10;
+
         isInit = true;
-        objTrans.parent = root;
+        rct=objTrans.GetComponent<RectTransform>();
+        rct.SetParent(root,false);
+        if (isFly)
+        {
+            Fly(this.data);
+            isFly = false;
+        }
     }
 
     public void AfterIntoObjectPool()
     {
         isInit = false;
+
     }
 
     public void SetData(Transform serverData)
