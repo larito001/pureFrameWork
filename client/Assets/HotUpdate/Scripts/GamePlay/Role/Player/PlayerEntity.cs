@@ -157,7 +157,7 @@ public class PlayerEntity : CharacterBase
                 handPos = character.GetComponentInChildren<HandRoot>();
                 builder = character.GetComponent<RigBuilder>();
                 headTarget = character.gameObject.transform.Find("HeadTarget");
-                gun = new GunEntity(animatorCtrl.leftHand, handPos);
+                gun = new GunEntity(handPos);
                 gun.Init(this);
                 isInit = true;
             });

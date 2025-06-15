@@ -9,7 +9,6 @@ public class GunEntity : BaseEntity
 
     private PlayerEntity player;
     private HandRoot handRoot;
-    private TwoBoneIKConstraint leftHand;
     private ParticleSystem fire;
     public float fireRate = 0.2f; // 每发子弹的时间间隔
     private float fireTimer = 0f;
@@ -24,9 +23,8 @@ public class GunEntity : BaseEntity
     }
     private Queue<BulletEntity> bullets = new Queue<BulletEntity>();
     
-    public GunEntity(TwoBoneIKConstraint leftHand ,HandRoot handRoot)
+    public GunEntity(HandRoot handRoot)
     {
-        this.leftHand = leftHand;
         this.handRoot = handRoot;
     }
     private GameObject gun;
@@ -40,9 +38,8 @@ public class GunEntity : BaseEntity
         {
             gun = UnityEngine.Object.Instantiate(obj);
             gun.transform.SetParent(handRoot.transform);
-            var LeftHandTarget = gun.transform.Find("LeftHandTarget");
            
-            leftHand.data.target = LeftHandTarget;
+            // leftHand.data.target = LeftHandTarget;
             gun.transform.localPosition = Vector3.zero;
             gun.transform.localRotation = Quaternion.identity;
             player.builder.Build();

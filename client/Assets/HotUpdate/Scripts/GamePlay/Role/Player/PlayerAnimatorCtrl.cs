@@ -13,8 +13,8 @@ public class PlayerAnimatorCtrl : CtrlBase
     ArmState armState = ArmState.Normal;
     PlayerPose playerPose = PlayerPose.Stand;
     public float RotateSpeed = 2;
-    public TwoBoneIKConstraint rightHand;
-    public TwoBoneIKConstraint leftHand;
+    // public TwoBoneIKConstraint rightHand;
+    // public TwoBoneIKConstraint leftHand; 
     private float reloadTimer = 0f;
     private float reloadDuration = 4f;
 
@@ -48,8 +48,8 @@ public class PlayerAnimatorCtrl : CtrlBase
         }
 
         var Rig = characterBase.character.transform.Find("Rigs");
-        rightHand = Rig.Find("RightHand").GetComponent<TwoBoneIKConstraint>();
-        leftHand = Rig.Find("LeftHand").GetComponent<TwoBoneIKConstraint>();
+        // rightHand = Rig.Find("RightHand").GetComponent<TwoBoneIKConstraint>();
+        // leftHand = Rig.Find("LeftHand").GetComponent<TwoBoneIKConstraint>();
     }
     public void SwitchPlayerState()
     {
@@ -112,7 +112,7 @@ public class PlayerAnimatorCtrl : CtrlBase
         if (armState == ArmState.Aim)
         {
             animator.SetBool("isAming", true);
-            animator.SetFloat("HorizontalSpeed", characterBase.playerMovement.x * characterBase.runSpeed, 0.5f, deltaTime);
+            animator.SetFloat("HorizontalSpeed", characterBase.playerMovement.x * characterBase.runSpeed, 0.1f, deltaTime);
             if (characterBase.playerMovement.magnitude == 0)
             {
                 // 获取目标方向
@@ -163,29 +163,29 @@ public class PlayerAnimatorCtrl : CtrlBase
     }
 
     private bool isRelongding = false;
-    private bool isLerpingWeight = false;
+    // private bool isLerpingWeight = false;
     private float lerpDuration = 0.5f;
-    private float lerpTimer = 0f;
-    private float startWeight = 0f;
-    private float targetWeight = 1f;
+    // private float lerpTimer = 0f;
+    // private float startWeight = 0f;
+    // private float targetWeight = 1f;
 
     public void ReLoad(UnityAction callback)
     {
         if (isRelongding) return;
-        lerpTimer = 0f;
-        startWeight = 1f;
-        targetWeight = 0f;
-        isLerpingWeight = true;
+        // lerpTimer = 0f;
+        // startWeight = 1f;
+        // targetWeight = 0f;
+        // isLerpingWeight = true;
         isRelongding = true;
         animator.SetBool("isReloding",true);
         YOTOFramework.timeMgr.DelayCall(() =>
         {
             animator.SetBool("isReloding",false);
             // 启动权重插值（从 0 → 1）
-            lerpTimer = 0f;
-            startWeight = 0f;
-            targetWeight = 1f;
-            isLerpingWeight = true;
+            // lerpTimer = 0f;
+            // startWeight = 0f;
+            // targetWeight = 1f;
+            // isLerpingWeight = true;
             isRelongding = false;
         }, 4f);
         // 触发 DelayCall（执行动画时长）
@@ -207,22 +207,22 @@ public class PlayerAnimatorCtrl : CtrlBase
         characterBase.CulculateDir();
         SwitchPlayerState();
         SetAnimator(deltaTime);
-        if (isLerpingWeight)
-        {
-            lerpTimer += Time.deltaTime;
-            float t = Mathf.Clamp01(lerpTimer / lerpDuration);
-            float weight = Mathf.Lerp(startWeight, targetWeight, t);
-            rightHand.weight = weight;
-            leftHand.weight = weight;
-
-            if (t >= 1f)
-            {
-                rightHand.weight = targetWeight;
-                leftHand.weight = targetWeight;
-                isLerpingWeight = false;
-                
-            }
-        }
+        // if (isLerpingWeight)
+        // {
+        //     lerpTimer += Time.deltaTime;
+        //     float t = Mathf.Clamp01(lerpTimer / lerpDuration);
+        //     float weight = Mathf.Lerp(startWeight, targetWeight, t);
+        //     // rightHand.weight = weight;
+        //     // leftHand.weight = weight;
+        //
+        //     if (t >= 1f)
+        //     {
+        //         // rightHand.weight = targetWeight;
+        //         // leftHand.weight = targetWeight;
+        //         isLerpingWeight = false;
+        //         
+        //     }
+        // }
     }
 
     public override void YOTONetUpdate()
