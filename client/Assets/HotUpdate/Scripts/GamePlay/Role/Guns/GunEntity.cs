@@ -133,14 +133,6 @@ public class GunEntity : BaseEntity
       
     }
 
-    public override void SetPosition(Vector3 pos)
-    {
 
-    }
-
-    public override void SetRotation(Quaternion rot)
-    {
- 
-    }
     
 }

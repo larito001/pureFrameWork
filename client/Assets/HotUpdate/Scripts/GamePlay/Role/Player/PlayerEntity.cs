@@ -321,12 +321,6 @@ public class PlayerEntity : CharacterBase
     }
 
 
-    public override void SetPosition(Vector3 pos)
-    {
-    }
 
-    public override void SetRotation(Quaternion rot)
-    {
-    }
     
 }

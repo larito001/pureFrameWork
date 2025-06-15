@@ -56,7 +56,7 @@ public class EnemyManager : SingletonMono<EnemyManager>
                 ZombieEntity zombieEntity=  ZombieEntity.pool.GetItem(Vector3.zero);
                 zombieEntity.InstanceGObj();
                 // 设置位置，假设僵尸在地面上（y轴为0）
-                zombieEntity.SetPosition( pos);
+                zombieEntity.Location=pos;
 
                 zombieEntities.Add(zombieEntity._entityID, zombieEntity);
             },1,10);

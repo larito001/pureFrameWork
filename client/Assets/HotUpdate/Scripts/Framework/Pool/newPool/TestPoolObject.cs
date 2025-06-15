@@ -45,16 +45,7 @@ public class TestPoolObject : ObjectBase,PoolItem<Vector3>
     {
         throw new System.NotImplementedException();
     }
-
-    public override void SetPosition(Vector3 pos)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void SetRotation(Quaternion rot)
-    {
-        throw new System.NotImplementedException();
-    }
+    
 
     protected override void AfterInstanceGObj()
     {

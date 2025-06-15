@@ -13,7 +13,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     public ZombieNavCtrl zombieNav;
     public float HP = 100;
     private Transform target;
-
+    public bool isInit=false;
     public void SetTarget(Transform t)
     {
         this.target = t;
@@ -36,6 +36,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
 
         zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =
             GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
+        isInit = true;
     }
 
     public void Hurt(float hurt)
@@ -95,18 +96,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     public override void YOTOOnHide()
     {
     }
-
-    public override void SetPosition(Vector3 pos)
-    {
-        if (zombieBase)
-        {
-            zombieBase.transform.position = pos;
-        }
-    }
-
-    public override void SetRotation(Quaternion rot)
-    {
-    }
+    
     //如果继承，注意重写
     public  void Remove()
     {
@@ -115,6 +105,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     }
     public void AfterIntoObjectPool()
     {
+        isInit = false;
     }
 
     public void SetData(Vector3 serverData)

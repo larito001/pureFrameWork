@@ -27,9 +27,6 @@ public abstract  class BaseEntity
     public abstract void YOTONetUpdate();
     public abstract void YOTOFixedUpdate(float deltaTime);
     public abstract void YOTOOnHide();
-    public abstract void SetPosition(Vector3 pos);
-
-    public abstract void SetRotation(Quaternion rot);
     private void Hide()
     {
         YOTOOnHide();

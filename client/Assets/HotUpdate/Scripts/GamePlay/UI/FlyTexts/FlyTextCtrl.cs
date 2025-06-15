@@ -78,15 +78,7 @@ public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
     {
   
     }
-
-    public override void SetPosition(Vector3 pos)
-    {
-    }
-
-    public override void SetRotation(Quaternion rot)
-    {
-
-    }
+    
 
     protected override void AfterInstanceGObj()
     {

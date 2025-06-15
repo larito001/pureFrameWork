@@ -69,13 +69,18 @@ public class CameraCtrl
             RaycastHit hitInfo;
             if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("BaseOfTower")))
             {
-                Debug.Log("tower hit");
-                TowerBase tower;
-                if (hitInfo.transform.TryGetComponent<TowerBase>(out tower))
+                if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("BaseOfTower"))
                 {
-                    tower.OnEnter();
-                    towers.Add(tower);
-                }
+                    Debug.Log("tower hit");
+                    TowerBase tower;
+                    if (hitInfo.transform.TryGetComponent<TowerBase>(out tower))
+                    {
+                        tower.OnEnter();
+                        towers.Add(tower);
+                    }
+                } 
+         
+              
             }
             else
             {

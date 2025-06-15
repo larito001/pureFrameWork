@@ -54,16 +54,7 @@ public abstract class BulletEntity :ObjectBase,PoolItem<Vector3>
     {
     
     }
-
-    public override void SetPosition(Vector3 pos)
-    {
-      
-    }
-
-    public override void SetRotation(Quaternion rot)
-    {
-
-    }
+    
     public abstract void Remove();
     public abstract void SetBulletData(Vector3 serverData);
     public abstract void BulletAfterIntoObjectPool();
