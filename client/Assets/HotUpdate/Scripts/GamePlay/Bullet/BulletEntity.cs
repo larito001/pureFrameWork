@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using YOTO;
 
-public abstract class BulletEntity :ObjectBase,PoolItem<Vector3>
+public abstract class BulletEntity :ObjectBase,PoolItem<Transform>
 {
     protected BulletBase bulletBase;
     private long startTime;
@@ -54,17 +54,21 @@ public abstract class BulletEntity :ObjectBase,PoolItem<Vector3>
     {
     
     }
-    
-    public abstract void Remove();
-    public abstract void SetBulletData(Vector3 serverData);
+
+    public virtual void Remove()
+    {
+        RecoverObject();
+    }
+    public abstract void TriggerEnter(Collider other);
+    public abstract void SetBulletData(Transform parent);
     public abstract void BulletAfterIntoObjectPool();
     public void AfterIntoObjectPool()
     {
         BulletAfterIntoObjectPool();
     }
 
-    public void SetData(Vector3 serverData)
+    public void SetData(Transform parent)
     {
-        SetBulletData(serverData);
+        SetBulletData(parent);
     }
 }

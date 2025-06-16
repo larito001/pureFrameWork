@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using YOTO;
 
-public class VFXBase : PoolBaseGameObject
+public class VFXBase : MonoBehaviour
 {
     public List<ParticleSystem> particleSystems = new List<ParticleSystem>();
-    public override void ResetAll()
+    public void ResetAll()
     {
      this.gameObject.SetActive(false);
     }
 
-    public override void OnStart()
+    public void OnStart()
     {
         this.gameObject.SetActive(true);
     }

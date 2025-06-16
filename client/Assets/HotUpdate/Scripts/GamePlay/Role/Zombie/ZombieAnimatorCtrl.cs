@@ -8,7 +8,7 @@ public enum ZombieState
     Run,
     Idel
 }
-public class ZombieAnimatorCtrl :PoolBaseGameObject
+public class ZombieAnimatorCtrl :MonoBehaviour
 {
 
     [SerializeField]
@@ -60,13 +60,5 @@ public class ZombieAnimatorCtrl :PoolBaseGameObject
         // Debug.Log("Idel");
         BodyMeshAnimator.Play("Idel", 0);
     }
-
-    public override void ResetAll()
-    {
-        
-    }
-
-    public override void OnStart()
-    {
-    }
+    
 }

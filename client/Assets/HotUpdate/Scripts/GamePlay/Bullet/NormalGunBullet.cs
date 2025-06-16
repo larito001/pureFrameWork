@@ -6,7 +6,7 @@ using YOTO;
 
 public class NormalGunBullet :BulletEntity
 {
-    public static  DataObjPool<NormalGunBullet,Vector3> pool=new DataObjPool<NormalGunBullet, Vector3>("normalBullet", 20);
+    public static  DataObjPool<NormalGunBullet,Transform> pool=new DataObjPool<NormalGunBullet, Transform>("normalBullet", 20);
     private int needFireCount = 0;
     private Vector3 lastPos;
     private Vector3 lastDir;
@@ -54,13 +54,25 @@ public class NormalGunBullet :BulletEntity
     public override void Remove()
     {
         Debug.Log("回收");
-        RecoverObject();
+        base.Remove();
         pool.RecoverItem(this);
-
-      
     }
 
-    public override void SetBulletData(Vector3 serverData)
+    public override void TriggerEnter(Collider other)
+    {
+        ZombieColliderCtrl ctrl;
+        if ( other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
+        {
+            EnemyManager.Instance.Hurt(ctrl.entityId,44);
+        }
+        else if (other.gameObject.layer == 6)
+        {
+
+            Remove();
+        }
+    }
+
+    public override void SetBulletData(Transform parent)
     {
         SetInVision(true);
         SetPrefabBundlePath("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab");

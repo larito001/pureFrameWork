@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - all
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aafd8a29881ca0c44a84cc241a46738d
+    m_Address: Assets/melee weapons/Prefabs/Axe4.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d9f9bf1ca5142254ba3a359ff4a34b3e
     m_Address: Assets/HotUpdate/prefabs/Role/Gun/SM_Wep_AssaultRifle_02.prefab
     m_ReadOnly: 0

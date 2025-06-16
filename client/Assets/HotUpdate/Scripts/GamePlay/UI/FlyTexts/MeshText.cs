@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CanvasRenderer))]
-public class UGUIFloatingTextBatch : PoolBaseGameObject
+public class UGUIFloatingTextBatch : MonoBehaviour
 {
     public Font font ; // ����
     public Material fontMaterial; // ����Ĳ���
@@ -156,16 +156,7 @@ public class UGUIFloatingTextBatch : PoolBaseGameObject
         // ʹ��CanvasRenderer����������ΪUIԪ��
         canvasRenderer.SetMesh(mesh);
     }
-
-    public override void ResetAll()
-    {
     
-    }
-
-    public override void OnStart()
-    {
-        
-    }
 
     //ˢ�£���ʱ����
     //void UpdateMesh()

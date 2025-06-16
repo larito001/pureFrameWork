@@ -33,7 +33,7 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
             if (e != null&&e.zombieBase!=null)
             {
                 var dir = e.zombieBase.transform.position - this.Location;
-                var bullet = NormalGunBullet.pool.GetItem(Vector3.zero);
+                var bullet = NormalGunBullet.pool.GetItem(null);
                 bullet.InstanceGObj();
                 bullet.FireFromTo(this.Location + new Vector3(0, 1, 0), dir);
                 Debug.Log("位置：" + this.Location);

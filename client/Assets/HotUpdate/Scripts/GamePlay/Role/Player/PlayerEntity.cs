@@ -45,6 +45,7 @@ public class PlayerEntity : CharacterBase
     public RigBuilder builder;
 
     public GunEntity gun;
+    public MeleeEntity melee;
     //todo:Gunparent
     // private NavTarget navTarget;
     public PlayerEntity() : base()
@@ -84,9 +85,14 @@ public class PlayerEntity : CharacterBase
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TryReload, () =>
         {
             if (!isInit) return;
-            gun.canFire = false;
+            if (gun != null)
+            {
+                gun.canFire = false;   
+            }
+
             animatorCtrl.ReLoad(() =>
             {
+                if (gun != null)
                 gun.canFire = true;
             });
         });
@@ -157,8 +163,12 @@ public class PlayerEntity : CharacterBase
                 handPos = character.GetComponentInChildren<HandRoot>();
                 builder = character.GetComponent<RigBuilder>();
                 headTarget = character.gameObject.transform.Find("HeadTarget");
+                // melee = new MeleeEntity(handPos);
+                // melee.Init(this);
+                // animatorCtrl.currentWeapon = PlayerAnimatorCtrl.MELEE_LAYER;
                 gun = new GunEntity(handPos);
                 gun.Init(this);
+                animatorCtrl.currentWeapon = PlayerAnimatorCtrl.GUN_LAYER;
                 isInit = true;
             });
     }
@@ -277,7 +287,12 @@ public class PlayerEntity : CharacterBase
             {
                 //todo:开火，子弹间隔，帮我写，在发射子弹的地方写好todo我创建子弹就好了
                 isShooting = true;
+                if (gun != null)
                 gun.TryShot();
+                if (melee != null)
+                {
+                    melee.TryShot();
+                }
             }
         }
 

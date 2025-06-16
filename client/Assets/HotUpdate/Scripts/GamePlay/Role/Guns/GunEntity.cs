@@ -80,7 +80,7 @@ public class GunEntity : BaseEntity
         fire.Stop();
         fire.Play();
         // 获取子弹对象
-        var  bullet = NormalGunBullet.pool.GetItem(Vector3.zero);
+        var  bullet = NormalGunBullet.pool.GetItem(null);
         bullet.InstanceGObj();
         bullet.FireFromTo( firePos.position,player.character.transform.forward);
         bullets.Enqueue(bullet);

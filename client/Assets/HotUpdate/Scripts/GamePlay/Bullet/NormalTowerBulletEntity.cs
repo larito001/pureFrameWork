@@ -5,7 +5,7 @@ using YOTO;
 
 public class NormalTowerBulletEntity : BulletEntity
 {
-    public static  DataObjPool<NormalTowerBulletEntity,Vector3> pool=new DataObjPool<NormalTowerBulletEntity, Vector3>("NormalTowerBulletEntity", 20);
+    public static  DataObjPool<NormalTowerBulletEntity,Transform> pool=new DataObjPool<NormalTowerBulletEntity, Transform>("NormalTowerBulletEntity", 20);
     public override void FireFromTo(Vector3 pos, Vector3 dir)
     {
         if(!bulletBase) return ;
@@ -30,10 +30,18 @@ public class NormalTowerBulletEntity : BulletEntity
     //主动移除
     public override void Remove()
     {
-        RecoverObject();
+        Debug.Log("回收");
+        base.Remove();
+        pool.RecoverItem(this);
     }
 
-    public override void SetBulletData(Vector3 serverData)
+
+    public override void TriggerEnter(Collider other)
+    {
+        
+    }
+
+    public override void SetBulletData(Transform parent)
     {
         SetInVision(true);
         SetPrefabBundlePath("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab");

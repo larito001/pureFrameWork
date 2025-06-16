@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +9,13 @@ using Vector3 = System.Numerics.Vector3;
 
 public class PlayerAnimatorCtrl : CtrlBase
 {
+    public const int GUN_LAYER = 2;
+    public const int NONE_LAYER = 3;
+    public const int MELEE_LAYER = 4;
+    public int currentWeapon = MELEE_LAYER;
     public Animator animator;
     LocalmotionState localmotionState = LocalmotionState.Idle;
-    ArmState armState = ArmState.Normal;
+    ArmState armState = ArmState.None;
     PlayerPose playerPose = PlayerPose.Stand;
     public float RotateSpeed = 2;
     // public TwoBoneIKConstraint rightHand;
@@ -32,8 +37,11 @@ public class PlayerAnimatorCtrl : CtrlBase
     }
     public enum ArmState
     {
-        Normal,
-        Aim
+        Gun,
+        GunAim,
+        Melee,
+        MeleeAim,
+        None,
     }
 
   
@@ -56,13 +64,32 @@ public class PlayerAnimatorCtrl : CtrlBase
         
         if (characterBase.isAming)
         {
-            armState = ArmState.Aim;
+            if (currentWeapon == GUN_LAYER)
+            {
+                armState = ArmState.GunAim;
+                SetWeight(0, 1, 0);
+            }else if(currentWeapon == MELEE_LAYER)
+            {
+                armState = ArmState.MeleeAim;
+                SetWeight(0, 0, 1);
+            }
+            
+        }
+        else if(currentWeapon == GUN_LAYER)
+        {
+            armState = ArmState.Gun;
+            SetWeight(0, 1, 0);
+        }
+        else if (currentWeapon == MELEE_LAYER)
+        {
+            armState = ArmState.Melee;
+            SetWeight(1, 0, 0);
         }
         else
         {
-            armState = ArmState.Normal;
+            armState = ArmState.None;
+            SetWeight(1, 0, 0);
         }
-        
         if (characterBase.playerMovement.magnitude == 0)
         {
             localmotionState = LocalmotionState.Idle;
@@ -81,16 +108,36 @@ public class PlayerAnimatorCtrl : CtrlBase
         
     }
 
+    private void SetWeight(float noneLayer,float gunLayer,float meleeLayer)
+    {
+        animator.SetLayerWeight(NONE_LAYER,noneLayer);
+        animator.SetLayerWeight(GUN_LAYER,gunLayer);
+        animator.SetLayerWeight(MELEE_LAYER,meleeLayer);
+    }
     public void TryShoot()
     {
         animator.SetTrigger("ShootingTrigger");
     }
+    public void TryUseMelee()
+    {
+        animator.SetTrigger("Melee");
+    }
+
+    void SwitchArmSate(int state)
+    {
+        if (currentWeapon == NONE_LAYER)
+        {
+            animator.SetLayerWeight(GUN_LAYER,0);
+            animator.SetLayerWeight(NONE_LAYER,1);
+            animator.SetLayerWeight(MELEE_LAYER,0);
+        }
+    }
     void SetAnimator(float deltaTime)
     { 
         
+        //腿的动作
         if (playerPose == PlayerPose.Stand)
         {
-            // animator.SetFloat("PlayerState", 0, 0.1f, deltaTime);
             switch (localmotionState)
             {
                 case LocalmotionState.Idle:
@@ -109,9 +156,33 @@ public class PlayerAnimatorCtrl : CtrlBase
             
         }
         
-        if (armState == ArmState.Aim)
+        //手的动作
+        if (armState == ArmState.GunAim)
         {
-            animator.SetBool("isAming", true);
+            AimState(deltaTime);
+        }
+        else if (armState == ArmState.Gun)
+        {
+            NormalState(deltaTime);
+        }
+        else if (armState == ArmState.MeleeAim)
+        {
+            AimState(deltaTime);
+        }
+        else if (armState == ArmState.Melee)
+        {
+            NormalState(deltaTime);
+        }else if (armState == ArmState.None)
+        {
+            NormalState(deltaTime);
+        }
+    
+
+    }
+
+    private void AimState(float deltaTime)
+    {
+        animator.SetBool("isAming", true);
             animator.SetFloat("HorizontalSpeed", characterBase.playerMovement.x * characterBase.runSpeed, 0.1f, deltaTime);
             if (characterBase.playerMovement.magnitude == 0)
             {
@@ -149,19 +220,17 @@ public class PlayerAnimatorCtrl : CtrlBase
                 // Rotate the character towards the target direction
                 characterBase.character.transform.rotation = Quaternion.Slerp(characterBase.character.transform.rotation, Quaternion.Euler(0, angle, 0), deltaTime*RotateSpeed); // You can adjust the `10f` to control the rotation speed
             }
-        }
-        else if (armState == ArmState.Normal)
-        {
-            animator.SetBool("isAming", false);
-            float rad = Mathf.Atan2(characterBase.playerMovement.x, characterBase.playerMovement.z);
-            animator.SetFloat("RotateSpeed", rad, 0.2f, deltaTime);
-            characterBase.character.transform.Rotate(0, rad * 360 * deltaTime, 0f);
-        }     
-     
-    
-
     }
 
+    private void NormalState(float deltaTime)
+    {
+        animator.SetBool("isAming", false);
+        float rad = Mathf.Atan2(characterBase.playerMovement.x, characterBase.playerMovement.z);
+        animator.SetFloat("RotateSpeed", rad, 0.2f, deltaTime);
+        characterBase.character.transform.Rotate(0, rad * 360 * deltaTime, 0f);
+    }
+    
+    
     private bool isRelongding = false;
     // private bool isLerpingWeight = false;
     private float lerpDuration = 0.5f;
