@@ -10,6 +10,7 @@ public class GunEntity : BaseEntity
     private PlayerEntity player;
     private HandRoot handRoot;
     private ParticleSystem fire;
+    private Transform fireTrans;
     public float fireRate = 0.2f; // 每发子弹的时间间隔
     private float fireTimer = 0f;
 
@@ -51,11 +52,11 @@ public class GunEntity : BaseEntity
             firePos = gun.transform.Find("FirePos");
             YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Fire.prefab", Vector3.zero,Quaternion.identity, (obj,pos,rot) =>
             {
-                GameObject temp = UnityEngine.Object.Instantiate(obj, Vector3.zero,Quaternion.identity);
-                fire= temp.GetComponentInChildren<ParticleSystem>();
-                temp.transform.parent = firePos;
-                temp.transform.localPosition = Vector3.zero;
-                temp.transform.localRotation = Quaternion.identity;
+                fireTrans = UnityEngine.Object.Instantiate(obj, Vector3.zero,Quaternion.identity).transform;
+                fire= fireTrans.GetComponentInChildren<ParticleSystem>();
+                fireTrans.transform.parent = firePos;
+                fireTrans.transform.localPosition = Vector3.zero;
+                fireTrans.transform.localRotation = Quaternion.identity;
                 fire.Stop();
             });
         });
@@ -83,6 +84,8 @@ public class GunEntity : BaseEntity
     {
        
         fire.Stop();
+        // fireTrans .LookAt(fire.transform.position);
+        fireTrans.forward =player.character.transform.forward;
         fire.Play();
         // 获取子弹对象
         var  bullet = NormalGunBullet.pool.GetItem(null);

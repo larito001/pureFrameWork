@@ -9,8 +9,8 @@ using Vector3 = System.Numerics.Vector3;
 
 public class PlayerAnimatorCtrl : CtrlBase
 {
-    public const int GUN_LAYER = 2;
-    public const int NONE_LAYER = 3;
+    public const int GUN_LAYER = 1;
+    public const int NONE_LAYER = 2;
     public const int MELEE_LAYER = 4;
     public int currentWeapon = MELEE_LAYER;
     public Animator animator;
@@ -83,7 +83,7 @@ public class PlayerAnimatorCtrl : CtrlBase
         else if (currentWeapon == MELEE_LAYER)
         {
             armState = ArmState.Melee;
-            SetWeight(1, 0, 0);
+            SetWeight(0, 0, 1);
         }
         else
         {
@@ -122,16 +122,7 @@ public class PlayerAnimatorCtrl : CtrlBase
     {
         animator.SetTrigger("Melee");
     }
-
-    void SwitchArmSate(int state)
-    {
-        if (currentWeapon == NONE_LAYER)
-        {
-            animator.SetLayerWeight(GUN_LAYER,0);
-            animator.SetLayerWeight(NONE_LAYER,1);
-            animator.SetLayerWeight(MELEE_LAYER,0);
-        }
-    }
+    
     void SetAnimator(float deltaTime)
     { 
         
@@ -281,12 +272,17 @@ public class PlayerAnimatorCtrl : CtrlBase
 
     public void UseGun()
     {
+        if (currentWeapon != GUN_LAYER)
         animator.Play("EquipRifle",GUN_LAYER,0);
     }
 
     public void UseMelee()
     {
-        // animator.Play("EquipRifle",GUN_LAYER,0);
+        if (currentWeapon != MELEE_LAYER)
+        {
+            animator.Play("EquipMelee",MELEE_LAYER,0);
+        }
+
     }
     public override void YOTONetUpdate()
     {

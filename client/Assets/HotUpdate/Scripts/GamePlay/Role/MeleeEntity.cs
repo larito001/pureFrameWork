@@ -87,7 +87,7 @@ public class MeleeEntity : BaseEntity
             long currentTime = System.DateTime.Now.Ticks / 10000; // 当前时间戳，单位为毫秒
             long elapsedTime = currentTime - current.GetStartTime(); // 时间差，单位为毫秒
 
-            if (elapsedTime > 1000) // 如果超过 5 秒（5000 毫秒）
+            if (elapsedTime > 500) // 如果超过 5 秒（5000 毫秒）
             {
                 bullets.Dequeue();
                 current.Remove();
@@ -121,5 +121,6 @@ public class MeleeEntity : BaseEntity
     {
         canFire = true;
         melee.SetActive(true);
+        player.animatorCtrl.UseMelee();
     }
 }
