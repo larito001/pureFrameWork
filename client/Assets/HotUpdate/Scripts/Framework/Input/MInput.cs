@@ -116,6 +116,24 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""One"",
+                    ""type"": ""Button"",
+                    ""id"": ""29145d21-7fac-46bf-8505-c436509d4985"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Two"",
+                    ""type"": ""Button"",
+                    ""id"": ""95ab47f0-42d5-44d4-b018-b4e0a540d4cb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -292,6 +310,28 @@ public partial class @MInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53c502b7-0838-4440-92cd-7236a8980856"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""One"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""98e3b021-6678-4489-98ce-ec509a1705dc"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Two"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -845,6 +885,8 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         m_GamePlayAction_TouchAddition = m_GamePlayAction.FindAction("TouchAddition", throwIfNotFound: true);
         m_GamePlayAction_Fire = m_GamePlayAction.FindAction("Fire", throwIfNotFound: true);
         m_GamePlayAction_Reload = m_GamePlayAction.FindAction("Reload", throwIfNotFound: true);
+        m_GamePlayAction_One = m_GamePlayAction.FindAction("One", throwIfNotFound: true);
+        m_GamePlayAction_Two = m_GamePlayAction.FindAction("Two", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -934,6 +976,8 @@ public partial class @MInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_GamePlayAction_TouchAddition;
     private readonly InputAction m_GamePlayAction_Fire;
     private readonly InputAction m_GamePlayAction_Reload;
+    private readonly InputAction m_GamePlayAction_One;
+    private readonly InputAction m_GamePlayAction_Two;
     public struct GamePlayActionActions
     {
         private @MInput m_Wrapper;
@@ -948,6 +992,8 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         public InputAction @TouchAddition => m_Wrapper.m_GamePlayAction_TouchAddition;
         public InputAction @Fire => m_Wrapper.m_GamePlayAction_Fire;
         public InputAction @Reload => m_Wrapper.m_GamePlayAction_Reload;
+        public InputAction @One => m_Wrapper.m_GamePlayAction_One;
+        public InputAction @Two => m_Wrapper.m_GamePlayAction_Two;
         public InputActionMap Get() { return m_Wrapper.m_GamePlayAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -987,6 +1033,12 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @One.started += instance.OnOne;
+            @One.performed += instance.OnOne;
+            @One.canceled += instance.OnOne;
+            @Two.started += instance.OnTwo;
+            @Two.performed += instance.OnTwo;
+            @Two.canceled += instance.OnTwo;
         }
 
         private void UnregisterCallbacks(IGamePlayActionActions instance)
@@ -1021,6 +1073,12 @@ public partial class @MInput: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @One.started -= instance.OnOne;
+            @One.performed -= instance.OnOne;
+            @One.canceled -= instance.OnOne;
+            @Two.started -= instance.OnTwo;
+            @Two.performed -= instance.OnTwo;
+            @Two.canceled -= instance.OnTwo;
         }
 
         public void RemoveCallbacks(IGamePlayActionActions instance)
@@ -1177,6 +1235,8 @@ public partial class @MInput: IInputActionCollection2, IDisposable
         void OnTouchAddition(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnOne(InputAction.CallbackContext context);
+        void OnTwo(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -82,18 +82,19 @@ public class PlayerEntity : CharacterBase
 
     public override void Init(Vector3 pos)
     {
+        YOTOFramework.eventMgr.AddEventListener<int>(YOTO.EventType.KeyBoardNumClick,SwitchWeapon);
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TryReload, () =>
         {
             if (!isInit) return;
             if (gun != null)
             {
-                gun.canFire = false;   
+                gun.Reload();   
             }
 
             animatorCtrl.ReLoad(() =>
             {
                 if (gun != null)
-                gun.canFire = true;
+                    gun.ReloadEnd();
             });
         });
         YOTOFramework.eventMgr.AddEventListener<Vector3>(YOTO.EventType.RefreshMousePos, (pos) =>
@@ -163,14 +164,53 @@ public class PlayerEntity : CharacterBase
                 handPos = character.GetComponentInChildren<HandRoot>();
                 builder = character.GetComponent<RigBuilder>();
                 headTarget = character.gameObject.transform.Find("HeadTarget");
-                // melee = new MeleeEntity(handPos);
-                // melee.Init(this);
-                // animatorCtrl.currentWeapon = PlayerAnimatorCtrl.MELEE_LAYER;
-                gun = new GunEntity(handPos);
-                gun.Init(this);
-                animatorCtrl.currentWeapon = PlayerAnimatorCtrl.GUN_LAYER;
+
+         
                 isInit = true;
+                SwitchWeapon(1);
             });
+    }
+
+    private void SwitchWeapon(int index)
+    {
+        if (index == 1)
+        {
+            if (gun == null)
+            {
+                gun = new GunEntity(handPos); 
+                gun.Init(this);
+            }
+            else
+            {
+                gun.UseWeapon();
+            }
+
+            if (melee != null)
+            {
+                melee.UnuseWeapon();
+            }
+
+            animatorCtrl.currentWeapon = PlayerAnimatorCtrl.GUN_LAYER; 
+        }
+        else if (index == 2)
+        {
+            if (melee == null)
+            {
+                melee = new MeleeEntity(handPos);
+                melee.Init(this);
+            }
+            else
+            {
+                melee.UseWeapon();
+            }
+
+            if (gun != null)
+            {
+                gun.UnuseWeapon();
+            }
+
+            animatorCtrl.currentWeapon = PlayerAnimatorCtrl.MELEE_LAYER;
+        }
     }
 
     public override void AddComponent()

@@ -113,6 +113,21 @@ namespace YOTO
                 YOTOFramework.eventMgr.TriggerEvent(EventType.TryReload);
             }
         }
-        
+
+        public void OnOne(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+               YOTOFramework.eventMgr.TriggerEvent<int>(EventType.KeyBoardNumClick,1);
+            }
+        }
+
+        public void OnTwo(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                YOTOFramework.eventMgr.TriggerEvent<int>(EventType.KeyBoardNumClick,2);
+            }
+        }
     }
 }

@@ -112,4 +112,14 @@ public class MeleeEntity : BaseEntity
     public override void YOTOOnHide()
     {
     }
+    public void UnuseWeapon()
+    {
+        canFire = false;
+        melee.SetActive(false);
+    }
+    public void UseWeapon()
+    {
+        canFire = true;
+        melee.SetActive(true);
+    }
 }

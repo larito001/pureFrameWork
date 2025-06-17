@@ -22,6 +22,7 @@ namespace YOTO
        FireRelease,
        RefreshMousePos,
        TryReload,
+       KeyBoardNumClick,
     }
 
 

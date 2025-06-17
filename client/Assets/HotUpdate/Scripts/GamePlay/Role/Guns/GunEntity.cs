@@ -13,7 +13,11 @@ public class GunEntity : BaseEntity
     public float fireRate = 0.2f; // 每发子弹的时间间隔
     private float fireTimer = 0f;
 
-    public bool canFire = true; // 是否允许发射
+    public bool canFire
+    {
+        get;
+        private set;
+    } // 是否允许发射
     private bool isFiring = false; // 当前是否处于开火状态
 
     public Transform firePos
@@ -25,6 +29,7 @@ public class GunEntity : BaseEntity
     
     public GunEntity(HandRoot handRoot)
     {
+  
         this.handRoot = handRoot;
     }
     private GameObject gun;
@@ -38,7 +43,7 @@ public class GunEntity : BaseEntity
         {
             gun = UnityEngine.Object.Instantiate(obj);
             gun.transform.SetParent(handRoot.transform);
-           
+            canFire = true;
             // leftHand.data.target = LeftHandTarget;
             gun.transform.localPosition = Vector3.zero;
             gun.transform.localRotation = Quaternion.identity;
@@ -130,6 +135,25 @@ public class GunEntity : BaseEntity
       
     }
 
+    public void Reload()
+    {
+        canFire = false;
+    }
+    public void ReloadEnd()
+    {
+        canFire = true;
+    }
 
-    
+    public void UnuseWeapon()
+    {
+        canFire = false;
+        gun.SetActive(false);
+    }
+    public void UseWeapon()
+    {
+        canFire = true;
+        gun.SetActive(true);
+        //播放动画
+        player.animatorCtrl.UseGun();
+    }
 }

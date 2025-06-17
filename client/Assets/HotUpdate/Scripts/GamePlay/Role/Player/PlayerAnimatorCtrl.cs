@@ -276,24 +276,18 @@ public class PlayerAnimatorCtrl : CtrlBase
         characterBase.CulculateDir();
         SwitchPlayerState();
         SetAnimator(deltaTime);
-        // if (isLerpingWeight)
-        // {
-        //     lerpTimer += Time.deltaTime;
-        //     float t = Mathf.Clamp01(lerpTimer / lerpDuration);
-        //     float weight = Mathf.Lerp(startWeight, targetWeight, t);
-        //     // rightHand.weight = weight;
-        //     // leftHand.weight = weight;
-        //
-        //     if (t >= 1f)
-        //     {
-        //         // rightHand.weight = targetWeight;
-        //         // leftHand.weight = targetWeight;
-        //         isLerpingWeight = false;
-        //         
-        //     }
-        // }
+ 
     }
 
+    public void UseGun()
+    {
+        animator.Play("EquipRifle",GUN_LAYER,0);
+    }
+
+    public void UseMelee()
+    {
+        // animator.Play("EquipRifle",GUN_LAYER,0);
+    }
     public override void YOTONetUpdate()
     {
         
