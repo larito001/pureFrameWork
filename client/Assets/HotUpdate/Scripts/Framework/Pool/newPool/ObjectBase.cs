@@ -149,8 +149,10 @@ public abstract class ObjectBase:BaseEntity
     /// </summary>
     public void RecoverObject(bool isDelete = false)
     {
+        Free();
         BeforeRecover(isDelete);
         RecoverObjTrans();
+
         isInVision = false;
         isDrawed = false;
         isRecover = true;

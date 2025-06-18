@@ -58,6 +58,13 @@ public class MeleeBullet : BulletEntity
         {
             EnemyManager.Instance.Hurt(ctrl.entityId,999);
         }
+
+        SceneResBase sceneResBase;
+        if (other.TryGetComponent(out sceneResBase))
+        {
+            sceneResBase.CollectOnce();
+      
+        }
        
     }
 
