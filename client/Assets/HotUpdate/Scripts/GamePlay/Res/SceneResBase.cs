@@ -19,6 +19,7 @@ public class SceneResBase : MonoBehaviour
     public void CollectOnce()
     {
         canCollectNum--;
+        PlayerResManager.Instance.AddWoodNum(1);
         if (canCollectNum == 0)
         {
             resEntity.Remove();

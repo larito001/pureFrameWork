@@ -38,6 +38,8 @@ public class MeleeEntity : BaseEntity
                 melee.transform.localPosition = Vector3.zero;
                 player.builder.Build();
                 firePos = melee.transform.Find("FirePos");
+                firePos.parent = player.character.transform;
+                firePos.localPosition = Vector3.zero;
             });
     }
 
@@ -66,14 +68,20 @@ public class MeleeEntity : BaseEntity
             fire.Stop();
             fire.Play();   
         }
+        YOTOFramework.timeMgr.DelayCall(DelayFire,0.4f);
+        
+        EnemyManager.Instance.SetTarget(this.player.character.transform);
+    }
 
+    private void DelayFire()
+    {
         // 获取子弹对象
         var bullet = MeleeBullet.pool.GetItem(firePos);
         bullet.InstanceGObj();
         bullet.FireFromTo(firePos.position, player.character.transform.forward);
         bullets.Enqueue(bullet);
-        EnemyManager.Instance.SetTarget(this.player.character.transform);
     }
+    
 
     public override void YOTOStart()
     {
@@ -87,7 +95,7 @@ public class MeleeEntity : BaseEntity
             long currentTime = System.DateTime.Now.Ticks / 10000; // 当前时间戳，单位为毫秒
             long elapsedTime = currentTime - current.GetStartTime(); // 时间差，单位为毫秒
 
-            if (elapsedTime > 500) // 如果超过 5 秒（5000 毫秒）
+            if (elapsedTime > 200) // 如果超过 5 秒（5000 毫秒）
             {
                 bullets.Dequeue();
                 current.Remove();
