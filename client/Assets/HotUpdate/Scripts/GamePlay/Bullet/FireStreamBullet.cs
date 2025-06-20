@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using YOTO;
 
-public class NormalTowerBulletEntity : BulletEntity
+public class FireStreamBullet : BulletEntity
 {
-     public static  DataObjPool<NormalTowerBulletEntity,Transform> pool=new DataObjPool<NormalTowerBulletEntity, Transform>("NormalTowerBulletEntity", 20);
+      public static  DataObjPool<FireStreamBullet,Transform> pool=new DataObjPool<FireStreamBullet, Transform>("FireStreamBullet", 20);
     private int needFireCount = 0;
     private Vector3 lastPos;
     private Vector3 lastDir;
@@ -34,7 +33,6 @@ public class NormalTowerBulletEntity : BulletEntity
             temp =bulletBase.gameObject.AddComponent<Rigidbody>();
             temp.useGravity = false;
         }
-        temp.velocity = dir.normalized * 50f;
     }
 
     protected override void AfterInstanceGObj()
@@ -52,42 +50,64 @@ public class NormalTowerBulletEntity : BulletEntity
     //主动移除
     public override void Remove()
     {
+        atkEnemy.Clear();
         Debug.Log("回收");
         base.Remove();
         pool.RecoverItem(this);
     }
-
+    Dictionary<int ,ZombieColliderCtrl> atkEnemy = new Dictionary<int ,ZombieColliderCtrl>();
     public override void TriggerEnter(Collider other)
     {
         ZombieColliderCtrl ctrl;
         if ( other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
         {
-            EnemyManager.Instance.Hurt(ctrl.entityId,44);
-            Remove();
-            
+            // EnemyManager.Instance.Hurt(ctrl.entityId,999);
+            Debug.Log("僵尸进入火焰");
+            atkEnemy.Add(ctrl.entityId,ctrl);
         }
-        else if (other.gameObject.layer == 6)
-        {
-
-            Remove();
-        }
+      
     }
 
     public override void TriggerExit(Collider other)
     {
-        
+        ZombieColliderCtrl ctrl;
+        if ( other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
+        {
+            atkEnemy.Remove(ctrl.entityId);
+        }
     }
 
     public override void SetBulletData(Transform parent)
     {
         SetInVision(true);
-        SetPrefabBundlePath("Assets/HotUpdate/prefabs/Bullet/Bullet.prefab");
+        SetPrefabBundlePath("Assets/HotUpdate/prefabs/Bullet/FireSteam.prefab");
     }
 
     public override void BulletAfterIntoObjectPool()
     {
  
     }
+    List<int >removeList = new List<int>();
+    public override void YOTOUpdate(float deltaTime)
+    {
+        base.YOTOUpdate(deltaTime);
+        foreach (var zombieColliderCtrl in atkEnemy)
+        {
+            if (!EnemyManager.Instance.CheckZombieAlive(zombieColliderCtrl.Value.entityId))
+            {
+                removeList.Add(zombieColliderCtrl.Value.entityId);
+                
+            }
+            else
+            {
+                EnemyManager.Instance.Hurt(zombieColliderCtrl.Value.entityId,20*deltaTime);
+            }
+        }
+        for (var i = 0; i < removeList.Count; i++)
+        {
+            atkEnemy.Remove(removeList[i]);
 
-
+        }
+    
+    }
 }

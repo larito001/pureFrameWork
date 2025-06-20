@@ -7,8 +7,8 @@ using YOTO;
 
 public class TowerCreateUI : UIPageBase
 {
-    public Button button;
-    
+    public Button fire;
+    public Button bullet;
     private Camera cam;
     public override void OnLoad()
     {
@@ -38,22 +38,35 @@ public class TowerCreateUI : UIPageBase
         }
     }
 
-    private void GenerateTower()
+    private void GenerateTowerFire()
     {
         if (TowerBaseEntity.selectTower != null)
         {
-            TowerBaseEntity.selectTower .StartFire();
+
+            TowerBaseEntity.selectTower .GenerateTower(TowerEnum.Fire);
+            CloseSelf();
         }
         
     }
-
+    private void GenerateTowerNormal()
+    {
+        if (TowerBaseEntity.selectTower != null)
+        {
+           
+            TowerBaseEntity.selectTower .GenerateTower(TowerEnum.NormalBullet);
+            CloseSelf();
+        }
+        
+    }
     public override void OnShow()
     {
-        button.onClick.AddListener(GenerateTower);
+        fire.onClick.AddListener(GenerateTowerFire);
+        bullet.onClick.AddListener(GenerateTowerNormal);
     }
 
     public override void OnHide()
     {
-        button.onClick.RemoveListener(GenerateTower);
+        bullet.onClick.RemoveListener(GenerateTowerNormal);
+        fire.onClick.RemoveListener(GenerateTowerFire);
     }
 }

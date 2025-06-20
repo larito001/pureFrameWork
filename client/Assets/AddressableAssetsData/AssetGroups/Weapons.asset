@@ -17,12 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 8aa8659fe21b04b42a69608d87ff4c4a
   m_SerializeEntries:
-  - m_GUID: 08e3ca4a8798512439a37954eb1aaea5
-    m_Address: Assets/HotUpdate/prefabs/Bullet/Impact.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - all
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aafd8a29881ca0c44a84cc241a46738d
     m_Address: Assets/melee weapons/Prefabs/Axe4.prefab
     m_ReadOnly: 0

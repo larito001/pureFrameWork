@@ -20,14 +20,10 @@ public class MeleeBullet : BulletEntity
             needFireCount++;
             return;
         } 
-        bulletBase.trail.enabled = false;
         // 设置子弹位置：角色前方 + Y轴偏移（比如 +1.0f 高一点）
         bulletBase.transform.position = pos;
-        bulletBase.trail.Clear();
-        bulletBase.trail.time = 0.1f; 
         // 设置子弹朝向
         bulletBase.transform.rotation = Quaternion.LookRotation(dir);
-        bulletBase.trail.enabled = true;
         bulletBase.transform.SetParent(parent);
     }
 
@@ -65,6 +61,11 @@ public class MeleeBullet : BulletEntity
             sceneResBase.CollectOnce();
       
         }
+       
+    }
+
+    public override void TriggerExit(Collider other)
+    {
        
     }
 

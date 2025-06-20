@@ -3,25 +3,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletBase :MonoBehaviour
+public class BulletBase : MonoBehaviour
 {
     public ParticleSystem particle;
-    public TrailRenderer trail;
+    [SerializeField]
+    private TrailRenderer trail;
+
+    public void SetTrailEnabled(bool enabled)
+    {
+        if (this.trail != null)
+            trail.enabled = enabled;
+    }
+
+    public void SetTrailTime(float time)
+    {
+        if (this.trail != null)
+            trail.time = time;
+    }
+
+    public void ClearTrail()
+    {
+        if (this.trail != null)
+            trail.Clear();
+    }
 
     private BulletEntity bulletEntity;
+
     public void Init(BulletEntity entity)
     {
-        bulletEntity=entity;
-        trail.time = 0;
+        bulletEntity = entity;
+        if (trail != null)
+            trail.time = 0;
     }
-    private void OnTriggerEnter(Collider other)
-    { 
 
+    private void OnTriggerEnter(Collider other)
+    {
+        // Debug.Log("碰撞内部！"+other.name);
         if (bulletEntity != null)
         {
+            // Debug.Log("碰撞内部尝试成功");
             bulletEntity.TriggerEnter(other);
         }
-    
-       
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (bulletEntity != null)
+        {
+            bulletEntity.TriggerExit(other);
+        }
     }
 }

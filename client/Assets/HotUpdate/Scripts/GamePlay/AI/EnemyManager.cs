@@ -36,6 +36,10 @@ public class EnemyManager : SingletonMono<EnemyManager>
         }
     }
 
+    public bool  CheckZombieAlive(int id)
+    {
+       return zombieEntities.ContainsKey(id);
+    }
     public void RemoveZombie(int id)
     {
         if (zombieEntities.ContainsKey(id))

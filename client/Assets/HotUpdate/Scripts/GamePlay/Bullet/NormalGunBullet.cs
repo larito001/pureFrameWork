@@ -20,14 +20,14 @@ public class NormalGunBullet :BulletEntity
             needFireCount++;
             return;
         } 
-        bulletBase.trail.enabled = false;
+        bulletBase.SetTrailEnabled(false);
         // 设置子弹位置：角色前方 + Y轴偏移（比如 +1.0f 高一点）
         bulletBase.transform.position = pos;
-        bulletBase.trail.Clear();
-        bulletBase.trail.time = 0.1f; 
+        bulletBase.ClearTrail();
+        bulletBase.SetTrailTime(0.1f);
         // 设置子弹朝向
         bulletBase.transform.rotation = Quaternion.LookRotation(dir);
-        bulletBase.trail.enabled = true;
+        bulletBase.SetTrailEnabled(true);
         // 添加刚体
         Rigidbody temp;
         if (!bulletBase.gameObject.TryGetComponent<Rigidbody>(out  temp))
@@ -64,12 +64,19 @@ public class NormalGunBullet :BulletEntity
         if ( other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
         {
             EnemyManager.Instance.Hurt(ctrl.entityId,44);
+            Remove();
+            
         }
         else if (other.gameObject.layer == 6)
         {
 
             Remove();
         }
+    }
+
+    public override void TriggerExit(Collider other)
+    {
+        
     }
 
     public override void SetBulletData(Transform parent)

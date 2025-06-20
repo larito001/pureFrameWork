@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using YOTO;
 
+
+
+public enum TowerEnum
+{
+    Fire,
+    NormalBullet,
+}
 public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
 {
+    
+    
     public static DataObjPool<TowerBaseEntity, Vector3> pool =
         new DataObjPool<TowerBaseEntity, Vector3>("TowerBaseEntity", 20);
 
     public static TowerBaseEntity selectTower;
-    private bool isStartShoot = false;
-    public void StartFire()
-    {
-        isStartShoot = true;
-    }
+    private bool isHaveTower = false;
+    
     protected override void YOTOOnload()
     {
     }
@@ -22,28 +28,35 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
     {
     }
 
-    private float timer = 0;
+
+
+    public void GenerateTower(TowerEnum towerType)
+    {
+        if (towerType==TowerEnum.NormalBullet)
+        {
+            var ntower = NormalTower.pool.GetItem(this);
+            // ntower.InstanceGObj();
+            ntower.Location=this.Location;
+        }else if (towerType == TowerEnum.Fire)
+        {
+            var tower = FireStreamTower.pool.GetItem(this);
+            tower.Location=this.Location;
+            //tower.InstanceGObj();
+        }
+        else
+        {
+            var ntower = NormalTower.pool.GetItem(this);
+            // ntower.InstanceGObj();
+            ntower.Location=this.Location;
+        }
+        isHaveTower = true;
+        //todo:选择防御塔生产
+   
+    }
 
     public override void YOTOUpdate(float deltaTime)
     {
-        if (!isStartShoot) return;
-        if (timer > 0.2f)
-        {
-            var e = EnemyManager.Instance.GetEnemey();
-            if (e != null&&e.zombieBase!=null)
-            {
-                var dir = e.zombieBase.transform.position - this.Location;
-                var bullet = NormalGunBullet.pool.GetItem(null);
-                bullet.InstanceGObj();
-                bullet.FireFromTo(this.Location + new Vector3(0, 1, 0), dir);
-                Debug.Log("位置：" + this.Location);
-            }
-
-
-            timer = 0;
-        }
-
-        timer += deltaTime;
+    
     }
 
     public override void YOTONetUpdate()
@@ -59,17 +72,17 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
     }
 
 
-
     protected override void AfterInstanceGObj()
     {
-      var towerBase=  ObjTrans.GetComponent<TowerBase>();
-      towerBase.SetId(this._entityID);
+        var towerBase = ObjTrans.GetComponent<TowerBase>();
+        towerBase.SetId(this._entityID);
     }
 
     public void AfterIntoObjectPool()
     {
-        isStartShoot = false;
+        isHaveTower = false;
     }
+
 
     public void SetData(Vector3 serverData)
     {
@@ -79,12 +92,11 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
 
     public void OnEnter()
     {
-        if (!isStartShoot)
+        if (!isHaveTower)
         {
             YOTOFramework.uIMgr.Show(UIEnum.TowerCreateUI);
-            selectTower = this; 
+            selectTower = this;
         }
-
     }
 
     public void OnExit()
@@ -92,6 +104,4 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
         YOTOFramework.uIMgr.Hide(UIEnum.TowerCreateUI);
         selectTower = null;
     }
-
-
 }

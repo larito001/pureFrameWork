@@ -34,10 +34,10 @@ public class NormalScene : VirtualSceneBase
         player.Init(org.transform.position);
         for (int i = 0; i < 5; i++)
         {
-            TowerManager.Instance.GenerateTowerBase(org.transform.position+new Vector3(5,0,0)*i); 
+            TowerManager.Instance.GenerateTowerBase(org.transform.position+new Vector3(0,-4,0)+new Vector3(5,0,0)*i); 
             var wood=  SceneResEntity.pool.GetItem(Vector3.zero);
             wood.InstanceGObj();
-            wood.Location = org.transform.position+new Vector3(0,-4,0) + new Vector3(5, 0, 0) * i;
+            wood.Location = org.transform.position+new Vector3(5,-4,0) + new Vector3(5, 0, 0) * i;
         }
 
   

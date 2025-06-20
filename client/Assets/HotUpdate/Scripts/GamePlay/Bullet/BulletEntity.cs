@@ -60,6 +60,7 @@ public abstract class BulletEntity :ObjectBase,PoolItem<Transform>
         RecoverObject();
     }
     public abstract void TriggerEnter(Collider other);
+    public abstract void TriggerExit(Collider other);
     public abstract void SetBulletData(Transform parent);
     public abstract void BulletAfterIntoObjectPool();
     public void AfterIntoObjectPool()

@@ -142,14 +142,12 @@ public abstract class ObjectBase:BaseEntity
             loadPrefab();
             isDrawed = true;
         }
-
     }
     /// <summary>
     /// 回收
     /// </summary>
     public void RecoverObject(bool isDelete = false)
     {
-        Free();
         BeforeRecover(isDelete);
         RecoverObjTrans();
 

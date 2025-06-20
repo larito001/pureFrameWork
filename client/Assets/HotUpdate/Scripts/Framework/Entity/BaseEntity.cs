@@ -15,6 +15,13 @@ public abstract  class BaseEntity
     }
     public  BaseEntity()
     {
+        Init();
+        _isLoaded = true;
+    }
+
+    public void Init()
+    {
+        if (_isLoaded) return;
         _entityID=ids++;
         //Debug.Log("���������");
         YOTOOnload();
