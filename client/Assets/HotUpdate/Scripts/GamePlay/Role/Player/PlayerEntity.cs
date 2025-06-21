@@ -275,26 +275,26 @@ public class PlayerEntity : CharacterBase
 
             if (direction.sqrMagnitude > 0.001f)
             {
-                // 计算目标方向相对于角色前方的角度差
-                Vector3 characterForward = character.transform.forward;
-                characterForward.y = 0f;
-                characterForward.Normalize();
-
-                Vector3 targetDirection = direction.normalized;
-                float angleToTarget = Vector3.SignedAngle(characterForward, targetDirection, Vector3.up);
-
-                // 限制在 [-maxHeadYaw, maxHeadYaw] 之间
-                float clampedAngle = Mathf.Clamp(angleToTarget, -maxHeadYaw, maxHeadYaw);
-
-                // 计算目标旋转（绕Y轴旋转）
-                Quaternion targetRotation = Quaternion.Euler(0f, character.transform.eulerAngles.y + clampedAngle, 0f);
-
-                // 插值旋转，让头部平滑转向目标方向（受限）
-                headTarget.rotation = Quaternion.Slerp(
-                    headTarget.rotation,
-                    targetRotation,
-                    Time.deltaTime * headRotationSpeed
-                );
+                // // 计算目标方向相对于角色前方的角度差
+                // Vector3 characterForward = character.transform.forward;
+                // characterForward.y = 0f;
+                // characterForward.Normalize();
+                //
+                // Vector3 targetDirection = direction.normalized;
+                // float angleToTarget = Vector3.SignedAngle(characterForward, targetDirection, Vector3.up);
+                //
+                // // 限制在 [-maxHeadYaw, maxHeadYaw] 之间
+                // float clampedAngle = Mathf.Clamp(angleToTarget, -maxHeadYaw, maxHeadYaw);
+                //
+                // // 计算目标旋转（绕Y轴旋转）
+                // Quaternion targetRotation = Quaternion.Euler(0f, character.transform.eulerAngles.y + clampedAngle, 0f);
+                //
+                // // 插值旋转，让头部平滑转向目标方向（受限）
+                // headTarget.rotation = Quaternion.Slerp(
+                //     headTarget.rotation,
+                //     targetRotation,
+                //     Time.deltaTime * headRotationSpeed
+                // );
             }
         }
         else

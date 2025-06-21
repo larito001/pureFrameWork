@@ -17,8 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 8aa8659fe21b04b42a69608d87ff4c4a
   m_SerializeEntries:
-  - m_GUID: aafd8a29881ca0c44a84cc241a46738d
-    m_Address: Assets/melee weapons/Prefabs/Axe4.prefab
+  - m_GUID: d31c63b1178737a45919f63aab757a81
+    m_Address: Assets/Fire Axe/Prefab/PBR/Fire_Axe_LODA.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - all

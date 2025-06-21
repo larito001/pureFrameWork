@@ -29,7 +29,7 @@ public class MeleeEntity : BaseEntity
         // VFXManager.Instance.Init();
 
 
-        YOTOFramework.resMgr.LoadGameObject("Assets/melee weapons/Prefabs/Axe4.prefab",
+        YOTOFramework.resMgr.LoadGameObject("Assets/Fire Axe/Prefab/PBR/Fire_Axe_LODA.prefab",
             Vector3.zero, Quaternion.identity, (obj, pos, rot) =>
             {
                 melee = UnityEngine.Object.Instantiate(obj,handRoot.transform);
