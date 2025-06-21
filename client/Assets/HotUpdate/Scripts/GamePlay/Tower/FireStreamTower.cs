@@ -29,7 +29,7 @@ public class FireStreamTower : ObjectBase, PoolItem<TowerBaseEntity>
                 var dir = e.zombieBase.transform.position - this.Location;
                 var bullet = FireStreamBullet.pool.GetItem(null);
                 bullet.InstanceGObj();
-                bullet.FireFromTo(this.Location + new Vector3(0, 1, 0), dir);
+                bullet.FireFromTo(this.Location , dir);
                 bullets.Enqueue(bullet);
                 Debug.Log("位置：" + this.Location);
             }
