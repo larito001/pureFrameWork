@@ -16,13 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: ee77edf04bfd97147b7076edc52d2904
-  m_SerializeEntries:
-  - m_GUID: 5abbec3d05f08734482d8d31d1d36117
-    m_Address: Assets/HotUpdate/Material/PhyicMaterial/smoothMaterial.physicMaterial
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - all
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 9195e527738c21e4f8021deaa48a5e38, type: 2}
   m_SchemaSet:
