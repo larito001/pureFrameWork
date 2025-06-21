@@ -14,6 +14,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     public float HP = 100;
     private Transform target;
     public bool isInit=false;
+    private Camera cam;
     public void SetTarget(Transform t)
     {
         this.target = t;
@@ -37,11 +38,22 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
         zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =
             GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
         isInit = true;
+        if (cam==null)
+        {
+            cam=YOTOFramework.cameraMgr.getUICamera();
+        }
     }
 
     public void Hurt(float hurt)
     {
+      
         HP -= hurt;
+    
+        // 1. 将世界坐标转换为屏幕坐标
+        Vector3 screenPosition = cam.WorldToScreenPoint(this.objTrans.position);
+            
+        int rand = Random.Range(0, 2); // 0 或 1
+        FlyTextMgr.Instance.AddText(hurt.ToString(), screenPosition, (FlyTextType)rand);
         if (HP <= 0)
         {
             Die();

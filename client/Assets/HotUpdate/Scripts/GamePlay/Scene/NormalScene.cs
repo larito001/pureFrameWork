@@ -26,7 +26,6 @@ public class NormalScene : VirtualSceneBase
     {
         //加载事件系统
         EmergencyManager.Instance.Init();
-        FlyTextMgr.Instance.AddText("GameStart!", Vector3.zero, FlyTextType.Normal);
         YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
         player = new PlayerEntity();
         var org = GameObject.Find("PlayerOrgPos");

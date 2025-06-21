@@ -88,26 +88,35 @@ public class FireStreamBullet : BulletEntity
  
     }
     List<int >removeList = new List<int>();
+    private float timer = 0;
     public override void YOTOUpdate(float deltaTime)
     {
         base.YOTOUpdate(deltaTime);
-        foreach (var zombieColliderCtrl in atkEnemy)
+        if (timer >=0.5f)
         {
-            if (!EnemyManager.Instance.CheckZombieAlive(zombieColliderCtrl.Value.entityId))
+            foreach (var zombieColliderCtrl in atkEnemy)
             {
-                removeList.Add(zombieColliderCtrl.Value.entityId);
+                if (!EnemyManager.Instance.CheckZombieAlive(zombieColliderCtrl.Value.entityId))
+                {
+                    removeList.Add(zombieColliderCtrl.Value.entityId);
                 
+                }
+                else
+                {
+                    EnemyManager.Instance.Hurt(zombieColliderCtrl.Value.entityId,20);
+                }
             }
-            else
+            for (var i = 0; i < removeList.Count; i++)
             {
-                EnemyManager.Instance.Hurt(zombieColliderCtrl.Value.entityId,20*deltaTime);
-            }
-        }
-        for (var i = 0; i < removeList.Count; i++)
-        {
-            atkEnemy.Remove(removeList[i]);
+                atkEnemy.Remove(removeList[i]);
 
+            }
+
+            timer -= 0.5f;
         }
-    
+
+        timer += deltaTime;
+
+
     }
 }
