@@ -7,7 +7,8 @@ public enum UILayerEnum
 {
     Normal,
     Top,
-    Tips
+    Tips,
+    PopText,
 }
 
 public class UILayer

@@ -19,6 +19,7 @@ public class SceneResBase : MonoBehaviour
     public void CollectOnce()
     {
         canCollectNum--;
+        FlyTextMgr.Instance.AddText("wood+1", this.transform.position, FlyTextType.Normal);
         PlayerResManager.Instance.AddWoodNum(1);
         if (canCollectNum == 0)
         {
