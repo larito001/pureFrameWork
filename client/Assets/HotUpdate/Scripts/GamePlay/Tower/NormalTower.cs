@@ -77,6 +77,6 @@ public class NormalTower :  ObjectBase, PoolItem<TowerBaseEntity>
     public void SetData(TowerBaseEntity serverData)
     {
         SetInVision(true);
-        SetPrefabBundlePath("");
+        SetPrefabBundlePath("Assets/HotUpdate/prefabs/Tower/PreFabs/Sci-Fi_Turret_2_Yellow.prefab");
     }
 }

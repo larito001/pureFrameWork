@@ -35,19 +35,21 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
         if (towerType==TowerEnum.NormalBullet)
         {
             var ntower = NormalTower.pool.GetItem(this);
+            ntower.Location=this.Location+new Vector3(0,1,0);
             ntower.InstanceGObj();
-            ntower.Location=this.Location;
+
         }else if (towerType == TowerEnum.Fire)
         {
             var tower = FireStreamTower.pool.GetItem(this);
-            tower.Location=this.Location;
+            tower.Location=this.Location+new Vector3(0,1,0);
             tower.InstanceGObj();
         }
         else
         {
             var ntower = NormalTower.pool.GetItem(this);
-            // ntower.InstanceGObj();
             ntower.Location=this.Location;
+            ntower.InstanceGObj();
+    
         }
         isHaveTower = true;
         //todo:选择防御塔生产
