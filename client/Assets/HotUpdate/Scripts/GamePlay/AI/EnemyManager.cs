@@ -63,7 +63,7 @@ public class EnemyManager : SingletonMono<EnemyManager>
                 zombieEntity.Location=pos;
 
                 zombieEntities.Add(zombieEntity._entityID, zombieEntity);
-            },1,10);
+            },0.5f,50);
         }
 
   

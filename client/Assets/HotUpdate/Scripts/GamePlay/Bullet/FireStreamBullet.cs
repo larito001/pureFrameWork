@@ -62,7 +62,7 @@ public class FireStreamBullet : BulletEntity
         if ( other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
         {
             // EnemyManager.Instance.Hurt(ctrl.entityId,999);
-            Debug.Log("僵尸进入火焰");
+            // Debug.Log("僵尸进入火焰");
             atkEnemy.Add(ctrl.entityId,ctrl);
         }
       

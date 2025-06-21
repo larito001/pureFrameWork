@@ -102,9 +102,14 @@ public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
 
         // ✅ 同步淡出
         seq.Join(cg.DOFade(0f, fadeTime).SetEase(Ease.InQuad));
-
+        seq.OnComplete(AnimComplete);
     }
 
+    private void AnimComplete()
+    {
+        RecoverObject();
+        pool.RecoverItem(this);
+    }
     public override void YOTOUpdate(float deltaTime)
     {
        
