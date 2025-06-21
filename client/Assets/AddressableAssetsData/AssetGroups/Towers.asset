@@ -17,8 +17,26 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 3641dd7216f8a77488f896e32bb731ac
   m_SerializeEntries:
+  - m_GUID: 2e772378685c95b4cb6628d338fceb0f
+    m_Address: Assets/HotUpdate/prefabs/Tower/PreFabs/Sci-Fi_Turret_2_Red.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5e2661d9065582d459345829c1ff6ddf
     m_Address: Assets/HotUpdate/prefabs/TowerBase/BaseOfTower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b915b3cd66373c543b4b6f7946fd3f2f
+    m_Address: Assets/HotUpdate/prefabs/Tower/PreFabs/Sci-Fi_Turret_2_Yellow.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e8df33999e34bfd4db803c4bf2561134
+    m_Address: Assets/HotUpdate/prefabs/Tower/PreFabs/Sci-Fi_Turret_2_Green.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - all

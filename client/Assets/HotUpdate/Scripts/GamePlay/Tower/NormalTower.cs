@@ -77,5 +77,6 @@ public class NormalTower :  ObjectBase, PoolItem<TowerBaseEntity>
     public void SetData(TowerBaseEntity serverData)
     {
         SetInVision(true);
+        SetPrefabBundlePath("");
     }
 }

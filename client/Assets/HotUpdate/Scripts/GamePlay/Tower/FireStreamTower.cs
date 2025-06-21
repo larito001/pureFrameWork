@@ -76,5 +76,6 @@ public class FireStreamTower : ObjectBase, PoolItem<TowerBaseEntity>
     public void SetData(TowerBaseEntity serverData)
     {
         SetInVision(true);
+        SetPrefabBundlePath("Assets/HotUpdate/prefabs/Tower/PreFabs/Sci-Fi_Turret_2_Red.prefab");
     }
 }

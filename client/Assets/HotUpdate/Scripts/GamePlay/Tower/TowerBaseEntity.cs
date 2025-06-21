@@ -35,13 +35,13 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
         if (towerType==TowerEnum.NormalBullet)
         {
             var ntower = NormalTower.pool.GetItem(this);
-            // ntower.InstanceGObj();
+            ntower.InstanceGObj();
             ntower.Location=this.Location;
         }else if (towerType == TowerEnum.Fire)
         {
             var tower = FireStreamTower.pool.GetItem(this);
             tower.Location=this.Location;
-            //tower.InstanceGObj();
+            tower.InstanceGObj();
         }
         else
         {
