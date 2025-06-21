@@ -35,6 +35,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - all
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63d47703bd4d46849848259ee2a46f3d
+    m_Address: Assets/HotUpdate/prefabs/UI/LoadingUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 67b712b42fd128e42b78e47ed7e7cf18
     m_Address: Assets/HotUpdate/prefabs/UI/StartPanel.prefab
     m_ReadOnly: 0

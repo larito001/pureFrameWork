@@ -13,7 +13,7 @@ namespace YOTO
     public class SceneMgr
     {
 
-        CameraCtrl cameraCtrl;
+       public CameraCtrl cameraCtrl;
 
         Dictionary<Scenes, VirtualSceneBase> scenesMap = new Dictionary<Scenes, VirtualSceneBase>() {
             { Scenes.Normal, new NormalScene()},

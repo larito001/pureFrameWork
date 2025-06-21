@@ -158,6 +158,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StaticLoadingPage
       objectReference: {fileID: 0}
+    - target: {fileID: 4065790761386802965, guid: 522ca8c4d7322854ba499f905c8e3840, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4157718839410794214, guid: 522ca8c4d7322854ba499f905c8e3840, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -383,8 +387,8 @@ Camera:
   m_GameObject: {fileID: 1087706060}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

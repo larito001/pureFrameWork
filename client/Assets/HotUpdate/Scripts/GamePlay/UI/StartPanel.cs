@@ -10,11 +10,22 @@ public class StartPanel : UIPageBase
     public Button treeBtn;
     public override void OnLoad()
     {
+        YOTOFramework.sceneMgr.cameraCtrl.UseStartCamera();
         startBtn.onClick.AddListener(() =>
         {
            
-            YOTOFramework.sceneMgr.LoadScene(Scenes.Normal); 
-                         CloseSelf();
+      
+            YOTOFramework.uIMgr.Show(UIEnum.StartLoadingPanel);
+            YOTOFramework.timeMgr.DelayCall(() =>
+            {
+                YOTOFramework.sceneMgr.LoadScene(Scenes.Normal); 
+                YOTOFramework.sceneMgr.cameraCtrl.UsePlayerCamera();
+            },1);
+            YOTOFramework.timeMgr.DelayCall(() =>
+            {
+                YOTOFramework.uIMgr.Hide(UIEnum.StartLoadingPanel);
+            },8);
+            CloseSelf();
         });
         treeBtn.onClick.AddListener(() =>
         {

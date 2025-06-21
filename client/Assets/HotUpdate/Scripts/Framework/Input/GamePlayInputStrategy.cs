@@ -22,7 +22,11 @@ namespace YOTO
 
         public void OnLook(InputAction.CallbackContext context)
         {
-            
+            Debug.Log("look");
+            if (context.phase == InputActionPhase.Performed)
+            {
+                YOTOFramework.eventMgr.TriggerEvent<Vector2>(EventType.Look, context.ReadValue<Vector2>()); 
+            }
         }
 
         public void OnMove(InputAction.CallbackContext context)

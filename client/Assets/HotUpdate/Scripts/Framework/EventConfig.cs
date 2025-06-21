@@ -23,6 +23,7 @@ namespace YOTO
        RefreshMousePos,
        TryReload,
        KeyBoardNumClick,
+       Look,
     }
 
 

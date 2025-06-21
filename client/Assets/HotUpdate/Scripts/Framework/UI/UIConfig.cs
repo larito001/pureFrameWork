@@ -42,7 +42,8 @@ public enum UIEnum
     SkillTreePanel,
     FightingPanel,
     TowerCreateUI,
-    FightingEndPanel
+    FightingEndPanel,
+    StartLoadingPanel,
 }
 public class UIConfig
 {
@@ -55,6 +56,7 @@ public class UIConfig
          { UIEnum.SkillTreePanel, new UIInfo(UIEnum.SkillTreePanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/SkillTreePanel.prefab") },
          { UIEnum.FightingPanel, new UIInfo( UIEnum.FightingPanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/FightingPanel.prefab") },
          { UIEnum.TowerCreateUI, new UIInfo( UIEnum.TowerCreateUI,UILayerEnum.Tips,"Assets/HotUpdate/prefabs/UI/TowerCreateUI.prefab") },
+         { UIEnum.StartLoadingPanel, new UIInfo( UIEnum.StartLoadingPanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/LoadingUI.prefab") },
     };
 
 }

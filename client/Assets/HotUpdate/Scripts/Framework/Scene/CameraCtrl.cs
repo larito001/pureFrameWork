@@ -5,69 +5,98 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using YOTO;
+using EventType = YOTO.EventType;
 
 public class CameraCtrl
 {
+    CinemachineVirtualCamera startVCamera;
     CinemachineVirtualCamera vCamera;
     Vector3 moveDirection;
-    Vector3 currentVelocity; // ��¼��ǰ������ٶ�
-    float moveSpeed = 3f; // �϶�ʱ���ƶ��ٶ�
-    float drag = 0.95f; // ��ק����ٶ�˥��ϵ��
-    bool isDragging = false; // ����Ƿ������϶�
+    Vector3 currentVelocity; 
+    float moveSpeed = 3f; 
+    float drag = 0.95f; 
+    bool isDragging = false; 
     GraphicRaycaster graphicRaycaster;
     PointerEventData pointerEventData;
-    private Vector3 touchPosition; 
+    private Vector3 touchPosition;
+    private GameObject startCameraDir;
+    private GameObject cameraDir;
+    private float xRotation = 0f;
+    private float yRotation = 0f;
+
+    private float xRotationVelocity = 0f; // 用于SmoothDamp平滑垂直角度
+    private float yRotationVelocity = 0f; // 用于SmoothDamp平滑水平角度
+
+    public float verticalClamp = 5f;
+    public float horizontalClamp = 7f;
+
+    public float sensitivity = 100f;
+    public float smoothTime = 0.35f; // 平滑时间，调节缓启动和缓减速效果
+
+    private Vector2 lookInput = new Vector2(0, 0);
+
     public CameraCtrl()
     {
+        startVCamera = YOTOFramework.cameraMgr.getVirtualCamera("StartCameraVirtual");
+        startCameraDir = GameObject.Find("StartCameraDir");
+        startVCamera.transform.position = startCameraDir.transform.position;
+        startVCamera.transform.rotation = startCameraDir.transform.rotation;
+        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Look,
+            (lookInput) => { this.lookInput = lookInput; });
         vCamera = YOTOFramework.cameraMgr.getVirtualCamera("MainCameraVirtual");
-        GameObject cameraDir = GameObject.Find("CameraDir");
+        cameraDir = GameObject.Find("CameraDir");
         vCamera.transform.position = cameraDir.transform.position;
         vCamera.transform.rotation = cameraDir.transform.rotation;
+
+
         vCamera.m_Lens.FieldOfView = 30;
         YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Touch, Touch);
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire,Press);
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, Press);
         //YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.TouchMove, CameraMove);
         YOTOFramework.eventMgr.AddEventListener<float>(YOTO.EventType.Scroll, CameraSclae);
-  
+
         graphicRaycaster = YOTOFramework.uIMgr.GetLayer(UILayerEnum.Tips).layerRoot.GetComponent<GraphicRaycaster>();
         pointerEventData = new PointerEventData(EventSystem.current);
     }
 
+    public void UseStartCamera()
+    {
+        startVCamera.Priority = 999;
+        vCamera.Priority = 0;
+    }
+
+    public void UsePlayerCamera()
+    {
+        startVCamera.Priority = 0;
+        vCamera.Priority = 999;
+    }
+
     private void CameraMove(Vector2 dir)
     {
-        // ��ʼ�϶��������϶����
         isDragging = true;
-
-        // ��ȡ�������ǰ���򣨺���y�ᣬ��Ϊ��ˮƽ�ƶ���
         Vector3 forward = new Vector3(vCamera.transform.forward.x, 0, vCamera.transform.forward.z).normalized;
-        // ��ȡ������ҷ��򣨺���y�ᣬ��Ϊ��ˮƽ�ƶ���
         Vector3 right = new Vector3(vCamera.transform.right.x, 0, vCamera.transform.right.z).normalized;
-
-        // �����϶�������ǰ�ƶ�ʱ�������ǰ�����������ƶ�ʱ����������ҷ���
         moveDirection = -forward * dir.y - right * dir.x;
-
-        // ���µ�ǰ�ٶ�
         currentVelocity = moveDirection * moveSpeed;
-
-        // �����ƶ����
         vCamera.transform.position += currentVelocity * Time.deltaTime;
     }
-    List<TowerBase> towers =new List<TowerBase>();
+
+    List<TowerBase> towers = new List<TowerBase>();
+
     private void Press()
-    {    
+    {
         List<RaycastResult> results = new List<RaycastResult>();
         graphicRaycaster.Raycast(pointerEventData, results);
         if (results.Count > 0)
         {
-       
             Debug.Log("点到UI");
         }
         else
         {
-            Vector3 dir=new Vector3(touchPosition.x,touchPosition.y, vCamera.m_Lens.NearClipPlane);
+            Vector3 dir = new Vector3(touchPosition.x, touchPosition.y, vCamera.m_Lens.NearClipPlane);
             Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
             RaycastHit hitInfo;
-            if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("BaseOfTower")))
+            if (Physics.Raycast(ray, out hitInfo, 1000, LayerMask.GetMask("BaseOfTower")))
             {
                 if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("BaseOfTower"))
                 {
@@ -78,9 +107,7 @@ public class CameraCtrl
                         tower.OnEnter();
                         towers.Add(tower);
                     }
-                } 
-         
-              
+                }
             }
             else
             {
@@ -88,25 +115,25 @@ public class CameraCtrl
                 {
                     towers[i].OnExit();
                 }
+
                 towers.Clear();
             }
         }
-     
     }
+
     private void Touch(Vector2 pos)
     {
-
         touchPosition = pos;
-        Vector3 dir=new Vector3(pos.x,pos.y, vCamera.m_Lens.NearClipPlane);
+        Vector3 dir = new Vector3(pos.x, pos.y, vCamera.m_Lens.NearClipPlane);
         // Debug.Log("TOUCH" + dir);
         Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
         Ray uiRay = YOTOFramework.cameraMgr.getUICamera().ScreenPointToRay(dir);
-        RaycastHit hitInfo;//
+        RaycastHit hitInfo; //
 
         pointerEventData.position = pos;
         List<RaycastResult> results = new List<RaycastResult>();
 
-        // ִ��UI���߼��
+        // ִUI
         // graphicRaycaster.Raycast(pointerEventData, results);
         // if (results.Count > 0)
         // {
@@ -117,15 +144,13 @@ public class CameraCtrl
         // }
         // else
         {
-       if (Physics.Raycast(ray, out hitInfo,1000 ,LayerMask.GetMask("Ground")))
+            if (Physics.Raycast(ray, out hitInfo, 1000, LayerMask.GetMask("Ground")))
             {
                 // Debug.Log("Ground hit");
                 YOTOFramework.eventMgr.TriggerEvent<Vector3>(YOTO.EventType.RefreshMousePos, hitInfo.point);
             }
-          
         }
-   
-        //����һ�����ߣ��򵽵ذ���
+        
     }
 
     private void CameraSclae(float sclale)
@@ -139,24 +164,42 @@ public class CameraCtrl
             vCamera.m_Lens.FieldOfView += 1;
         }
     }
-    // ���������Ҫÿ֡����
+    
     public void Update(float dt)
     {
-        // �����ǰû���϶�
         if (!isDragging)
         {
-            // ��ק�ɿ��󣬼����ƶ����𽥼���
             if (currentVelocity.magnitude > 0.01f)
             {
                 vCamera.transform.position += currentVelocity * dt;
-                // �ٶ���˥��
                 currentVelocity *= drag;
             }
         }
         else
         {
-            // �϶������󣬽������Ϊfalse���������϶����ֲ���Ҫ���ƶ�
             isDragging = false;
+        }
+
+        {
+            float mouseX = lookInput.x * sensitivity * Time.deltaTime;
+            float mouseY = lookInput.y * sensitivity * Time.deltaTime;
+
+            float targetXRotation = xRotation - mouseY;
+            float targetYRotation = yRotation + mouseX;
+            // 获取目标朝向并直接计算欧拉角
+            Vector3 desiredEuler = Quaternion.LookRotation(startCameraDir.transform.forward).eulerAngles;
+            // 计算并限制角度偏差
+            float angleDiffX = Mathf.Clamp(Mathf.DeltaAngle(desiredEuler.x, targetXRotation), -verticalClamp,
+                verticalClamp);
+            float angleDiffY = Mathf.Clamp(Mathf.DeltaAngle(desiredEuler.y, targetYRotation), -horizontalClamp,
+                horizontalClamp);
+            // 计算最终目标角度（目标朝向+允许的偏差）
+            targetXRotation = desiredEuler.x + angleDiffX;
+            targetYRotation = desiredEuler.y + angleDiffY;
+            // 平滑过渡并应用旋转
+            xRotation = Mathf.SmoothDampAngle(xRotation, targetXRotation, ref xRotationVelocity, smoothTime);
+            yRotation = Mathf.SmoothDampAngle(yRotation, targetYRotation, ref yRotationVelocity, smoothTime);
+            startVCamera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
         }
     }
 }
