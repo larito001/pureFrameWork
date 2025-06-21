@@ -22,7 +22,7 @@ public class NormalTower :  ObjectBase, PoolItem<TowerBaseEntity>
     private Queue<BulletEntity> bullets = new Queue<BulletEntity>();
     public override void YOTOUpdate(float deltaTime)
     {
-        if (timer >1f)
+        if (timer >0.2f)
         {
             var e = EnemyManager.Instance.GetEnemey();
             if (e != null && e.zombieBase != null)
@@ -44,7 +44,7 @@ public class NormalTower :  ObjectBase, PoolItem<TowerBaseEntity>
             var current = bullets.Peek();
             long currentTime = System.DateTime.Now.Ticks / 10000;  // 当前时间戳，单位为毫秒
             long elapsedTime = currentTime - current.GetStartTime();  // 时间差，单位为毫秒
-
+            
             if (elapsedTime > 2000)  // 如果超过 5 秒（5000 毫秒）
             {
                 bullets.Dequeue();

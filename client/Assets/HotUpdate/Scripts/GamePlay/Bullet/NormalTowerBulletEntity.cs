@@ -66,11 +66,6 @@ public class NormalTowerBulletEntity : BulletEntity
             Remove();
             
         }
-        else if (other.gameObject.layer == 6)
-        {
-
-            Remove();
-        }
     }
 
     public override void TriggerExit(Collider other)
