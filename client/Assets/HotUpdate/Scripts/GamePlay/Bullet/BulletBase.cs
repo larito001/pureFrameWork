@@ -14,7 +14,12 @@ public class BulletBase : MonoBehaviour
         if (this.trail != null)
             trail.enabled = enabled;
     }
-
+    public void SetBoxEnabled(bool enabled)
+    {
+        var box = this.GetComponent<BoxCollider>();
+        if (box != null)
+            box.enabled = enabled;
+    }
     public void SetTrailTime(float time)
     {
         if (this.trail != null)

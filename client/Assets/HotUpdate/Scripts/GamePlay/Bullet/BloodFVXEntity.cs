@@ -1,0 +1,67 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using YOTO;
+
+public class BloodFVXEntity : ObjectBase, PoolItem<Vector3>
+{
+    public static DataObjPool<BloodFVXEntity, Vector3> pool =
+        new DataObjPool<BloodFVXEntity, Vector3>("BloodFVXEntity", 20);
+
+    private ParticleSystem particle;
+    protected override void YOTOOnload()
+    {
+    }
+
+    public override void YOTOStart()
+    {
+    }
+
+    public override void YOTOUpdate(float deltaTime)
+    {
+    }
+
+    public override void YOTONetUpdate()
+    {
+    }
+
+    public override void YOTOFixedUpdate(float deltaTime)
+    {
+    }
+
+    public override void YOTOOnHide()
+    {
+    }
+
+    public void StartPlay()
+    {
+    
+    }
+    protected override void AfterInstanceGObj()
+    {
+        if (particle == null)
+        {
+            particle = objTrans.GetComponent<ParticleSystem>();
+        }
+        particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        particle.Play();
+        YOTOFramework.timeMgr.DelayCall(() =>
+        {
+            Debug.Log("回收血"+_entityID+objTrans.position);
+            RecoverObject();
+            pool.RecoverItem(this);
+         
+        }, 10);
+    }
+
+    public void AfterIntoObjectPool()
+    {
+        Debug.Log("RemoveObj"+_entityID);
+    }
+
+    public void SetData(Vector3 data)
+    {
+        SetInVision(true);
+        SetPrefabBundlePath("Assets/HotUpdate/prefabs/SimpleFX/Prefabs/FX_BloodSplatter.prefab");
+    }
+}

@@ -41,6 +41,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - all
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8c27aeead6d968e4ba986702d6b84335
+    m_Address: Assets/HotUpdate/prefabs/SimpleFX/Prefabs/FX_BloodSplatter.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8ef33879cb59b2d48b4e21f28963ba41
     m_Address: Assets/HotUpdate/prefabs/Bullet/FireSteam.prefab
     m_ReadOnly: 0

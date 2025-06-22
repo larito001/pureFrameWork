@@ -37,7 +37,13 @@ public abstract class BulletEntity :ObjectBase,PoolItem<Transform>
 
     public override void YOTOUpdate(float deltaTime)
     {
-      
+        long currentTime = System.DateTime.Now.Ticks / 10000;  // 当前时间戳，单位为毫秒
+        long elapsedTime = currentTime - this.GetStartTime();  // 时间差，单位为毫秒
+
+        if (elapsedTime > 3000)  // 如果超过 5 秒（5000 毫秒）
+        {
+            this.Remove();
+        }
     }
 
     public override void YOTONetUpdate()

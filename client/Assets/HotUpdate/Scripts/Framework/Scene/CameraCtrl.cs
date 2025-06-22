@@ -53,7 +53,7 @@ public class CameraCtrl
         YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Touch, Touch);
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, Press);
         //YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.TouchMove, CameraMove);
-        YOTOFramework.eventMgr.AddEventListener<float>(YOTO.EventType.Scroll, CameraSclae);
+        // YOTOFramework.eventMgr.AddEventListener<float>(YOTO.EventType.Scroll, CameraSclae);
 
         graphicRaycaster = YOTOFramework.uIMgr.GetLayer(UILayerEnum.Tips).layerRoot.GetComponent<GraphicRaycaster>();
         pointerEventData = new PointerEventData(EventSystem.current);
@@ -158,6 +158,7 @@ public class CameraCtrl
         if (sclale >= 0)
         {
             vCamera.m_Lens.FieldOfView -= 1;
+            
         }
         else
         {
