@@ -39,10 +39,8 @@ public class BloodFVXEntity : ObjectBase, PoolItem<Vector3>
     }
     protected override void AfterInstanceGObj()
     {
-        if (particle == null)
-        {
-            particle = objTrans.GetComponent<ParticleSystem>();
-        }
+        
+        particle = objTrans.GetComponent<ParticleSystem>();
         particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         particle.Play();
         YOTOFramework.timeMgr.DelayCall(() =>
@@ -51,7 +49,7 @@ public class BloodFVXEntity : ObjectBase, PoolItem<Vector3>
             RecoverObject();
             pool.RecoverItem(this);
          
-        }, 10);
+        }, 1);
     }
 
     public void AfterIntoObjectPool()
