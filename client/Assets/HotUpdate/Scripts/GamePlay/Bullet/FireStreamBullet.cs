@@ -10,6 +10,7 @@ public class FireStreamBullet : BulletEntity
     private Vector3 lastDir;
     public override void FireFromTo(Vector3 pos, Vector3 dir)
     {
+        destroyTime = 3000;
         SetStartTime();
         if (!bulletBase)
         {

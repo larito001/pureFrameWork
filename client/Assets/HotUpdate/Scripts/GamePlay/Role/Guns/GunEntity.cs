@@ -88,7 +88,7 @@ public class GunEntity : BaseEntity
         fireTrans.forward =player.character.transform.forward;
         fire.Play();
         // 获取子弹对象
-        var  bullet = NormalGunBullet.pool.GetItem(null);
+        var  bullet = NormalGunBullet.pool.GetItem(firePos);
         bullet.InstanceGObj();
         bullet.FireFromTo( firePos.position,player.character.transform.forward);
         // bullets.Enqueue(bullet);

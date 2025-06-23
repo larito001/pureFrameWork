@@ -15,7 +15,6 @@ public class MeleeEntity : BaseEntity
     private bool isFiring = false; // 当前是否处于开火状态
 
     public Transform firePos { get; private set; }
-    private Queue<BulletEntity> bullets = new Queue<BulletEntity>();
 
     public MeleeEntity(HandRoot handRoot)
     {
@@ -79,7 +78,6 @@ public class MeleeEntity : BaseEntity
         var bullet = MeleeBullet.pool.GetItem(firePos);
         bullet.InstanceGObj();
         bullet.FireFromTo(firePos.position, player.character.transform.forward);
-        bullets.Enqueue(bullet);
     }
     
 
@@ -89,19 +87,6 @@ public class MeleeEntity : BaseEntity
 
     public override void YOTOUpdate(float deltaTime)
     {
-        if (bullets.Count > 0)
-        {
-            var current = bullets.Peek();
-            long currentTime = System.DateTime.Now.Ticks / 10000; // 当前时间戳，单位为毫秒
-            long elapsedTime = currentTime - current.GetStartTime(); // 时间差，单位为毫秒
-
-            if (elapsedTime > 200) // 如果超过 5 秒（5000 毫秒）
-            {
-                bullets.Dequeue();
-                current.Remove();
-            }
-        }
-
         // 计时器增加
         if (fireTimer < fireRate)
         {

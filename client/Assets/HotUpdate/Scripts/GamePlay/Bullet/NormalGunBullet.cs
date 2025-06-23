@@ -11,9 +11,10 @@ public class NormalGunBullet : BulletEntity
     private int needFireCount = 0;
     private Vector3 lastPos;
     private Vector3 lastDir;
-
+    private Vector3 firePos;
     public override void FireFromTo(Vector3 pos, Vector3 dir)
     {
+        firePos = pos;
         SetStartTime();
         if (!bulletBase)
         {
@@ -73,7 +74,7 @@ public class NormalGunBullet : BulletEntity
             Vector3 pos = other.ClosestPoint(zpos);
             EnemyManager.Instance.Hurt(ctrl.entityId, 44);
    
-            var fvx = BloodFVXEntity.pool.GetItem(pos);
+            var fvx = BloodFVXEntity.pool.GetItem(firePos);
             Debug.Log("生成血+"+fvx._entityID+pos);
             fvx.Location = pos;
             fvx.StartPlay();

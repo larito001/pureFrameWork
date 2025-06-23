@@ -9,6 +9,7 @@ public class BloodFVXEntity : ObjectBase, PoolItem<Vector3>
         new DataObjPool<BloodFVXEntity, Vector3>("BloodFVXEntity", 20);
 
     private ParticleSystem particle;
+    private Vector3 firePos;
     protected override void YOTOOnload()
     {
     }
@@ -39,8 +40,8 @@ public class BloodFVXEntity : ObjectBase, PoolItem<Vector3>
     }
     protected override void AfterInstanceGObj()
     {
-        
-        particle = objTrans.GetComponent<ParticleSystem>();
+        objTrans.LookAt(firePos); 
+        particle = objTrans.GetComponentInChildren<ParticleSystem>();
         particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         particle.Play();
         YOTOFramework.timeMgr.DelayCall(() =>
@@ -59,6 +60,7 @@ public class BloodFVXEntity : ObjectBase, PoolItem<Vector3>
 
     public void SetData(Vector3 data)
     {
+        firePos = data;
         SetInVision(true);
         SetPrefabBundlePath("Assets/HotUpdate/prefabs/SimpleFX/Prefabs/FX_BloodSplatter.prefab");
     }

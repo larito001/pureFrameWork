@@ -7,6 +7,7 @@ public abstract class BulletEntity :ObjectBase,PoolItem<Transform>
 {
     protected BulletBase bulletBase;
     private long startTime;
+    protected float destroyTime=2000;//ms
     public abstract void FireFromTo(Vector3 pos, Vector3 dir);
 
     protected override void AfterInstanceGObj()
@@ -40,7 +41,7 @@ public abstract class BulletEntity :ObjectBase,PoolItem<Transform>
         long currentTime = System.DateTime.Now.Ticks / 10000;  // 当前时间戳，单位为毫秒
         long elapsedTime = currentTime - this.GetStartTime();  // 时间差，单位为毫秒
 
-        if (elapsedTime > 2000)  // 如果超过 5 秒（5000 毫秒）
+        if (elapsedTime > destroyTime)  // 如果超过 5 秒（5000 毫秒）
         {
             this.Remove();
         }

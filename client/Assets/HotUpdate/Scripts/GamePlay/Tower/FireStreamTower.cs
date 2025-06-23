@@ -18,7 +18,6 @@ public class FireStreamTower : ObjectBase, PoolItem<TowerBaseEntity>
     {
      
     }
-    private Queue<BulletEntity> bullets = new Queue<BulletEntity>();
     public override void YOTOUpdate(float deltaTime)
     {
         if (timer >5f)
@@ -30,27 +29,12 @@ public class FireStreamTower : ObjectBase, PoolItem<TowerBaseEntity>
                 var bullet = FireStreamBullet.pool.GetItem(null);
                 bullet.InstanceGObj();
                 bullet.FireFromTo(this.Location , dir);
-                bullets.Enqueue(bullet);
                 Debug.Log("位置：" + this.Location);
             }
             timer = 0;
         }
 
         timer += deltaTime;
-        
-        if (bullets.Count > 0)
-        {
-            var current = bullets.Peek();
-            long currentTime = System.DateTime.Now.Ticks / 10000;  // 当前时间戳，单位为毫秒
-            long elapsedTime = currentTime - current.GetStartTime();  // 时间差，单位为毫秒
-
-            if (elapsedTime > 3000)  // 如果超过 5 秒（5000 毫秒）
-            {
-                bullets.Dequeue();
-                current.Remove();
-            }
-        }
-    
     }
 
     public override void YOTONetUpdate()
@@ -67,6 +51,7 @@ public class FireStreamTower : ObjectBase, PoolItem<TowerBaseEntity>
 
     protected override void AfterInstanceGObj()
     {
+        
     }
 
     public void AfterIntoObjectPool()

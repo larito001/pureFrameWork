@@ -9,8 +9,11 @@ public class MeleeBullet : BulletEntity
     private Vector3 lastPos;
     private Vector3 lastDir;
     private Transform parent;
+    private Vector3 firePos;
     public override void FireFromTo(Vector3 pos, Vector3 dir)
     {
+        firePos = pos;
+        destroyTime = 200;
         SetStartTime();
         if (!bulletBase)
         {
@@ -52,6 +55,13 @@ public class MeleeBullet : BulletEntity
         ZombieColliderCtrl ctrl;
         if ( other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
         {
+            Vector3 zpos = objTrans.position;
+            Vector3 pos = other.ClosestPoint(zpos);
+            var fvx = BloodFVXEntity.pool.GetItem(firePos);
+            Debug.Log("生成血+"+fvx._entityID+pos);
+            fvx.Location = pos;
+            fvx.StartPlay();
+            fvx.InstanceGObj();
             EnemyManager.Instance.Hurt(ctrl.entityId,999);
         }
 
