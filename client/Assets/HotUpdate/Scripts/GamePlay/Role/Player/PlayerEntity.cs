@@ -44,6 +44,10 @@ public class PlayerEntity : CharacterBase
     private HandRoot handPos;
     public RigBuilder builder;
 
+    public void Hurt(float hurt)
+    {
+        FlyTextMgr.Instance.AddText(hurt.ToString(),character.transform.position,FlyTextType.PlayerHurt);
+    }
     public GunEntity gun;
     public MeleeEntity melee;
     //todo:Gunparent

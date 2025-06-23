@@ -8,54 +8,59 @@ using YOTO;
 using Random = UnityEngine.Random;
 
 
-public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
+public class FlyTextCtrl : ObjectBase, PoolItem<Transform>
 {
-    public static  DataObjPool<FlyTextCtrl,Transform> pool=new DataObjPool<FlyTextCtrl, Transform>("FlyTextCtrl", 40);
+    public static DataObjPool<FlyTextCtrl, Transform> pool = new DataObjPool<FlyTextCtrl, Transform>("FlyTextCtrl", 40);
     float speed;
     float time = 0;
     public TextMeshProUGUI tmp;
-    private bool isInit=false;
+    private bool isInit = false;
     private Transform root;
     private FlyTextData data;
     private RectTransform rct;
     private bool isFly = false;
     private Vector3 currentPos;
+
     public void Fly(FlyTextData data)
     {
-        currentPos=data.pos; 
+        currentPos = data.pos;
         if (!isInit)
         {
             this.data = data;
             isFly = true;
             return;
         }
+
         tmp = objTrans.GetComponent<TextMeshProUGUI>();
         tmp.text = data.text;
 
-        
+
         if (data.flyTextType == FlyTextType.Normal)
         {
-            tmp.color=Color.white;
-            
-            StartAnim(0.5f, 1.2f, 1.0f, 0.4f, 0.1f,1,1,Ease.OutQuad,Ease.InOutQuad);
+            tmp.color = Color.white;
+
+            StartAnim(0.5f, 1.2f, 1.0f, 0.4f, 0.1f, 1, 1, Ease.OutQuad, Ease.InOutQuad);
         }
-        else if(data.flyTextType == FlyTextType.Quick)
+        else if (data.flyTextType == FlyTextType.Quick)
         {
-            tmp.color=Color.red;
-            StartAnim(0.3f, 1.5f, 1.5f, 0.3f, 0.1f,0.6f,0.2f,Ease.OutElastic,Ease.OutBack);
+            tmp.color = Color.red;
+            StartAnim(0.3f, 1.5f, 1.5f, 0.3f, 0.1f, 0.6f, 0.2f, Ease.OutElastic, Ease.OutBack);
         }
-      
-      
+
+        if (data.flyTextType == FlyTextType.PlayerHurt)
+        {
+            tmp.color = Color.yellow;
+
+            StartAnim(0.5f, 1.2f, 1.0f, 0.4f, 0.1f, 1, 1, Ease.OutQuad, Ease.InOutQuad);
+        }
     }
-    
+
     protected override void YOTOOnload()
     {
-
     }
 
     public override void YOTOStart()
     {
-        
     }
 
 
@@ -110,48 +115,43 @@ public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
         RecoverObject();
         pool.RecoverItem(this);
     }
+
     public override void YOTOUpdate(float deltaTime)
     {
-       
     }
 
     public override void YOTONetUpdate()
     {
-    
     }
 
     public override void YOTOFixedUpdate(float deltaTime)
     {
- 
     }
 
     public override void YOTOOnHide()
     {
-  
     }
-    
+
 
     protected override void AfterInstanceGObj()
     {
         speed = 10;
         isInit = true;
-        rct=objTrans.GetComponent<RectTransform>();
-        rct.SetParent(root,false);
-        rct.transform.position= new Vector3(9999,9999,9999);
-        tmp=objTrans.GetComponent<TextMeshProUGUI>();
-        tmp.text= data.text;   
+        rct = objTrans.GetComponent<RectTransform>();
+        rct.SetParent(root, false);
+        rct.transform.position = new Vector3(9999, 9999, 9999);
+        tmp = objTrans.GetComponent<TextMeshProUGUI>();
+        tmp.text = data.text;
         if (isFly)
         {
             Fly(this.data);
             isFly = false;
         }
-        
     }
 
     public void AfterIntoObjectPool()
     {
         isInit = false;
-
     }
 
     public void SetData(Transform serverData)
@@ -160,5 +160,4 @@ public class FlyTextCtrl : ObjectBase,PoolItem<Transform>
         SetPrefabBundlePath("Assets/HotUpdate/prefabs/FlyTextPrefab.prefab");
         root = serverData;
     }
-    
 }

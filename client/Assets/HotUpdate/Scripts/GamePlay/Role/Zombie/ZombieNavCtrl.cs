@@ -19,7 +19,7 @@ public class ZombieNavCtrl : MonoBehaviour
     {
         agent = transform.GetComponent<AgentAuthoring>();
     }
-
+    private float atkTimer = 0;
     private void FixedUpdate()
     {
         if (!canMove) return;
@@ -28,13 +28,21 @@ public class ZombieNavCtrl : MonoBehaviour
         float distance = math.distance(currentPos, agent.EntityBody.Destination);
         if (agent.EntityBody.IsStopped&&haveAim&&distance <= (agent.GetStopDistance()+0.1f))
         {
-            zombieEntity.zombieBase.EnemyAtk();
+            if (atkTimer >= 2.4f)
+            {
+                zombieEntity.zombieBase.EnemyAtk();
+                atkTimer = 0;
+            }
+            atkTimer += Time.fixedDeltaTime;
+          
         }else if (agent.EntityBody.IsStopped&&!haveAim&&distance <= (agent.GetStopDistance()+0.1f))
         {
+            atkTimer = 2.4f;
             zombieEntity.zombieBase.EnemyIdel();
         }
         else if(!agent.EntityBody.IsStopped&&distance > (agent.GetStopDistance()+0.1f))
         {
+            atkTimer = 2.4f;
             zombieEntity.zombieBase.EnemyRun();
         }
     }
