@@ -11,13 +11,13 @@ public class PlayerResManager : Singleton<PlayerResManager>
     {
         if (num >= 0)
         {
-            woodNum += num; 
+            ironNum += num; 
         }
     }
     
     public int GetIronNum()
     {
-        return woodNum;
+        return ironNum;
     }
     public void AddWoodNum(int num)
     {

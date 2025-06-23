@@ -3,23 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using YOTO;
 
-public class SceneResEntity : ObjectBase,PoolItem<Vector3>
+public abstract class SceneResEntity : ObjectBase,PoolItem<Vector3>
 {
-    private int canCollectNum = 3;
-    public static DataObjPool<SceneResEntity, Vector3> pool =
-        new DataObjPool<SceneResEntity, Vector3>("SceneResEntity", 20);
+    protected int canCollectNum = 3;
 
-    public void Collect()
-    {
-        canCollectNum--;
-         
-        FlyTextMgr.Instance.AddText("wood+1", this.Location, FlyTextType.Normal);
-        PlayerResManager.Instance.AddWoodNum(1);
-        if (canCollectNum == 0)
-        {
-            Remove();
-        }
-    }
+
+    public abstract void Collect();
 
     protected override void YOTOOnload()
     {
@@ -47,15 +36,14 @@ public class SceneResEntity : ObjectBase,PoolItem<Vector3>
     }
 
 
-    public void Remove()
+    public virtual void Remove()
     {
-        pool.RecoverItem(this);
         RecoverObject();
     }
     protected override void AfterInstanceGObj()
     {
-        var towerBase=  ObjTrans.GetComponent<SceneResBase>();
-        towerBase.Init(this);
+        var res=  ObjTrans.GetComponent<SceneResBase>();
+        res.Init(this);
     }
 
     public void AfterIntoObjectPool()
@@ -64,9 +52,10 @@ public class SceneResEntity : ObjectBase,PoolItem<Vector3>
     
     public void SetData(Vector3 serverData)
     {
-        SetInVision(true);
-        SetPrefabBundlePath(".prefabAwesomeFreeScans/WoodLogs/Prefabs/LowEndPC/SmallWood.prefab");
+        SetResData();
     }
-    
+
+    protected abstract void SetResData();
+
 
 }

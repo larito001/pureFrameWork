@@ -2,17 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IronResEntity : MonoBehaviour
+public class IronResEntity : SceneResEntity
 {
-    // Start is called before the first frame update
-    void Start()
+    public static DataObjPool<IronResEntity, Vector3> pool =
+        new DataObjPool<IronResEntity, Vector3>("IronResEntity", 20);
+
+    public override void Collect()
     {
-        
+        canCollectNum--;
+         
+        FlyTextMgr.Instance.AddText("Iron+1", this.Location, FlyTextType.IronRes);
+        PlayerResManager.Instance.AddIronNum(1);
+        if (canCollectNum == 0)
+        {
+            Remove();
+        }
+    }
+    public override void Remove()
+    {
+        base.Remove();
+        pool.RecoverItem(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void SetResData()
     {
-        
+        SetInVision(true);
+        SetPrefabBundlePath("Assets/HotUpdate/prefabs/IronRes/Prefabs/IronRes.prefab");  
     }
 }

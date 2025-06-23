@@ -2,17 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WoodResEntity : MonoBehaviour
+public class WoodResEntity : SceneResEntity
 {
-    // Start is called before the first frame update
-    void Start()
+    public static DataObjPool<WoodResEntity, Vector3> pool =
+        new DataObjPool<WoodResEntity, Vector3>("WoodResEntity", 20);
+
+    public override void Collect()
     {
-        
+        canCollectNum--;
+         
+        FlyTextMgr.Instance.AddText("wood+1", this.Location, FlyTextType.WoodRes);
+        PlayerResManager.Instance.AddWoodNum(1);
+        if (canCollectNum == 0)
+        {
+            Remove();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Remove()
     {
-        
+        base.Remove();
+        pool.RecoverItem(this);
+    }
+
+    protected override void SetResData()
+    {
+        SetInVision(true);
+        SetPrefabBundlePath(".prefabAwesomeFreeScans/WoodLogs/Prefabs/LowEndPC/SmallWood.prefab");  
     }
 }
