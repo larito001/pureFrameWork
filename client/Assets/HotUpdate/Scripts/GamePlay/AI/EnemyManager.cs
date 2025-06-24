@@ -52,7 +52,7 @@ public class EnemyManager : SingletonMono<EnemyManager>
         zombieEntities.Clear();
         var poss= GameObject.Find("EnemyOrgPos");
         var posTransforms= poss.GetComponentsInChildren<Transform>();
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < posTransforms.Length; i++)
         {
            var pos = posTransforms[i].position;
             YOTOFramework.timeMgr.LoopCall(() =>
@@ -63,7 +63,7 @@ public class EnemyManager : SingletonMono<EnemyManager>
                 zombieEntity.Location=pos;
 
                 zombieEntities.Add(zombieEntity._entityID, zombieEntity);
-            },0.5f,1);
+            },0.5f,50);
         }
 
   

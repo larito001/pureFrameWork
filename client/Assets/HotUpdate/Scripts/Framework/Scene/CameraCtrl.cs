@@ -59,6 +59,32 @@ public class CameraCtrl
         pointerEventData = new PointerEventData(EventSystem.current);
     }
 
+  
+    private bool isShaking=false;
+    public void AddShake(float time)
+    {
+        if (isShaking) return;
+        isShaking=true;   
+        var perlin = vCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+    
+        if (perlin == null)
+        {
+            // 如果没有 Perlin Noise 组件，添加一个
+            perlin = vCamera.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        }
+        // perlin.m_NoiseProfile=
+        // 设置抖动参数（你可以根据需要调整这两个值）
+        perlin.m_AmplitudeGain = 1.5f;
+        perlin.m_FrequencyGain = 2.0f;
+
+        // 延迟 time 秒后关闭抖动
+        YOTOFramework.timeMgr.DelayCall(() =>
+        {
+            isShaking = false;
+            perlin.m_AmplitudeGain = 0f;
+            perlin.m_FrequencyGain = 0f;
+        }, time);
+    }
     public void UseStartCamera()
     {
         startVCamera.Priority = 999;

@@ -47,6 +47,7 @@ public class PlayerEntity : CharacterBase
 
     public void Hurt(float hurt)
     {
+        YOTOFramework.sceneMgr.cameraCtrl.AddShake(0.1f);
         FlyTextMgr.Instance.AddText(hurt.ToString(),character.transform.position,FlyTextType.PlayerHurt);
     }
     public GunEntity gun;
