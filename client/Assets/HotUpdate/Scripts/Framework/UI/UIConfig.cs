@@ -37,7 +37,6 @@ public struct UIInfo
 public enum UIEnum
 {
     None = 0,
-    StaticLoadingUI,
     StartPanel,
     SkillTreePanel,
     FightingPanel,
@@ -47,9 +46,6 @@ public enum UIEnum
 }
 public class UIConfig
 {
-    /// <summary>
-    ///������ע��UI
-    /// </summary>
     public readonly Dictionary<UIEnum, UIInfo> uiConfigDic = new Dictionary<UIEnum, UIInfo>() {
          { UIEnum.FightingEndPanel, new UIInfo( UIEnum.FightingEndPanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/FightingEndPanel.prefab") },
          { UIEnum.StartPanel, new UIInfo( UIEnum.StartPanel,UILayerEnum.Normal,"Assets/HotUpdate/prefabs/UI/StartPanel.prefab") },
