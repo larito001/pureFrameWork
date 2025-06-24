@@ -40,6 +40,7 @@ public class PlayerEntity : CharacterBase
     private bool isInit = false;
     private float headRotationSpeed = 10;
 
+    public bool isAimEnd = false;
     
     private HandRoot handPos;
     public RigBuilder builder;
@@ -173,6 +174,7 @@ public class PlayerEntity : CharacterBase
                 isInit = true;
                 SwitchWeapon(1);
             });
+
     }
 
     private void SwitchWeapon(int index)
@@ -317,13 +319,21 @@ public class PlayerEntity : CharacterBase
             if (currentTime <= waitTime)
             {
                 currentTime += deltaTime;
+                isAimEnd = false;
+            }
+
+            if (currentTime >= waitTime)
+            {
+                isAimEnd = true;
             }
         }
         else
         {
             currentTime = 0;
+            isAimEnd = false;
         }
-
+        
+        
         isShooting = false;
         if (isFireing)
         {

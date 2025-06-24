@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3813756414784693427}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4853,7 +4853,7 @@ GameObject:
   - component: {fileID: 1690271295187227818}
   - component: {fileID: 5552427381370747317}
   m_Layer: 0
-  m_Name: Laser beam demo interactions
+  m_Name: Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4918,8 +4918,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1, y: 1, z: 1}
+  - {x: -30.248596, y: 0.4375128, z: -29.358494}
+  - {x: -30.871595, y: 0.4375128, z: -28.576271}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.3
