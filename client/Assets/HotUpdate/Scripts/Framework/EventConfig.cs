@@ -24,6 +24,9 @@ namespace YOTO
        TryReload,
        KeyBoardNumClick,
        Look,
+       
+       //刷新资源页面
+       RefreshResInfo,
     }
 
 

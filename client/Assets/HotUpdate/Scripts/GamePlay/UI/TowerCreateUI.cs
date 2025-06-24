@@ -43,8 +43,17 @@ public class TowerCreateUI : UIPageBase
         if (TowerBaseEntity.selectTower != null)
         {
 
-            TowerBaseEntity.selectTower .GenerateTower(TowerEnum.Fire);
-            CloseSelf();
+            if (PlayerResManager.Instance.CheckWoodEnough(3))
+            {
+                PlayerResManager.Instance.UseWoodRes(3);
+                TowerBaseEntity.selectTower .GenerateTower(TowerEnum.Fire);
+                CloseSelf(); 
+            }
+            else
+            {
+                FlyTextMgr.Instance.AddText("Wood not Enough!",TowerBaseEntity.selectTower.Location);
+            }
+   
         }
         
     }
@@ -52,9 +61,18 @@ public class TowerCreateUI : UIPageBase
     {
         if (TowerBaseEntity.selectTower != null)
         {
-           
-            TowerBaseEntity.selectTower .GenerateTower(TowerEnum.NormalBullet);
-            CloseSelf();
+            if (PlayerResManager.Instance.CheckIronEnough(3))
+            {
+                PlayerResManager.Instance.UseIronRes(3);
+                TowerBaseEntity.selectTower .GenerateTower(TowerEnum.NormalBullet);
+                CloseSelf();
+            }
+            else
+            {
+                FlyTextMgr.Instance.AddText("Iron not Enough!",TowerBaseEntity.selectTower.Location);
+            }
+
+       
         }
         
     }
