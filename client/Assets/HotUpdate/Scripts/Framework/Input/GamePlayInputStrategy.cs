@@ -70,7 +70,7 @@ namespace YOTO
         {
              if (context.phase == InputActionPhase.Performed)
             {
-                YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.Fire);
+                YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.PressLeftMouse);
             }
              else if (context.phase == InputActionPhase.Canceled) // 松开触发事件
              {

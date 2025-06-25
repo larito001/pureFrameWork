@@ -51,7 +51,7 @@ public class CameraCtrl
 
         vCamera.m_Lens.FieldOfView = 30;
         YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Touch, Touch);
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, Press);
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.PressLeftMouse, Press);
         //YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.TouchMove, CameraMove);
         // YOTOFramework.eventMgr.AddEventListener<float>(YOTO.EventType.Scroll, CameraSclae);
 
@@ -108,7 +108,6 @@ public class CameraCtrl
     }
 
     List<TowerBase> towers = new List<TowerBase>();
-
     private void Press()
     {
         List<RaycastResult> results = new List<RaycastResult>();
@@ -119,6 +118,7 @@ public class CameraCtrl
         }
         else
         {
+   
             Vector3 dir = new Vector3(touchPosition.x, touchPosition.y, vCamera.m_Lens.NearClipPlane);
             Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
             RaycastHit hitInfo;
@@ -137,6 +137,7 @@ public class CameraCtrl
             }
             else
             {
+                YOTOFramework.eventMgr.TriggerEvent(YOTO.EventType.Fire);
                 for (var i = 0; i < towers.Count; i++)
                 {
                     towers[i].OnExit();
@@ -150,8 +151,6 @@ public class CameraCtrl
     private void Touch(Vector2 pos)
     {
         touchPosition = pos;
-     
-        
     }
 
     private void CameraSclae(float sclale)

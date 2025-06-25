@@ -19,6 +19,7 @@ namespace YOTO
        TouchMove,
        Scroll,
        Fire,
+       PressLeftMouse,
        FireRelease,
        RefreshMousePos,
        TryReload,
