@@ -112,7 +112,7 @@ public class GunEntity : BaseEntity
         {
             // 设置 LineRenderer 点的数量（2个点：起点和终点）
        
-            if (player.isAimEnd&&player.animatorCtrl.currentWeapon==PlayerAnimatorCtrl.GUN_LAYER)
+            if (player.isAimEnd&&player.animatorCtrl.currentWeapon==PlayerAnimatorCtrl.GUN_LAYER&&!player.isWaiting)
             {
                 if (!laser.enabled)
                 {

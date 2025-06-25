@@ -29,6 +29,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - all
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 32f61a25ebe3bfc44b608b560a60f5b0
+    m_Address: Assets/HotUpdate/prefabs/UI/Aim.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - all
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 46aa4acaa6b2c014eb8082adccb8a37b
     m_Address: Assets/HotUpdate/prefabs/UI/FightingEndPanel.prefab
     m_ReadOnly: 0

@@ -39,11 +39,12 @@ public class PlayerEntity : CharacterBase
     private Transform headTarget;
     private bool isInit = false;
     private float headRotationSpeed = 10;
-
+    public RigBuilder builder;
     public bool isAimEnd = false;
     
     private HandRoot handPos;
     private Transform charCameraPos;
+    public bool isWaiting { get;private set; }
 
     public void Hurt(float hurt)
     {
@@ -110,33 +111,19 @@ public class PlayerEntity : CharacterBase
          
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
-        { if (!isInit) return;
+        {
+            if (!isInit) return;
             isAming = true;
             isFireing = true;
         });
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.FireRelease, () =>
-        {
-            if (!isInit) return;
-            if (!isTouching)
-            {
-                isAming = false;
-            }
-
-            isFireing = false;
-        });
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.FireRelease, FireRelease);
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchPress, () =>
         {
             if (!isInit) return;
             isTouching = true;
             isAming = isTouching;
         });
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchRelease, () =>
-        {
-            if (!isInit) return;
-            mousePoint = Vector3.zero;
-            isTouching = false;
-            isAming = isTouching;
-        });
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchRelease, TouchReless);
         orgPosition = pos;
         Debug.Log("InitPlayer");
         isRunning = true;
@@ -161,9 +148,10 @@ public class PlayerEntity : CharacterBase
                 character.transform.position = orgPosition;
                 camera = YOTOFramework.cameraMgr.getMainCamera();
                 AddComponent();
+                builder = character.GetComponent<RigBuilder>();
                 handPos = character.GetComponentInChildren<HandRoot>();
                 headTarget = character.gameObject.transform.Find("HeadTarget");
-
+                builder.Build();
          
                 isInit = true;
                 SwitchWeapon(1);
@@ -171,8 +159,32 @@ public class PlayerEntity : CharacterBase
 
     }
 
+    private void FireRelease()
+    {
+        if (!isInit) return;
+        if (!isTouching)
+        {
+            isAming = false;
+        }
+
+        isFireing = false;
+    }
+    private void TouchReless()
+    {
+        if (!isInit) return;
+        mousePoint = Vector3.zero;
+        isTouching = false;
+        isAming = isTouching;
+    }
     private void SwitchWeapon(int index)
     {
+        if (isWaiting) return;
+
+        isWaiting = true;
+        YOTOFramework.timeMgr.DelayCall(() =>
+        {
+            isWaiting = false;
+        },0.7f);
         if (index == 1)
         {
             if (gun == null)
@@ -270,7 +282,11 @@ public class PlayerEntity : CharacterBase
     public override void YOTOUpdate(float deltaTime)
     {
         if (!isInit) return;
-        
+        headTarget.rotation = Quaternion.Slerp(
+            headTarget.rotation,
+            Quaternion.Euler(0f, character.transform.eulerAngles.y, 0f),
+            Time.deltaTime * headRotationSpeed
+        );
         if (isAming)
         {
             Vector3 cameraPos = camera.transform.position;
@@ -312,8 +328,10 @@ public class PlayerEntity : CharacterBase
         
         
         isShooting = false;
-        if (isFireing)
+ 
+        if (isFireing&&!isWaiting)
         {
+         
             if (currentTime >= waitTime)
             {
                 //todo:开火，子弹间隔，帮我写，在发射子弹的地方写好todo我创建子弹就好了

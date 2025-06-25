@@ -41,7 +41,7 @@ public class NormalScene : VirtualSceneBase
             iron.Location = org.transform.position+new Vector3(0,-4,10) + new Vector3(5, 0, 0) * i;
             iron.InstanceGObj();
         }
-
+        YOTOFramework.uIMgr.Show(UIEnum.AimUI);
   
         // var obj= TestPoolObject.pool.GetItem(Vector3.zero);
         // obj.InstanceGObj();
