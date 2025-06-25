@@ -150,32 +150,7 @@ public class CameraCtrl
     private void Touch(Vector2 pos)
     {
         touchPosition = pos;
-        Vector3 dir = new Vector3(pos.x, pos.y, vCamera.m_Lens.NearClipPlane);
-        // Debug.Log("TOUCH" + dir);
-        Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
-        Ray uiRay = YOTOFramework.cameraMgr.getUICamera().ScreenPointToRay(dir);
-        RaycastHit hitInfo; //
-
-        pointerEventData.position = pos;
-        List<RaycastResult> results = new List<RaycastResult>();
-
-        // ִUI
-        // graphicRaycaster.Raycast(pointerEventData, results);
-        // if (results.Count > 0)
-        // {
-        //     //Debug.Log("TOUCH" + hitInfo.point);
-        //
-        //     //BattleSystem.Instance.playerEntity?.MoveTarget(hitInfo.point);
-        //     Debug.Log("�㵽UI��");
-        // }
-        // else
-        {
-            if (Physics.Raycast(ray, out hitInfo, 1000, LayerMask.GetMask("Ground")))
-            {
-                // Debug.Log("Ground hit");
-                YOTOFramework.eventMgr.TriggerEvent<Vector3>(YOTO.EventType.RefreshMousePos, hitInfo.point);
-            }
-        }
+     
         
     }
 
@@ -191,9 +166,43 @@ public class CameraCtrl
             vCamera.m_Lens.FieldOfView += 1;
         }
     }
-    
+
+    private float rayTimer = 0;
     public void Update(float dt)
     {
+        if (rayTimer >= 0.02f)
+        {
+            Vector3 dir = new Vector3(touchPosition.x, touchPosition.y, vCamera.m_Lens.NearClipPlane);
+            // Debug.Log("TOUCH" + dir);
+            Ray ray = YOTOFramework.cameraMgr.getMainCamera().ScreenPointToRay(dir);
+            Ray uiRay = YOTOFramework.cameraMgr.getUICamera().ScreenPointToRay(dir);
+            RaycastHit hitInfo; //
+
+            pointerEventData.position = touchPosition;
+            List<RaycastResult> results = new List<RaycastResult>();
+
+            // ִUI
+            // graphicRaycaster.Raycast(pointerEventData, results);
+            // if (results.Count > 0)
+            // {
+            //     //Debug.Log("TOUCH" + hitInfo.point);
+            //
+            //     //BattleSystem.Instance.playerEntity?.MoveTarget(hitInfo.point);
+            //     Debug.Log("�㵽UI��");
+            // }
+            // else
+            {
+                if (Physics.Raycast(ray, out hitInfo, 1000, LayerMask.GetMask("Ground")))
+                {
+                    // Debug.Log("Ground hit");
+                    YOTOFramework.eventMgr.TriggerEvent<Vector3>(YOTO.EventType.RefreshMousePos, hitInfo.point);
+                }
+            }
+            rayTimer -= 0.02f;
+        }
+
+        rayTimer += dt;
+      
         if (!isDragging)
         {
             if (currentVelocity.magnitude > 0.01f)

@@ -266,8 +266,7 @@ public class PlayerEntity : CharacterBase
     }
 
     private float maxHeadYaw = 60f; // 最大左右旋转角度，单位是度
-
-    private GameObject test;
+    
     public override void YOTOUpdate(float deltaTime)
     {
         if (!isInit) return;
@@ -281,12 +280,6 @@ public class PlayerEntity : CharacterBase
             float height = 1.5f;
             float len = height / Mathf.Cos(angleRad);
             lookPos = mousePoint + dirNormalized * len;
-            if (test == null)
-            {
-                test = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            }
-
-            test.transform.position = lookPos;
             //todo:偏移镜头charCameraPos（Transform），移动到  character.transform.position+character.transform.forward *3的圆形范围内
 
             charCameraPos.position = Vector3.Lerp(charCameraPos.position, character.transform.position + character.transform.forward * 3, Time.deltaTime * 100);
