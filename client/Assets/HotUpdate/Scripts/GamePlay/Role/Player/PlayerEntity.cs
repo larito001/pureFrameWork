@@ -43,7 +43,7 @@ public class PlayerEntity : CharacterBase
     public bool isAimEnd = false;
     
     private HandRoot handPos;
-    public RigBuilder builder;
+    private Transform charCameraPos;
 
     public void Hurt(float hurt)
     {
@@ -107,13 +107,7 @@ public class PlayerEntity : CharacterBase
         {
             if (!isInit) return;
             mousePoint = pos;
-            Vector3 cameraPos = camera.transform.position;
-            Vector3 dir = mousePoint - cameraPos;
-            Vector3 dirNormalized = dir.normalized;
-            float angleRad = Vector3.Angle(dir, Vector3.up) * Mathf.Deg2Rad;
-            float height = 1.5f;
-            float len = height / Mathf.Cos(angleRad);
-            lookPos = mousePoint + dirNormalized * len;
+         
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
         { if (!isInit) return;
@@ -168,7 +162,6 @@ public class PlayerEntity : CharacterBase
                 camera = YOTOFramework.cameraMgr.getMainCamera();
                 AddComponent();
                 handPos = character.GetComponentInChildren<HandRoot>();
-                builder = character.GetComponent<RigBuilder>();
                 headTarget = character.gameObject.transform.Find("HeadTarget");
 
          
@@ -235,12 +228,14 @@ public class PlayerEntity : CharacterBase
 
        var mCamera= YOTOFramework.cameraMgr.getVirtualCamera("MainCameraVirtual");
        mCamera.m_Lens.FieldOfView = 60;
-       mCamera.m_Follow=character.transform;
-       mCamera.m_LookAt = character.transform;
+       charCameraPos=GameObject.Find("CharCameraPos").transform;
+
+       mCamera.m_Follow = charCameraPos;
+       mCamera.m_LookAt =charCameraPos;
       var body=  mCamera.AddCinemachineComponent<CinemachineFramingTransposer>();
       body.m_TrackedObjectOffset= new Vector3(0, 2, 0);
-      body.m_DeadZoneWidth = 0.1f;
-      body.m_DeadZoneHeight = 0.1f;
+      body.m_DeadZoneWidth = 0f;
+      body.m_DeadZoneHeight = 0f;
       body.m_CameraDistance = 10;
     }
 
@@ -272,51 +267,31 @@ public class PlayerEntity : CharacterBase
 
     private float maxHeadYaw = 60f; // 最大左右旋转角度，单位是度
 
+    private GameObject test;
     public override void YOTOUpdate(float deltaTime)
     {
         if (!isInit) return;
+        
         if (isAming)
         {
-            Vector3 direction = lookPos - headTarget.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude > 0.001f)
+            Vector3 cameraPos = camera.transform.position;
+            Vector3 dir = mousePoint - cameraPos;
+            Vector3 dirNormalized = dir.normalized;
+            float angleRad = Vector3.Angle(dir, Vector3.up) * Mathf.Deg2Rad;
+            float height = 1.5f;
+            float len = height / Mathf.Cos(angleRad);
+            lookPos = mousePoint + dirNormalized * len;
+            if (test == null)
             {
-                // // 计算目标方向相对于角色前方的角度差
-                // Vector3 characterForward = character.transform.forward;
-                // characterForward.y = 0f;
-                // characterForward.Normalize();
-                //
-                // Vector3 targetDirection = direction.normalized;
-                // float angleToTarget = Vector3.SignedAngle(characterForward, targetDirection, Vector3.up);
-                //
-                // // 限制在 [-maxHeadYaw, maxHeadYaw] 之间
-                // float clampedAngle = Mathf.Clamp(angleToTarget, -maxHeadYaw, maxHeadYaw);
-                //
-                // // 计算目标旋转（绕Y轴旋转）
-                // Quaternion targetRotation = Quaternion.Euler(0f, character.transform.eulerAngles.y + clampedAngle, 0f);
-                //
-                // // 插值旋转，让头部平滑转向目标方向（受限）
-                // headTarget.rotation = Quaternion.Slerp(
-                //     headTarget.rotation,
-                //     targetRotation,
-                //     Time.deltaTime * headRotationSpeed
-                // );
+                test = GameObject.CreatePrimitive(PrimitiveType.Cube);
             }
-        }
-        else
-        {
-            // 没在瞄准时，默认看向正前方（归位）
-            headTarget.rotation = Quaternion.Slerp(
-                headTarget.rotation,
-                Quaternion.Euler(0f, character.transform.eulerAngles.y, 0f),
-                Time.deltaTime * headRotationSpeed
-            );
-        }
 
+            test.transform.position = lookPos;
+            //todo:偏移镜头charCameraPos（Transform），移动到  character.transform.position+character.transform.forward *3的圆形范围内
 
-        if (isAming)
-        {
+            charCameraPos.position = Vector3.Lerp(charCameraPos.position, character.transform.position + character.transform.forward * 3, Time.deltaTime * 100);
+            
+            
             if (currentTime <= waitTime)
             {
                 currentTime += deltaTime;
@@ -330,6 +305,7 @@ public class PlayerEntity : CharacterBase
         }
         else
         {
+            charCameraPos.position = Vector3.Lerp(charCameraPos.position, character.transform.position , Time.deltaTime * 10);
             currentTime = 0;
             isAimEnd = false;
         }
@@ -350,8 +326,7 @@ public class PlayerEntity : CharacterBase
                 }
             }
         }
-
-
+        
         if (animatorCtrl)
         {
             animatorCtrl.YOTOUpdate(deltaTime);
@@ -366,11 +341,6 @@ public class PlayerEntity : CharacterBase
         {
             interactionCtrl.YOTOUpdate(deltaTime);
         }
-        //CharacterBase ch = BattleSystem.Instance.getCharByName("enemy1");
-        //if (ch != null && character)
-        //{
-        //    (ch as EnemyEntity).MoveTarget(character.transform.position);
-        //}
     }
 
     public override void YOTONetUpdate()

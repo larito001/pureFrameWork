@@ -35,7 +35,6 @@ public class MeleeEntity : BaseEntity
 
                 // leftHand.data.target = LeftHandTarget;
                 melee.transform.localPosition = Vector3.zero;
-                player.builder.Build();
                 firePos = melee.transform.Find("FirePos");
                 firePos.parent = player.character.transform;
                 firePos.localPosition = Vector3.zero;

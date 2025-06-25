@@ -41,7 +41,6 @@ public class GunEntity : BaseEntity
                 // leftHand.data.target = LeftHandTarget;
                 gun.transform.localPosition = Vector3.zero;
                 gun.transform.localRotation = Quaternion.identity;
-                player.builder.Build();
                 firePos = gun.transform.Find("FirePos");
                 YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Laser/Prefab/Laser.prefab",
                     Vector3.zero, Quaternion.identity,
