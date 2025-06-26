@@ -68,7 +68,6 @@ public class MeleeEntity : BaseEntity
         }
         YOTOFramework.timeMgr.DelayCall(DelayFire,0.4f);
         
-        EnemyManager.Instance.SetTarget(this.player.character.transform);
     }
 
     private void DelayFire()

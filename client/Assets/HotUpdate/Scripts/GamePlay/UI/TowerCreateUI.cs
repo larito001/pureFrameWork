@@ -33,8 +33,13 @@ public class TowerCreateUI : UIPageBase
             else
             {
                 // 如果物体在摄像机后方，将UI移到屏幕外
-                this.transform.position = new Vector3(-1000, -1000, 0);
+                this.transform.position = new Vector3(-10000, -10000, 0);
             }
+        }
+        else
+        {
+            // 如果物体在摄像机后方，将UI移到屏幕外
+            this.transform.position = new Vector3(-10000, -10000, 0);
         }
     }
 

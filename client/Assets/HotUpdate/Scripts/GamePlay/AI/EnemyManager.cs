@@ -7,15 +7,60 @@ using YOTO;
 public class EnemyManager : SingletonMono<EnemyManager>
 {
 
-    private Dictionary<int,ZombieEntity> zombieEntities = new Dictionary<int,ZombieEntity>();
-
+    private Dictionary<int, ZombieEntity> zombieEntities = new Dictionary<int, ZombieEntity>();//僵尸id，僵尸实体
+    private Dictionary<int ,List<ZombieEntity>> zombieAreaList= new Dictionary<int , List<ZombieEntity>>();//地区id，地区内的僵尸列表
+    private Dictionary<int ,int> zombieAreaDic= new Dictionary<int ,int>();//僵尸id，地区id
     private int num = 0;
-    
+
     public void Init()
     {
-        Complete();
+        zombieEntities.Clear();
+        var poss = GameObject.Find("EnemyOrgPos");
+        var trigger = poss.GetComponentsInChildren<EnemyRangeTrigger>();
+        for (var i = 0; i < trigger.Length; i++)
+        {
+            trigger[i].Init(i);
+            trigger[i].SetRange(50);
+            var list = new List<ZombieEntity>();
+            zombieAreaList.Add(i,list);
+            
+            var pos = trigger[i].transform.position;
+            for (int j = 0; j < 3; j++)
+            {
+                ZombieEntity zombieEntity=  ZombieEntity.pool.GetItem(Vector3.zero);
+                zombieEntity.InstanceGObj();
+                // 设置位置，假设僵尸在地面上（y轴为0）
+                zombieEntity.Location=pos;
+
+                zombieEntities.Add(zombieEntity._entityID, zombieEntity);
+                list.Add(zombieEntity);
+                zombieAreaDic.Add(zombieEntity._entityID,i);
+            }
+        }
+        
     }
 
+    public void TriggerEnmeies(int id,Transform target)
+    {
+        if (zombieAreaList.ContainsKey(id))
+        {
+            for (var i = 0; i < zombieAreaList[id].Count; i++)
+            {
+                zombieAreaList[id][i].SetTarget(target);
+            }
+        }
+    }
+
+    public void ExitEnmeies(int id)
+    {
+        if (zombieAreaList.ContainsKey(id))
+        {
+            for (var i = 0; i < zombieAreaList[id].Count; i++)
+            {
+                zombieAreaList[id][i].SetTarget(null);
+            }
+        }
+    }
     public ZombieEntity GetEnemey()
     {
         foreach (var keyValuePair in zombieEntities)
@@ -45,37 +90,20 @@ public class EnemyManager : SingletonMono<EnemyManager>
         if (zombieEntities.ContainsKey(id))
         {
             zombieEntities.Remove(id);
-        }
-    }
-    private void Complete()
-    {
-        zombieEntities.Clear();
-        var poss= GameObject.Find("EnemyOrgPos");
-        var posTransforms= poss.GetComponentsInChildren<Transform>();
-        for (var i = 0; i < posTransforms.Length; i++)
-        {
-           var pos = posTransforms[i].position;
-            YOTOFramework.timeMgr.LoopCall(() =>
+            if (zombieAreaDic.ContainsKey(id))
             {
-                ZombieEntity zombieEntity=  ZombieEntity.pool.GetItem(Vector3.zero);
-                zombieEntity.InstanceGObj();
-                // 设置位置，假设僵尸在地面上（y轴为0）
-                zombieEntity.Location=pos;
-
-                zombieEntities.Add(zombieEntity._entityID, zombieEntity);
-            },0.5f,50);
-        }
-
-  
-       
-    }
-
-    public void SetTarget(Transform target)
-    {
-        foreach (var z in zombieEntities.Values)
-        {
-            z.SetTarget(target);
+                var area = zombieAreaDic[id];
+                for (var i = zombieAreaList[area].Count-1; i >0; i--)
+                {
+                    if (zombieAreaList[area][i]._entityID == id)
+                    {
+                        zombieAreaList[area].RemoveAt(i);
+                    }
+                }
+                zombieAreaDic.Remove(id);
+            }
         }
     }
+    
     
 }
