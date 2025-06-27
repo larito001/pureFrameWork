@@ -27,6 +27,7 @@ public class GunEntity : BaseEntity
     private GameObject gun;
     private LineRenderer laser;
     private Transform laserPoint;
+    int enemyTriggerLayer = LayerMask.NameToLayer("EnemyTrigger"); // 获取 EnemyTrigger 层的索引
     protected override void YOTOOnload()
     {
         // VFXManager.Instance.Init();
@@ -120,9 +121,10 @@ public class GunEntity : BaseEntity
                 // 设置起点
                 Vector3 start = fireTrans.position;
                 Vector3 direction = player.character.transform.forward;
-
+             
+                LayerMask layerMask = ~(1 << enemyTriggerLayer); // 排除 EnemyTrigger 层
                 RaycastHit hit;
-                if (Physics.Raycast(start, direction, out hit, 100f))
+                if (Physics.Raycast(start, direction, out hit, 100f,layerMask))
                 {
                     // 如果射线击中物体，设置laser终点为击中点
                     laser.SetPosition(0, start);
