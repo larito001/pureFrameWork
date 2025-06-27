@@ -54,7 +54,7 @@ public class NormalZombieBullet : BulletEntity
         PlayerAnimatorCtrl player;
         if (other.TryGetComponent(out player))
         {
-            player.characterBase.Hurt(99);
+            player.characterBase.Hurt(2);
         }
        
     }

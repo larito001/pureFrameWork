@@ -9,15 +9,14 @@ using YOTO;
 
 public class PlayerEntity : CharacterBase
 {
-    
-    public float HP;
-
+    public float HP = 100;
+    float maxHP=100;
     public float ATK;
     public float DEF;
     public float SPEED;
-    public float CRT;//暴击率
-    public float CDMG;//暴击伤害
-    
+    public float CRT; //暴击率
+    public float CDMG; //暴击伤害
+
     public PlayerAnimatorCtrl animatorCtrl;
     public PlayerMoveCtrl moveCtrl;
     public PlayerInteractionCtrl interactionCtrl;
@@ -26,10 +25,10 @@ public class PlayerEntity : CharacterBase
     private Vector3 target;
     public bool canMove = true;
     public Vector3 orgPosition;
-    
+
     public bool isAming = true;
     public bool isShooting = false;
-    
+
     public Vector3 mousePoint;
     public Vector3 lookPos;
     private bool isTouching = false;
@@ -41,31 +40,44 @@ public class PlayerEntity : CharacterBase
     private float headRotationSpeed = 10;
     public RigBuilder builder;
     public bool isAimEnd = false;
-    
+
     private HandRoot handPos;
     private Transform charCameraPos;
-    public bool isWaiting { get;private set; }
+    public bool isWaiting { get; private set; }
+    private Outline outline;
 
     public void Hurt(float hurt)
     {
+     
+        HP -= hurt;
+        if (HP <= 0)
+        {
+            HP = 0;
+        }
+        
+        float healthPercentage = HP / maxHP;
+
+        // Interpolate between red (HP=0) and green (HP=maxHP)
+        outline.OutlineColor = Color.Lerp(Color.red, Color.green, healthPercentage);
+
         YOTOFramework.sceneMgr.cameraCtrl.AddShake(0.1f);
-        FlyTextMgr.Instance.AddText(hurt.ToString(),character.transform.position,FlyTextType.PlayerHurt);
+        FlyTextMgr.Instance.AddText(hurt.ToString(), character.transform.position, FlyTextType.PlayerHurt);
     }
+
     public GunEntity gun;
+
     public MeleeEntity melee;
+
     //todo:Gunparent
     // private NavTarget navTarget;
     public PlayerEntity() : base()
     {
-        
-
         // navTarget=NavMapManager.Instance.GetTarget(false,new Vector3(100,0,10));
-      //求Vector3.up和camera.transform.forward的夹角，然后根据三维的勾股定理，给出Height。height为直角边A，且为计算出的夹角的临边，已知夹角，已知直角三角形。知道对角的顶点位置lookPos，求另一个对角LookPos2
+        //求Vector3.up和camera.transform.forward的夹角，然后根据三维的勾股定理，给出Height。height为直角边A，且为计算出的夹角的临边，已知夹角，已知直角三角形。知道对角的顶点位置lookPos，求另一个对角LookPos2
     }
 
     public override void CulculateDir()
     {
-        
         Vector3 cameraForwordProjection =
             new Vector3(camera.transform.forward.x, 0, camera.transform.forward.z).normalized;
         if (!canMove)
@@ -89,13 +101,13 @@ public class PlayerEntity : CharacterBase
 
     public override void Init(Vector3 pos)
     {
-        YOTOFramework.eventMgr.AddEventListener<int>(YOTO.EventType.KeyBoardNumClick,SwitchWeapon);
+        YOTOFramework.eventMgr.AddEventListener<int>(YOTO.EventType.KeyBoardNumClick, SwitchWeapon);
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TryReload, () =>
         {
             if (!isInit) return;
             if (gun != null)
             {
-                gun.Reload();   
+                gun.Reload();
             }
 
             animatorCtrl.ReLoad(() =>
@@ -108,7 +120,6 @@ public class PlayerEntity : CharacterBase
         {
             if (!isInit) return;
             mousePoint = pos;
-         
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
         {
@@ -152,11 +163,10 @@ public class PlayerEntity : CharacterBase
                 handPos = character.GetComponentInChildren<HandRoot>();
                 headTarget = character.gameObject.transform.Find("HeadTarget");
                 builder.Build();
-         
+                outline = character.GetComponent<Outline>();
                 isInit = true;
                 SwitchWeapon(1);
             });
-
     }
 
     private void FireRelease()
@@ -169,6 +179,7 @@ public class PlayerEntity : CharacterBase
 
         isFireing = false;
     }
+
     private void TouchReless()
     {
         if (!isInit) return;
@@ -176,20 +187,18 @@ public class PlayerEntity : CharacterBase
         isTouching = false;
         isAming = isTouching;
     }
+
     private void SwitchWeapon(int index)
     {
         if (isWaiting) return;
 
         isWaiting = true;
-        YOTOFramework.timeMgr.DelayCall(() =>
-        {
-            isWaiting = false;
-        },0.7f);
+        YOTOFramework.timeMgr.DelayCall(() => { isWaiting = false; }, 0.7f);
         if (index == 1)
         {
             if (gun == null)
             {
-                gun = new GunEntity(handPos); 
+                gun = new GunEntity(handPos);
                 gun.Init(this);
             }
             else
@@ -202,7 +211,7 @@ public class PlayerEntity : CharacterBase
                 melee.UnuseWeapon();
             }
 
-            animatorCtrl.currentWeapon = PlayerAnimatorCtrl.GUN_LAYER; 
+            animatorCtrl.currentWeapon = PlayerAnimatorCtrl.GUN_LAYER;
         }
         else if (index == 2)
         {
@@ -238,17 +247,17 @@ public class PlayerEntity : CharacterBase
         interactionCtrl.Init(this);
         Debug.Log("AddComponent Finish");
 
-       var mCamera= YOTOFramework.cameraMgr.getVirtualCamera("MainCameraVirtual");
-       mCamera.m_Lens.FieldOfView = 60;
-       charCameraPos=GameObject.Find("CharCameraPos").transform;
+        var mCamera = YOTOFramework.cameraMgr.getVirtualCamera("MainCameraVirtual");
+        mCamera.m_Lens.FieldOfView = 60;
+        charCameraPos = GameObject.Find("CharCameraPos").transform;
 
-       mCamera.m_Follow = charCameraPos;
-       mCamera.m_LookAt =charCameraPos;
-      var body=  mCamera.AddCinemachineComponent<CinemachineFramingTransposer>();
-      body.m_TrackedObjectOffset= new Vector3(0, 2, 0);
-      body.m_DeadZoneWidth = 0f;
-      body.m_DeadZoneHeight = 0f;
-      body.m_CameraDistance = 10;
+        mCamera.m_Follow = charCameraPos;
+        mCamera.m_LookAt = charCameraPos;
+        var body = mCamera.AddCinemachineComponent<CinemachineFramingTransposer>();
+        body.m_TrackedObjectOffset = new Vector3(0, 2, 0);
+        body.m_DeadZoneWidth = 0f;
+        body.m_DeadZoneHeight = 0f;
+        body.m_CameraDistance = 10;
     }
 
 
@@ -278,7 +287,7 @@ public class PlayerEntity : CharacterBase
     }
 
     private float maxHeadYaw = 60f; // 最大左右旋转角度，单位是度
-    
+
     public override void YOTOUpdate(float deltaTime)
     {
         if (!isInit) return;
@@ -299,15 +308,16 @@ public class PlayerEntity : CharacterBase
             //todo:偏移镜头charCameraPos（Transform），移动到  character.transform.position+character.transform.forward *3的圆形范围内
             if (animatorCtrl.currentWeapon == PlayerAnimatorCtrl.GUN_LAYER)
             {
-                charCameraPos.position = Vector3.Lerp(charCameraPos.position, character.transform.position + character.transform.forward * 3, Time.deltaTime * 10);
+                charCameraPos.position = Vector3.Lerp(charCameraPos.position,
+                    character.transform.position + character.transform.forward * 3, Time.deltaTime * 10);
             }
             else
             {
-                charCameraPos.position = Vector3.Lerp(charCameraPos.position, character.transform.position , Time.deltaTime * 10);
+                charCameraPos.position = Vector3.Lerp(charCameraPos.position, character.transform.position,
+                    Time.deltaTime * 10);
             }
-         
-            
-            
+
+
             if (currentTime <= waitTime)
             {
                 currentTime += deltaTime;
@@ -321,30 +331,30 @@ public class PlayerEntity : CharacterBase
         }
         else
         {
-            charCameraPos.position = Vector3.Lerp(charCameraPos.position, character.transform.position , Time.deltaTime * 10);
+            charCameraPos.position =
+                Vector3.Lerp(charCameraPos.position, character.transform.position, Time.deltaTime * 10);
             currentTime = 0;
             isAimEnd = false;
         }
-        
-        
+
+
         isShooting = false;
- 
-        if (isFireing&&!isWaiting)
+
+        if (isFireing && !isWaiting)
         {
-         
             if (currentTime >= waitTime)
             {
                 //todo:开火，子弹间隔，帮我写，在发射子弹的地方写好todo我创建子弹就好了
                 isShooting = true;
                 if (gun != null)
-                gun.TryShot();
+                    gun.TryShot();
                 if (melee != null)
                 {
                     melee.TryShot();
                 }
             }
         }
-        
+
         if (animatorCtrl)
         {
             animatorCtrl.YOTOUpdate(deltaTime);
@@ -371,14 +381,9 @@ public class PlayerEntity : CharacterBase
         // {
         //     navTarget.SetPos(character.transform.position);
         // }
-    
     }
 
     public override void YOTOOnHide()
     {
     }
-
-
-
-    
 }
