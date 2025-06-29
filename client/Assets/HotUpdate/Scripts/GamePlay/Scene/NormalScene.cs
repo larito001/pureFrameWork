@@ -24,6 +24,7 @@ public class NormalScene : VirtualSceneBase
     //加载常用系统
     public override void OnInit()
     {
+        WeatherManager.Instance.Init();
         //加载事件系统
         EmergencyManager.Instance.Init();
         YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
@@ -31,16 +32,8 @@ public class NormalScene : VirtualSceneBase
         var org = GameObject.Find("PlayerOrgPos");
         EnemyManager.Instance.Init();
         player.Init(org.transform.position);
-        for (int i = 0; i < 5; i++)
-        {
-            TowerManager.Instance.GenerateTowerBase(org.transform.position+new Vector3(0,-4,0)+new Vector3(5,0,0)*i); 
-            var wood=  WoodResEntity.pool.GetItem(Vector3.zero);
-            wood.Location = org.transform.position+new Vector3(0,-4,5) + new Vector3(5, 0, 0) * i;
-            wood.InstanceGObj();
-            var iron=  IronResEntity.pool.GetItem(Vector3.zero);
-            iron.Location = org.transform.position+new Vector3(0,-4,10) + new Vector3(5, 0, 0) * i;
-            iron.InstanceGObj();
-        }
+        TowerManager.Instance.Init();
+        SceneResManager.Instance.Init();
         YOTOFramework.uIMgr.Show(UIEnum.AimUI);
   
         // var obj= TestPoolObject.pool.GetItem(Vector3.zero);

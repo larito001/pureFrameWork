@@ -63,7 +63,7 @@ public abstract class ObjectBase:BaseEntity
     {
         trans.position = Location;
         trans.rotation = Rotation;
-        trans.transform.parent = Parent;
+        trans.SetParent(Parent);
         AfterInstanceGObj();
         
     }

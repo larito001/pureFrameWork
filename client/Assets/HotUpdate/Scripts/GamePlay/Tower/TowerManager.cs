@@ -6,6 +6,14 @@ public class TowerManager : Singleton<TowerManager>
 {
     Dictionary<int, TowerBaseEntity> towers = new Dictionary<int, TowerBaseEntity>();
 
+    public void Init()
+    {
+        var org = GameObject.Find("PlayerOrgPos");
+        for (int i = 0; i < 5; i++)
+        {
+            GenerateTowerBase(org.transform.position+new Vector3(0,-4,0)+new Vector3(5,0,0)*i); 
+        }
+    }
     public void GenerateTowerBase(Vector3 pos)
     {
         var tower = TowerBaseEntity.pool.GetItem(Vector3.zero);
