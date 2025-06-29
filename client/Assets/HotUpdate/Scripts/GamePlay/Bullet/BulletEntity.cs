@@ -46,7 +46,8 @@ public abstract class BulletEntity :ObjectBase,PoolItem<Transform>
             this.Remove();
         }
     }
-
+    protected Transform parent;
+   
     public override void YOTONetUpdate()
     {
     

@@ -23,7 +23,7 @@ public class NormalTower :  ObjectBase, PoolItem<TowerBaseEntity>
     {
         if (timer >0.2f)
         {
-            var e = EnemyManager.Instance.GetEnemey();
+            var e = EnemyManager.Instance.GetRecentEnemy(Location);
             if (e != null && e.zombieBase != null)
             {
                 var dir = e.zombieBase.transform.position - this.Location;

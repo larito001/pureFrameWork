@@ -20,22 +20,41 @@ public class FireStreamTower : ObjectBase, PoolItem<TowerBaseEntity>
     }
     public override void YOTOUpdate(float deltaTime)
     {
-        if (timer >5f)
+        var e = EnemyManager.Instance.GetRecentEnemy(Location);
+        if (e != null && objTrans != null)
         {
-            var e = EnemyManager.Instance.GetEnemey();
-            if (e != null && e.zombieBase != null)
+            var dir = e.zombieBase.transform.position+new Vector3(0,1.5f,0) - this.Location;
+        
+            // Calculate the target rotation looking in the direction of 'dir'
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+        
+            // Smoothly interpolate between current rotation and target rotation
+            objTrans.rotation = Quaternion.Slerp(
+                objTrans.rotation,
+                targetRotation,
+                Time.deltaTime * 10 // adjust rotationSpeed to control lerp speed
+            );
+            if (timer >5f)
             {
-                var dir = e.zombieBase.transform.position - this.Location;
-                var bullet = FireStreamBullet.pool.GetItem(null);
-                bullet.InstanceGObj();
-                bullet.FireFromTo(this.Location , dir);
-                Debug.Log("位置：" + this.Location);
+          
+                if (e != null && e.zombieBase != null)
+                {
+                
+                    var bullet = FireStreamBullet.pool.GetItem(null);
+                    bullet.Parent=this.objTrans;
+                    bullet.InstanceGObj();
+                    bullet.FireFromTo(this.Location , dir);
+                    Debug.Log("位置：" + this.Location);
+                }
+                timer = 0;
             }
-            timer = 0;
-        }
 
-        timer += deltaTime;
+            timer += deltaTime;
+        }
+    
     }
+
+
 
     public override void YOTONetUpdate()
     {

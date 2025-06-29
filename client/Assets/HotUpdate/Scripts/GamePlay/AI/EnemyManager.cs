@@ -61,15 +61,6 @@ public class EnemyManager : SingletonMono<EnemyManager>
             }
         }
     }
-    public ZombieEntity GetEnemey()
-    {
-        foreach (var keyValuePair in zombieEntities)
-        {
-            return keyValuePair.Value;
-        }
-        return null;
-    }
-
 
     public void Hurt(int id, float hurt)
     {
@@ -79,6 +70,30 @@ public class EnemyManager : SingletonMono<EnemyManager>
             zombieEntities[id].Hurt(hurt);
             
         }
+    }
+
+    public ZombieEntity GetRecentEnemy(Vector3 pos)
+    {
+        ZombieEntity res=null;
+        float distance = 0;
+        foreach (var value in zombieEntities.Values)
+        {
+            if (res==null)
+            {
+                res = value;
+            }
+            else 
+            {
+               var dis= (res.zombieBase.transform.position -value.zombieBase.transform.position).magnitude;
+               if (distance > dis)
+               {
+                   res = value;
+                   distance = dis;
+               }
+            }
+        }
+
+        return res;
     }
 
     public bool  CheckZombieAlive(int id)

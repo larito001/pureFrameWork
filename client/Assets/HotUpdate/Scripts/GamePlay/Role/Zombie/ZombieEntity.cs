@@ -60,10 +60,11 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     public void Die()
     {
         zombieNav.Stop();
+        EnemyManager.Instance.RemoveZombie(_entityID);
         YOTOFramework.timeMgr.DelayCall(() =>
         {
             Remove();
-            EnemyManager.Instance.RemoveZombie(_entityID);
+
         },2.2f);
         zombieBase.EnemyDie();
         zombieBase.GetComponent<ZombieColliderCtrl>().Stop();

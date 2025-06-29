@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using HotUpdate.Scripts.Framework.Pool.newPool;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
 /// <summary>
@@ -24,6 +25,8 @@ public abstract class ObjectBase:BaseEntity
     protected Transform objTrans;
     private ObjectPool.PoolBuffer poolBuffer;
     private Vector3 location;
+    private Quaternion rotation;
+    private Transform parent;
     private bool isRecover;
 
     private void loadPrefab()
@@ -59,6 +62,8 @@ public abstract class ObjectBase:BaseEntity
     private void OnPrefabReadyUse(Transform trans)
     {
         trans.position = Location;
+        trans.rotation = Rotation;
+        trans.transform.parent = Parent;
         AfterInstanceGObj();
         
     }
@@ -102,7 +107,18 @@ public abstract class ObjectBase:BaseEntity
 
         set { location = value; }
     }
-    
+    public virtual Quaternion Rotation
+    {
+        get { return rotation; }
+
+        set { rotation = value; }
+    }
+    public virtual Transform Parent
+    {
+        get { return parent; }
+
+        set { parent = value; }
+    }
     /// <summary>
     /// 设置预制物路径
     /// </summary>
