@@ -13,8 +13,9 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     public ZombieNavCtrl zombieNav;
     public float HP = 100;
     private Transform target;
+    private CrowdGroupAuthoring group;
     public bool isInit=false;
-
+    public bool isDie { get; private set; }
     public void SetTarget(Transform t)
     {
         this.target = t;
@@ -22,7 +23,9 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
 
     protected override void AfterInstanceGObj()
     {
+        isDie = false;
         zombieBase = objTrans.GetComponent<ZombieAnimatorCtrl>();
+        zombieBase.Init(this);
         zombieBase.gameObject.SetActive(true);
         zombieNav = zombieBase.GetComponent<ZombieNavCtrl>();
         zombieNav.Init(this);
@@ -30,15 +33,21 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
         zombieBase.EnemyRun();
         zombieBase.GetComponent<ZombieColliderCtrl>().Run();
         HP = 100;
-        if (this.target)
-        {
-            SetTarget(target);
-        }
+        zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =group;  
 
-        zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =
-            GameObject.Find("Crowd Group").GetComponent<CrowdGroupAuthoring>();
         isInit = true;
      
+    }
+
+    public void SetGroup(CrowdGroupAuthoring  group)  
+    {
+        this.group=group;
+        if (zombieBase)
+        {
+            zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =group;  
+        }
+     
+
     }
 
     public void Hurt(float hurt)
@@ -84,13 +93,13 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
 
     public override void YOTOUpdate(float deltaTime)
     {
-        if (HP > 0 && zombieNav && target)
+        if (HP > 0 && zombieNav )
         {
             timer += deltaTime;
             if (timer > 1)
             {
                 timer = 0;
-                zombieNav.SetTarget(target.position);
+                zombieNav.SetTarget(target);
             }
         }
     }

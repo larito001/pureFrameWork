@@ -1,6 +1,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using ProjectDawn.Navigation.Hybrid;
 using UnityEngine;
 using YOTO;
 
@@ -11,24 +13,25 @@ public class EnemyManager : SingletonMono<EnemyManager>
     private Dictionary<int ,List<ZombieEntity>> zombieAreaList= new Dictionary<int , List<ZombieEntity>>();//地区id，地区内的僵尸列表
     private Dictionary<int ,int> zombieAreaDic= new Dictionary<int ,int>();//僵尸id，地区id
     private int num = 0;
-
+    private List<EnemyRangeTrigger> triggers; 
     public void Init()
     {
         zombieEntities.Clear();
         var poss = GameObject.Find("EnemyOrgPos");
-        var trigger = poss.GetComponentsInChildren<EnemyRangeTrigger>();
-        for (var i = 0; i < trigger.Length; i++)
+        triggers = poss.GetComponentsInChildren<EnemyRangeTrigger>().ToList();
+        for (var i = 0; i < triggers.Count; i++)
         {
-            trigger[i].Init(i);
-            trigger[i].SetRange(50);
+            triggers[i].Init(i);
+            triggers[i].SetRange(50);
             var list = new List<ZombieEntity>();
             zombieAreaList.Add(i,list);
             
-            var pos = trigger[i].transform.position;
+            var pos = triggers[i].transform.position;
             for (int j = 0; j < 3; j++)
             {
                 ZombieEntity zombieEntity=  ZombieEntity.pool.GetItem(Vector3.zero);
                 zombieEntity.InstanceGObj();
+                zombieEntity.SetGroup(triggers[i].GetComponent<CrowdGroupAuthoring>());
                 // 设置位置，假设僵尸在地面上（y轴为0）
                 zombieEntity.Location=pos;
 
