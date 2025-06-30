@@ -23,6 +23,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
 
     protected override void AfterInstanceGObj()
     {
+        objTrans.gameObject.SetActive(true);
         isDie = false;
         zombieBase = objTrans.GetComponent<ZombieAnimatorCtrl>();
         zombieBase.Init(this);
@@ -119,6 +120,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     //如果继承，注意重写
     public  void Remove()
     {
+        objTrans.gameObject.SetActive(false);
         RecoverObject();
         pool.RecoverItem(this);
     }

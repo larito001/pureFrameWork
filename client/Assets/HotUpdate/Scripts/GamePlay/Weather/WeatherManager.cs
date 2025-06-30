@@ -43,7 +43,7 @@ public class WeatherManager : SingletonMono<WeatherManager>
             foreach (DayTimeType time in System.Enum.GetValues(typeof(DayTimeType)))
             {
                 ChangeDayTime(time);
-                yield return new WaitForSeconds(10f);
+                yield return new WaitForSeconds(5f);
             }
         }
     }
@@ -56,7 +56,7 @@ public class WeatherManager : SingletonMono<WeatherManager>
             foreach (var weather in weathers)
             {
                 WeatherManager.Instance.ChangeWeather(weather);
-                yield return new WaitForSeconds(10f);
+                yield return new WaitForSeconds(5f);
             }
         }
     }
@@ -111,7 +111,7 @@ public class WeatherManager : SingletonMono<WeatherManager>
                 break;
         }
 
-        transitionCoroutine = StartCoroutine(TransitionLight(targetColor, targetDirection, 3f));
+        transitionCoroutine = StartCoroutine(TransitionLight(targetColor, targetDirection, 5f));
     }
     private void LoadShowerComplete(GameObject obj ,Vector3 pos, Quaternion rot)
     {
