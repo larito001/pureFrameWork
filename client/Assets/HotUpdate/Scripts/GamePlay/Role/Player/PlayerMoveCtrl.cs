@@ -15,18 +15,22 @@ public class PlayerMoveCtrl : CtrlBase
     IEnumerator fvxIE;
     List<VFXBase> vfxs= new List<VFXBase>();
     private bool canMove = true;
-    
-    
-    public override void Init(PlayerEntity character)
+
+    private Vector3 _outVolocity;
+    private Quaternion _outQuaternion;
+    public void SetRig(Rigidbody rig)
     {
-        base.Init(character);
-        characterBase.character.TryGetComponent<Rigidbody>(out rigidbody);
-        if (!rigidbody)
-        {
-            rigidbody = characterBase.character.AddComponent<Rigidbody>();
-        }
+        rigidbody = rig;
     }
-    
+
+    public void SetVolocity(Vector3 v)
+    {
+        _outVolocity = v;
+    }
+    public void SetRotation(Quaternion q)
+    {
+        _outQuaternion = q;
+    }
     public override void YOTOUpdate(float deltaTime)
     {
         if (!canMove)
@@ -36,14 +40,11 @@ public class PlayerMoveCtrl : CtrlBase
         
         if (rigidbody)
         {
-            if (characterBase.isSpinting)
-            {
-                characterBase.isSpinting = false;
-            }
-            velocity = characterBase.animationVelocity;
+      
+            velocity = _outVolocity;
             velocity.y = rigidbody.velocity.y;
             rigidbody.velocity = velocity;
-            rigidbody.rotation = characterBase.animationRotate;
+            rigidbody.rotation = _outQuaternion;
         }
 
     }

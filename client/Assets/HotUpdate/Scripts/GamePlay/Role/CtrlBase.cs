@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class CtrlBase:MonoBehaviour
 {
-   public PlayerEntity characterBase;
+    public PlayerEntity characterBase;
     public virtual void Init(PlayerEntity character)
     {
         characterBase=character;

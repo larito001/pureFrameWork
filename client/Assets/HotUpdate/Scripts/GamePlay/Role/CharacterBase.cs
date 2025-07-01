@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class CharacterBase : BaseEntity
 {
-    public bool isSpinting;
     public float walkSpeed = 2.5f;
     public float runSpeed = 10f;
 

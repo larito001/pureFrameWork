@@ -137,11 +137,7 @@ public class PlayerEntity : CharacterBase
             moveInput = ve;
         });
 
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Sprint, () =>
-        {
-            if (!isInit) return;
-            isSpinting = true;
-        });
+   
 
         //*****************************************
         YOTOFramework.resMgr.LoadGameObject("Assets/PolygonApocalypse/Prefabs/Characters/SM_Chr_Teen_Male_01.prefab",
@@ -241,6 +237,7 @@ public class PlayerEntity : CharacterBase
         animatorCtrl.Init(this);
         animatorCtrl.SetAnimator(character.GetComponent<Animator>());
         moveCtrl.Init(this);
+        moveCtrl.SetRig(character.GetComponent<Rigidbody>());
         interactionCtrl.Init(this);
         Debug.Log("AddComponent Finish");
 
@@ -290,6 +287,8 @@ public class PlayerEntity : CharacterBase
         CulculateDir();
         animatorCtrl.SetAimingState(isAiming);
         animatorCtrl.SetCurrentWeapon(currentWeapon);
+        moveCtrl.SetVolocity(this.animationVelocity);
+        moveCtrl.SetRotation(this.animationRotate);
         if (!isInit) return;
         headTarget.rotation = Quaternion.Slerp(
             headTarget.rotation,
