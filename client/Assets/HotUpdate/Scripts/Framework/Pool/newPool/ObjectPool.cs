@@ -203,7 +203,7 @@ namespace HotUpdate.Scripts.Framework.Pool.newPool
                     if (!_isLoading)
                     {
                         _isLoading = true;
-                        YOTOFramework.resMgr.LoadGameObject(_resPath,rootTrans.position, rootTrans.rotation ,(templateObj,pos,rot) =>
+                        YOTOFramework.resMgr.LoadGameObject(_resPath,(templateObj) =>
                         {
                             if (templateObj == null)
                             {

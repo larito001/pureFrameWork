@@ -9,153 +9,107 @@ using YOTO;
 
 public class PlayerEntity : CharacterBase
 {
-    public float HP = 100;
-    float maxHP=100;
-    public float ATK;
-    public float DEF;
-    public float SPEED;
-    public float CRT; //暴击率
-    public float CDMG; //暴击伤害
+    #region  属性
 
+    private const float waitTime = 0.5f; //抬枪时间
+    private const string playerPerfabPath = "Assets/PolygonApocalypse/Prefabs/Characters/SM_Chr_Teen_Male_01.prefab";
+
+
+    //控制器
     private PlayerAnimatorCtrl animatorCtrl;
+
     public PlayerMoveCtrl moveCtrl;
-    public PlayerInteractionCtrl interactionCtrl;
-    public Camera camera;
-    public Vector2 moveInput;
-    private Vector3 target;
-    public bool canMove = true;
-    public Vector3 orgPosition;
 
-    // public bool isAming = true;
-    public bool isShooting = false;
-
-    public Vector3 mousePoint;
-    public Vector3 lookPos;
-    private bool isTouching = false;
-    private bool isFireing = false;
-    private float waitTime = 0.5f;
-    private float currentTime = 0;
-    private Transform headTarget;
-    private bool isInit = false;
-    private float headRotationSpeed = 10;
-    public RigBuilder builder;
-    public bool isAimEnd = false;
-    private int currentWeapon = PlayerAnimatorCtrl.NONE_LAYER;
-    private HandRoot handPos;
-    private Transform charCameraPos;
-    public bool isWaiting { get; private set; }
-    private Outline outline;
-
-    public void Hurt(float hurt)
-    {
-     
-        HP -= hurt;
-        if (HP <= 0)
-        {
-            HP = 0;
-        }
-        
-        float healthPercentage = HP / maxHP;
-
-        // Interpolate between red (HP=0) and green (HP=maxHP)
-        outline.OutlineColor = Color.Lerp(Color.red, Color.green, healthPercentage);
-
-        YOTOFramework.sceneMgr.cameraCtrl.AddShake(0.1f);
-        FlyTextMgr.Instance.AddText(hurt.ToString(), character.transform.position, FlyTextType.PlayerHurt);
-    }
-
+    //外部组件
+    public Camera camera; //相机,用于获取方向
+    private Transform headTarget; //头朝向
+    public RigBuilder builder; //控制骨骼IK的，当前只控制头
+    private HandRoot handPos; //放枪的位置
+    private Transform charCameraPos; //相机跟随的点，设置瞄准镜头偏移
+    private Outline outline; //描边
     public GunEntity gun;
 
     public MeleeEntity melee;
 
-    //todo:Gunparent
-    // private NavTarget navTarget;
-    public PlayerEntity() : base()
+    //玩家状态信息
+    private bool isAiming = false;
+    private bool canMove = true; //玩家是否可以移动
+    private bool isShooting = false; //是否正在开火
+    private bool isInit = false; //是否初始化完成
+    private bool isAimEnd = false; //是否完成抬枪动作（控制枪械红点）
+    private int currentWeapon = PlayerAnimatorCtrl.NONE_LAYER; //当前武器
+    private bool isWaiting = false; //是否正在切枪
+    private bool isTouching = false; //是否正在触摸屏幕、点击左键、右键
+    private bool isFireing = false; //是否按下开火
+    //输入信息
+    private Vector2 moveInput; //移动输入
+    private Vector3 playerMovement; //玩家移动方向
+    private Vector3 orgPosition; //玩家复活点位置
+    private Vector3 mousePoint; //鼠标的位置
+    private Vector3 lookPos; //玩家看向的位置
+    //私有计算temp
+    private float currentTime = 0; //当前抬枪进度
+    #endregion
+    
+
+
+    #region 输入
+
+    private void OnPlayerLoadComplete(GameObject player)
     {
-        // navTarget=NavMapManager.Instance.GetTarget(false,new Vector3(100,0,10));
-        //求Vector3.up和camera.transform.forward的夹角，然后根据三维的勾股定理，给出Height。height为直角边A，且为计算出的夹角的临边，已知夹角，已知直角三角形。知道对角的顶点位置lookPos，求另一个对角LookPos2
+        character = UnityEngine.Object.Instantiate(player);
+        character.SetActive(true);
+        character.transform.position = orgPosition;
+        camera = YOTOFramework.cameraMgr.getMainCamera();
+        AddComponent();
+        builder = character.GetComponent<RigBuilder>();
+        handPos = character.GetComponentInChildren<HandRoot>();
+        headTarget = character.gameObject.transform.Find("HeadTarget");
+        builder.Build();
+        outline = character.GetComponent<Outline>();
+        isInit = true;
+        SwitchWeapon(1);
     }
 
-    public override void CulculateDir()
+    private void OnMove(Vector2 move)
     {
-        Vector3 cameraForwordProjection =
-            new Vector3(camera.transform.forward.x, 0, camera.transform.forward.z).normalized;
-        if (!canMove)
+        if (!isInit) return;
+        moveInput = move;
+    }
+
+    private void OnTouchScreen()
+    {
+        if (!isInit) return;
+        isTouching = true;
+        isAiming = isTouching;
+    }
+
+    private void TryFire()
+    {
+        if (!isInit) return;
+        isAiming = true;
+        isFireing = true;
+    }
+
+    private void RefrshMousePos(Vector3 pos)
+    {
+        if (!isInit) return;
+        mousePoint = pos;
+    }
+
+    private void TryReload()
+    {
+        if (!isInit) return;
+        if (gun != null)
         {
-            playerMovement = Vector3.zero;
-            animatorCtrl.SetMoveDir(playerMovement);
-            return;
+            gun.Reload();
         }
-        
-        playerMovement = cameraForwordProjection * moveInput.y + camera.transform.right * moveInput.x;
 
-        playerMovement = character.transform.InverseTransformVector(playerMovement);
-        animatorCtrl.SetMoveDir(playerMovement);
-    }
-
-    public override void Init(Vector3 pos)
-    {
-        YOTOFramework.eventMgr.AddEventListener<int>(YOTO.EventType.KeyBoardNumClick, SwitchWeapon);
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TryReload, () =>
+        animatorCtrl.ReLoad(() =>
         {
-            if (!isInit) return;
             if (gun != null)
-            {
-                gun.Reload();
-            }
-
-            animatorCtrl.ReLoad(() =>
-            {
-                if (gun != null)
-                    gun.ReloadEnd();
-            });
+                gun.ReloadEnd();
         });
-        YOTOFramework.eventMgr.AddEventListener<Vector3>(YOTO.EventType.RefreshMousePos, (pos) =>
-        {
-            if (!isInit) return;
-            mousePoint = pos;
-        });
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
-        {
-            if (!isInit) return;
-            isAiming = true;
-            isFireing = true;
-        });
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.FireRelease, FireRelease);
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchPress, () =>
-        {
-            if (!isInit) return;
-            isTouching = true;
-            isAiming = isTouching;
-        });
-        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchRelease, TouchReless);
-        orgPosition = pos;
-        Debug.Log("InitPlayer");
-        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Move, (ve) =>
-        {
-            if (!isInit) return;
-            moveInput = ve;
-        });
-
-   
-
-        //*****************************************
-        YOTOFramework.resMgr.LoadGameObject("Assets/PolygonApocalypse/Prefabs/Characters/SM_Chr_Teen_Male_01.prefab",
-            Vector3.zero, Quaternion.identity, (obj, pos, rot) =>
-            {
-                character = UnityEngine.Object.Instantiate(obj);
-                character.SetActive(true);
-                character.transform.position = orgPosition;
-                camera = YOTOFramework.cameraMgr.getMainCamera();
-                AddComponent();
-                builder = character.GetComponent<RigBuilder>();
-                handPos = character.GetComponentInChildren<HandRoot>();
-                headTarget = character.gameObject.transform.Find("HeadTarget");
-                builder.Build();
-                outline = character.GetComponent<Outline>();
-                isInit = true;
-                SwitchWeapon(1);
-            });
     }
 
     private void FireRelease()
@@ -169,7 +123,7 @@ public class PlayerEntity : CharacterBase
         isFireing = false;
     }
 
-    private bool isAiming = false;
+
     private void TouchReless()
     {
         if (!isInit) return;
@@ -226,19 +180,72 @@ public class PlayerEntity : CharacterBase
         }
     }
 
-    public override void AddComponent()
+    #endregion
+
+    #region 对外：初始化，是否移动，受击
+
+    public override void Init(Vector3 pos)
+    {
+        orgPosition = pos;
+        AddEvent();
+    }
+
+    public void DontMove()
+    {
+        canMove = false;
+    }
+
+    public void CanMove()
+    {
+        canMove = true;
+    }
+
+    public void Hurt(float hurt)
+    {
+        HP -= hurt;
+        if (HP <= 0)
+        {
+            HP = 0;
+        }
+
+        float healthPercentage = HP / maxHP;
+        outline.OutlineColor = Color.Lerp(Color.red, Color.green, healthPercentage);
+        YOTOFramework.sceneMgr.cameraCtrl.AddShake(0.1f);
+        FlyTextMgr.Instance.AddText(hurt.ToString(), character.transform.position, FlyTextType.PlayerHurt);
+    }
+
+    #endregion
+    
+    #region 私有
+
+    private void CulculateDir()
+    {
+        if (!isInit) return;
+
+        if (!canMove)
+        {
+            playerMovement = Vector3.zero;
+            animatorCtrl.SetMoveDir(playerMovement);
+            return;
+        }
+
+        Vector3 cameraForwordProjection =
+            new Vector3(camera.transform.forward.x, 0, camera.transform.forward.z).normalized;
+        playerMovement = cameraForwordProjection * moveInput.y + camera.transform.right * moveInput.x;
+
+        playerMovement = character.transform.InverseTransformVector(playerMovement);
+        animatorCtrl.SetMoveDir(playerMovement);
+    }
+
+    private void AddComponent()
     {
         Debug.Log("AddComponent");
         animatorCtrl = character.AddComponent<PlayerAnimatorCtrl>();
         moveCtrl = character.AddComponent<PlayerMoveCtrl>();
-        interactionCtrl = character.AddComponent<PlayerInteractionCtrl>();
-
-
         animatorCtrl.Init(this);
         animatorCtrl.SetAnimator(character.GetComponent<Animator>());
         moveCtrl.Init(this);
         moveCtrl.SetRig(character.GetComponent<Rigidbody>());
-        interactionCtrl.Init(this);
         Debug.Log("AddComponent Finish");
 
         var mCamera = YOTOFramework.cameraMgr.getVirtualCamera("MainCameraVirtual");
@@ -254,47 +261,49 @@ public class PlayerEntity : CharacterBase
         body.m_CameraDistance = 10;
     }
 
+    #endregion
+    
+    #region 生命周期
 
-    public override void DontMove()
+    protected override void AddEvent()
     {
-        canMove = false;
+        YOTOFramework.eventMgr.AddEventListener<int>(YOTO.EventType.KeyBoardNumClick, SwitchWeapon);
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TryReload, TryReload);
+        YOTOFramework.eventMgr.AddEventListener<Vector3>(YOTO.EventType.RefreshMousePos, RefrshMousePos);
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, TryFire);
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.FireRelease, FireRelease);
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchPress, OnTouchScreen);
+        YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchRelease, TouchReless);
+        YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Move, OnMove);
+        YOTOFramework.resMgr.LoadGameObject(playerPerfabPath, OnPlayerLoadComplete);
     }
 
-    public override void CanMove()
+    protected override void RemoveEvent()
     {
-        canMove = true;
+        YOTOFramework.eventMgr.RemoveEventListener<int>(YOTO.EventType.KeyBoardNumClick, SwitchWeapon);
+        YOTOFramework.eventMgr.RemoveEventListener(YOTO.EventType.TryReload, TryReload);
+        YOTOFramework.eventMgr.RemoveEventListener<Vector3>(YOTO.EventType.RefreshMousePos, RefrshMousePos);
+        YOTOFramework.eventMgr.RemoveEventListener(YOTO.EventType.Fire, TryFire);
+        YOTOFramework.eventMgr.RemoveEventListener(YOTO.EventType.FireRelease, FireRelease);
+        YOTOFramework.eventMgr.RemoveEventListener(YOTO.EventType.TouchPress, OnTouchScreen);
+        YOTOFramework.eventMgr.RemoveEventListener(YOTO.EventType.TouchRelease, TouchReless);
+        YOTOFramework.eventMgr.RemoveEventListener<Vector2>(YOTO.EventType.Move, OnMove);
     }
-
-
-    public override void Dispose()
-    {
-        GameObject.Destroy(character);
-    }
-
-
-    protected override void YOTOOnload()
-    {
-    }
-
-    public override void YOTOStart()
-    {
-    }
-
-    private float maxHeadYaw = 60f; // 最大左右旋转角度，单位是度
 
     public override void YOTOUpdate(float deltaTime)
     {
+        if (!isInit) return;
         CulculateDir();
         animatorCtrl.SetAimingState(isAiming);
         animatorCtrl.SetCurrentWeapon(currentWeapon);
         moveCtrl.SetVolocity(this.animationVelocity);
         moveCtrl.SetRotation(this.animationRotate);
-        if (!isInit) return;
-        headTarget.rotation = Quaternion.Slerp(
-            headTarget.rotation,
-            Quaternion.Euler(0f, character.transform.eulerAngles.y, 0f),
-            Time.deltaTime * headRotationSpeed
-        );
+        if (gun != null)
+        {
+            gun.SetIsAinEnd(isAimEnd);
+            gun.SetIsWaiting(isWaiting);
+        }
+        headTarget.rotation = Quaternion.Euler(0f, character.transform.eulerAngles.y, 0f);
         if (isAiming)
         {
             Vector3 cameraPos = camera.transform.position;
@@ -305,7 +314,6 @@ public class PlayerEntity : CharacterBase
             float len = height / Mathf.Cos(angleRad);
             lookPos = mousePoint + dirNormalized * len;
             animatorCtrl.SetLookPos(lookPos);
-            //todo:偏移镜头charCameraPos（Transform），移动到  character.transform.position+character.transform.forward *3的圆形范围内
             if (currentWeapon == PlayerAnimatorCtrl.GUN_LAYER)
             {
                 charCameraPos.position = Vector3.Lerp(charCameraPos.position,
@@ -324,6 +332,11 @@ public class PlayerEntity : CharacterBase
                 isAimEnd = false;
             }
 
+            if (isWaiting)
+            {
+                currentTime = 0;
+            }
+
             if (currentTime >= waitTime)
             {
                 isAimEnd = true;
@@ -340,23 +353,16 @@ public class PlayerEntity : CharacterBase
 
         isShooting = false;
 
-        if (isFireing && !isWaiting)
+        if (isFireing)
         {
             if (currentTime >= waitTime)
             {
-                //todo:开火，子弹间隔，帮我写，在发射子弹的地方写好todo我创建子弹就好了
                 isShooting = true;
                 if (gun != null)
-                    gun.TryShot(() =>
-                    {
-                        animatorCtrl.TryShoot();
-                    });
+                    gun.TryShot(animatorCtrl.TryShoot);
                 if (melee != null)
                 {
-                    melee.TryShot(() =>
-                    {
-                        animatorCtrl.TryUseMelee();
-                    });
+                    melee.TryShot(animatorCtrl.TryUseMelee);
                 }
             }
         }
@@ -370,11 +376,14 @@ public class PlayerEntity : CharacterBase
         {
             moveCtrl.YOTOUpdate(deltaTime);
         }
+    }
 
-        if (interactionCtrl)
-        {
-            interactionCtrl.YOTOUpdate(deltaTime);
-        }
+    protected override void YOTOOnload()
+    {
+    }
+
+    public override void YOTOStart()
+    {
     }
 
     public override void YOTONetUpdate()
@@ -383,13 +392,14 @@ public class PlayerEntity : CharacterBase
 
     public override void YOTOFixedUpdate(float deltaTime)
     {
-        // if (character != null&&navTarget!=null)
-        // {
-        //     navTarget.SetPos(character.transform.position);
-        // }
     }
 
     public override void YOTOOnHide()
     {
+        //todo:释放调角色包
+        RemoveEvent();
+        GameObject.Destroy(character);
     }
+
+    #endregion
 }

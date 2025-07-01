@@ -12,14 +12,14 @@ public class VFXManager : Singleton<VFXManager>
 
     public void Init()
     {
-        foreach (var name in VFXDic.Values)
-        {
-            YOTOFramework.resMgr.LoadGameObject(name,Vector3.zero, Quaternion.identity, LoadObj);
-        }
+        // foreach (var name in VFXDic.Values)
+        // {
+        //     YOTOFramework.resMgr.LoadGameObject(name, LoadObj);
+        // }
 
     
     }
-    public void PlayVFX(string name,Vector3 pos, Quaternion rot)
+    public void PlayVFX(string name)
     {
         if (VFXDic.ContainsKey(name))
         {
@@ -31,7 +31,7 @@ public class VFXManager : Singleton<VFXManager>
     }
 
 
-    private void LoadObj(GameObject obj ,Vector3 pos, Quaternion rot)
+    private void LoadObj(GameObject obj)
     {
         // YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.BulletImpact).SetPrefab(obj.GetComponent<VFXBase>());
     }

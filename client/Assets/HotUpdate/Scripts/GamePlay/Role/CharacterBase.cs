@@ -4,30 +4,23 @@ using UnityEngine;
 
 public abstract class CharacterBase : BaseEntity
 {
-    public float walkSpeed = 2.5f;
-    public float runSpeed = 10f;
-
-
-    public Vector3 playerMovement;
+    
+    //属性
+    public float HP = 100;
+    public float maxHP=100;
+    public float ATK;
+    public float DEF;
+    public float SPEED;
+    public float CRT; //暴击率
+    public float CDMG; //暴击伤害
+    //移动方向
+  
     public GameObject character;
     public Vector3 animationVelocity;
     public Quaternion animationRotate=Quaternion.identity;
-
-    protected CharacterBase()
-    {
-        //Debug.Log("���츸��");
-    }
-
     public abstract void Init(Vector3 pos);
-    public abstract void CulculateDir();
-    public abstract void AddComponent();
-    //public abstract void Start();
-    //public abstract void Update(float deltaTime);
-    //public abstract void FixedUpdate(float deltaTime);
-    public abstract void DontMove();
-    public abstract void CanMove();
-    public abstract void Dispose();
-
+    protected abstract void AddEvent();
+    protected abstract void RemoveEvent();
     public Vector3 GetPos()
     {
         return character.transform.position;

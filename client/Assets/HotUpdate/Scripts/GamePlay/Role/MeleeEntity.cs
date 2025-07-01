@@ -30,7 +30,7 @@ public class MeleeEntity : BaseEntity
 
 
         YOTOFramework.resMgr.LoadGameObject("Assets/Fire Axe/Prefab/PBR/Fire_Axe_LODA.prefab",
-            Vector3.zero, Quaternion.identity, (obj, pos, rot) =>
+         (obj) =>
             {
                 melee = UnityEngine.Object.Instantiate(obj,handRoot.transform);
 

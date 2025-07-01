@@ -35,8 +35,7 @@ namespace YOTO
                 });
         }
 
-        public void LoadGameObject(string path, Vector3 pos, Quaternion rotation,
-            Action<GameObject, Vector3, Quaternion> callBack)
+        public void LoadGameObject(string path, Action<GameObject> callBack)
         {
             ResLoader<GameObject> loader = CreateLoader<GameObject>();
 
@@ -45,7 +44,7 @@ namespace YOTO
                 {
                     if (t.Status == AsyncOperationStatus.Succeeded)
                     {
-                        callBack(t.Result, pos, rotation);
+                        callBack(t.Result);
                     }
                     else
                     {
@@ -54,6 +53,11 @@ namespace YOTO
 
                     RecycleLoader(loader);
                 });
+        }
+
+        public void ReleasePack(string path)
+        {
+            
         }
     }
 }

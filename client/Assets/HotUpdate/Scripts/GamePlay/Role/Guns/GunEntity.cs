@@ -16,7 +16,17 @@ public class GunEntity : BaseEntity
 
     public bool canFire { get; private set; } // 是否允许发射
     private bool isFiring = false; // 当前是否处于开火状态
+    private bool _isAimEnd;
+    private bool _isWaiting;
 
+    public void SetIsAinEnd(bool isAimEnd)
+    {
+        _isAimEnd = isAimEnd;
+    }
+    public void SetIsWaiting(bool isWaiting)
+    {
+        _isWaiting = isWaiting;
+    }
     public Transform firePos { get; private set; }
     // private Queue<BulletEntity> bullets = new Queue<BulletEntity>();
 
@@ -35,7 +45,7 @@ public class GunEntity : BaseEntity
 
 
         YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Role/Gun/SM_Wep_AssaultRifle_02.prefab",
-            Vector3.zero, Quaternion.identity, (obj, pos, rot) =>
+            (obj) =>
             {
                 gun = UnityEngine.Object.Instantiate(obj);
                 gun.transform.SetParent(handRoot.transform);
@@ -45,24 +55,23 @@ public class GunEntity : BaseEntity
                 gun.transform.localRotation = Quaternion.identity;
                 firePos = gun.transform.Find("FirePos");
                 YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Laser/Prefab/Laser.prefab",
-                    Vector3.zero, Quaternion.identity,
-                    (obj, pos, rot) =>
+               
+                    (obj) =>
                     {
                         laser = GameObject.Instantiate(obj).GetComponent<LineRenderer>();
                         laser.positionCount = 2;
                         laserPoint = laser.GetComponentInChildren<Transform>();
                         laserPoint.parent = null;
                     });
-                YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Fire.prefab", Vector3.zero,
-                    Quaternion.identity, (obj, pos, rot) =>
-                    {
-                        fireTrans = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity).transform;
-                        fire = fireTrans.GetComponentInChildren<ParticleSystem>();
-                        fireTrans.transform.parent = firePos;
-                        fireTrans.transform.localPosition = Vector3.zero;
-                        fireTrans.transform.localRotation = Quaternion.identity;
-                        fire.Stop();
-                    });
+                YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Fire.prefab", (obj) =>
+                {
+                    fireTrans = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity).transform;
+                    fire = fireTrans.GetComponentInChildren<ParticleSystem>();
+                    fireTrans.transform.parent = firePos;
+                    fireTrans.transform.localPosition = Vector3.zero;
+                    fireTrans.transform.localRotation = Quaternion.identity;
+                    fire.Stop();
+                });
             });
     }
 
@@ -112,7 +121,7 @@ public class GunEntity : BaseEntity
         {
             // 设置 LineRenderer 点的数量（2个点：起点和终点）
        
-            if (player.isAimEnd&&canFire&&!player.isWaiting)
+            if (_isAimEnd&&canFire&&!_isWaiting)
             {
                 if (!laser.enabled)
                 {

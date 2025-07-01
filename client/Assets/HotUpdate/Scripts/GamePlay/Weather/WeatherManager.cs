@@ -31,9 +31,9 @@ public class WeatherManager : SingletonMono<WeatherManager>
         StartCoroutine(TestDayTimeCycle());
         StartCoroutine(TestWeatherCycle());
         YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Realistic Rain FX/Prefabs/Distort/shower.prefab",
-            Vector3.zero, Quaternion.identity, LoadShowerComplete);
+            LoadShowerComplete);
         YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Realistic Rain FX/Prefabs/Distort/Storm.prefab",
-            Vector3.zero, Quaternion.identity, LoadStromComplete);
+             LoadStromComplete);
     }
    
     IEnumerator TestDayTimeCycle()
@@ -113,12 +113,12 @@ public class WeatherManager : SingletonMono<WeatherManager>
 
         transitionCoroutine = StartCoroutine(TransitionLight(targetColor, targetDirection, 5f));
     }
-    private void LoadShowerComplete(GameObject obj ,Vector3 pos, Quaternion rot)
+    private void LoadShowerComplete(GameObject obj )
     {
         showerEffect = GameObject.Instantiate(obj).GetComponent<RainParticleBase>();
         showerEffect.transform.position += new Vector3(0, 4, 0);
     }
-    private void LoadStromComplete(GameObject obj ,Vector3 pos, Quaternion rot)
+    private void LoadStromComplete(GameObject obj)
     {
         stormEffect = GameObject.Instantiate(obj).GetComponent<RainParticleBase>();
         stormEffect.transform.position += new Vector3(0, 4, 0);
