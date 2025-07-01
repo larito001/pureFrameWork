@@ -1,41 +1,39 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Events;
 using YOTO;
-using Vector3 = System.Numerics.Vector3;
 
 public class PlayerAnimatorCtrl : CtrlBase
 {
     public const int GUN_LAYER = 1;
     public const int NONE_LAYER = 2;
     public const int MELEE_LAYER = 4;
-    public int currentWeapon = MELEE_LAYER;
-    public Animator animator;
+
+    private Animator animator;
     LocalmotionState localmotionState = LocalmotionState.Idle;
     ArmState armState = ArmState.None;
-    PlayerPose playerPose = PlayerPose.Stand;
-    public float RotateSpeed = 2;
-    // public TwoBoneIKConstraint rightHand;
-    // public TwoBoneIKConstraint leftHand; 
+    private float RotateSpeed = 2;
     private float reloadTimer = 0f;
     private float reloadDuration = 4f;
+    public Vector3 playerMoveDir;
+    private bool isRelongding = false;
+    private float lerpDuration = 0.5f;
+    private bool _isAiming = false;
+    private float _runSpeed = 10f;
+    private Vector3 _lookPos;
+    private int _currentWeapon = NONE_LAYER;
 
-    public enum PlayerPose
-    {
-        Crouch,
-        Stand,
-        MidAir
-    }
-    public enum LocalmotionState
+
+    private enum LocalmotionState
     {
         Idle,
         Walk,
         Run
     }
-    public enum ArmState
+
+    private enum ArmState
     {
         Gun,
         GunAim,
@@ -43,44 +41,53 @@ public class PlayerAnimatorCtrl : CtrlBase
         MeleeAim,
         None,
     }
-
-  
-    public override void Init(PlayerEntity character)
+    public void SetLookPos(Vector3 lookPos)
     {
-        base.Init(character);
-        characterBase.character.TryGetComponent<Animator>(out animator);
-   
-        if (!animator)
-        {
-            animator = characterBase.character.AddComponent<Animator>();
-        }
-
-        var Rig = characterBase.character.transform.Find("Rigs");
-        // rightHand = Rig.Find("RightHand").GetComponent<TwoBoneIKConstraint>();
-        // leftHand = Rig.Find("LeftHand").GetComponent<TwoBoneIKConstraint>();
+        _lookPos = lookPos;
     }
-    public void SwitchPlayerState()
+    public void SetAimingState(bool isAiming)
     {
-        
-        if (characterBase.isAming)
+        _isAiming = isAiming;
+    }
+    public void SetRunSpeed(float  speed)
+    {
+        _runSpeed = speed;
+    }
+    public void SetCurrentWeapon(int weapon)
+    {
+        _currentWeapon = weapon;
+    }
+
+    public void SetAnimator(Animator animator)
+    {
+        this.animator = animator;
+    }
+
+    public void SetMoveDir(Vector3 dir)
+    {
+        playerMoveDir = dir;
+    }
+    private void SwitchPlayerState()
+    {
+        if (_isAiming)
         {
-            if (currentWeapon == GUN_LAYER)
+            if (_currentWeapon== GUN_LAYER)
             {
                 armState = ArmState.GunAim;
                 SetWeight(0, 1, 0);
-            }else if(currentWeapon == MELEE_LAYER)
+            }
+            else if (_currentWeapon == MELEE_LAYER)
             {
                 armState = ArmState.MeleeAim;
                 SetWeight(0, 0, 1);
             }
-            
         }
-        else if(currentWeapon == GUN_LAYER)
+        else if (_currentWeapon == GUN_LAYER)
         {
             armState = ArmState.Gun;
             SetWeight(0, 1, 0);
         }
-        else if (currentWeapon == MELEE_LAYER)
+        else if (_currentWeapon== MELEE_LAYER)
         {
             armState = ArmState.Melee;
             SetWeight(0, 0, 1);
@@ -90,61 +97,52 @@ public class PlayerAnimatorCtrl : CtrlBase
             armState = ArmState.None;
             SetWeight(1, 0, 0);
         }
-        if (characterBase.playerMovement.magnitude == 0)
+
+        if (playerMoveDir.magnitude == 0)
         {
             localmotionState = LocalmotionState.Idle;
-            //Debug.Log("idel��" + characterBase.playerMovement+":"+ characterBase.playerMovement.magnitude);
-        }
-        else if (!characterBase.isRunning)
-        {
-            localmotionState = LocalmotionState.Walk;
-            //Debug.Log("walk��" + characterBase.playerMovement);
         }
         else
         {
             localmotionState = LocalmotionState.Run;
-            //Debug.Log("run��" + characterBase.playerMovement);
         }
-        
     }
 
-    private void SetWeight(float noneLayer,float gunLayer,float meleeLayer)
+    private void SetWeight(float noneLayer, float gunLayer, float meleeLayer)
     {
-        animator.SetLayerWeight(NONE_LAYER,noneLayer);
-        animator.SetLayerWeight(GUN_LAYER,gunLayer);
-        animator.SetLayerWeight(MELEE_LAYER,meleeLayer);
+        animator.SetLayerWeight(NONE_LAYER, noneLayer);
+        animator.SetLayerWeight(GUN_LAYER, gunLayer);
+        animator.SetLayerWeight(MELEE_LAYER, meleeLayer);
     }
+
     public void TryShoot()
     {
         animator.SetTrigger("ShootingTrigger");
     }
+
     public void TryUseMelee()
     {
         animator.SetTrigger("Melee");
     }
-    
-    void SetAnimator(float deltaTime)
-    { 
-        
-        //腿的动作
-        if (playerPose == PlayerPose.Stand)
+
+    private void SetAnimator(float deltaTime)
+    {
+        switch (localmotionState)
         {
-            switch (localmotionState)
-            {
-                case LocalmotionState.Idle:
-                    animator.SetFloat("MoveSpeed", 0, 0.1f, deltaTime);
-                    animator.SetBool("isMoving",false);
-                    break;
-                case LocalmotionState.Walk:
-                    animator.SetBool("isMoving",true);
-                        animator.SetFloat("MoveSpeed", Mathf.Min(characterBase.playerMovement.z * characterBase.walkSpeed,2) , 0.1f, deltaTime);
-                    break;
-                case LocalmotionState.Run:
-                    animator.SetBool("isMoving",true);
-                    animator.SetFloat("MoveSpeed",Mathf.Min(characterBase.playerMovement.z * characterBase.runSpeed,2) , 0.1f, deltaTime);
-                    break;
-            }
-            
+            case LocalmotionState.Idle:
+                animator.SetFloat("MoveSpeed", 0, 0.1f, deltaTime);
+                animator.SetBool("isMoving", false);
+                break;
+            case LocalmotionState.Walk:
+                animator.SetBool("isMoving", true);
+                animator.SetFloat("MoveSpeed", Mathf.Min(playerMoveDir.z * _runSpeed, 2),
+                    0.1f, deltaTime);
+                break;
+            case LocalmotionState.Run:
+                animator.SetBool("isMoving", true);
+                animator.SetFloat("MoveSpeed", Mathf.Min(playerMoveDir.z * _runSpeed, 2),
+                    0.1f, deltaTime);
+                break;
         }
         
         //手的动作
@@ -163,129 +161,95 @@ public class PlayerAnimatorCtrl : CtrlBase
         else if (armState == ArmState.Melee)
         {
             NormalState(deltaTime);
-        }else if (armState == ArmState.None)
+        }
+        else if (armState == ArmState.None)
         {
             NormalState(deltaTime);
         }
-    
-
     }
 
     private void AimState(float deltaTime)
     {
         animator.SetBool("isAming", true);
-            animator.SetFloat("HorizontalSpeed", characterBase.playerMovement.x * characterBase.runSpeed, 0.1f, deltaTime);
-            if (characterBase.playerMovement.magnitude == 0)
-            {
-                // 获取目标方向
-                UnityEngine.Vector3 dir = characterBase.lookPos - characterBase.character.transform.position;
-                dir.y = 0f; // 保证只在水平面上旋转
+        animator.SetFloat("HorizontalSpeed", playerMoveDir.x * _runSpeed, 0.1f, deltaTime);
+        if (playerMoveDir.magnitude == 0)
+        {
+            // 获取目标方向
+            UnityEngine.Vector3 dir = _lookPos- transform.position;
+            dir.y = 0f; // 保证只在水平面上旋转
+            // 当前角色的正前方向
+            UnityEngine.Vector3 forward =transform.forward;
+            // 计算目标方向的旋转角度（弧度）
+            float angleRad = Mathf.Atan2(dir.x, dir.z); // 正值表示右转，负值表示左转
+            // 获取角色当前朝向的角度
+            float currentRad = Mathf.Atan2(forward.x, forward.z);
+            // 计算当前朝向与目标朝向的差值（夹角）
+            float deltaRad = Mathf.DeltaAngle(currentRad * Mathf.Rad2Deg, angleRad * Mathf.Rad2Deg) * Mathf.Deg2Rad;
+            // 将方向差值传递给动画
+            animator.SetFloat("RotateSpeed", deltaRad * 5f, 0.2f, deltaTime);
+            // 实际旋转角色（你也可以用 Quaternion.Slerp 替代以获得更柔和效果）
+            transform.Rotate(0, deltaRad * Mathf.Rad2Deg * deltaTime * RotateSpeed, 0f);
+        }
 
-                // 当前角色的正前方向
-                UnityEngine.Vector3  forward = characterBase.character.transform.forward;
-
-                // 计算目标方向的旋转角度（弧度）
-                float angleRad = Mathf.Atan2(dir.x, dir.z); // 正值表示右转，负值表示左转
-
-                // 获取角色当前朝向的角度
-                float currentRad = Mathf.Atan2(forward.x, forward.z);
-
-                // 计算当前朝向与目标朝向的差值（夹角）
-                float deltaRad = Mathf.DeltaAngle(currentRad * Mathf.Rad2Deg, angleRad * Mathf.Rad2Deg) * Mathf.Deg2Rad;
-
-                // 将方向差值传递给动画
-                animator.SetFloat("RotateSpeed", deltaRad*5f, 0.2f, deltaTime);
-
-                // 实际旋转角色（你也可以用 Quaternion.Slerp 替代以获得更柔和效果）
-                characterBase.character.transform.Rotate(0, deltaRad * Mathf.Rad2Deg * deltaTime * RotateSpeed, 0f);
-            }
-            if (characterBase.lookPos != UnityEngine.Vector3.zero)
-            {
-                // Calculate the direction vector to rotate towards
-                UnityEngine.Vector3 dir = characterBase.lookPos - characterBase.character.transform.position ;
-                dir.y = 0f;  // Optional: keeps the rotation on the y-axis (horizontal only)
-        
-                // Get the rotation angle
-                float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        
-                // Rotate the character towards the target direction
-                characterBase.character.transform.rotation = Quaternion.Slerp(characterBase.character.transform.rotation, Quaternion.Euler(0, angle, 0), deltaTime*RotateSpeed); // You can adjust the `10f` to control the rotation speed
-            }
+        if (_lookPos != UnityEngine.Vector3.zero)
+        {
+            UnityEngine.Vector3 dir = _lookPos - transform.position;
+            dir.y = 0f;
+            float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Slerp(transform.rotation,
+                Quaternion.Euler(0, angle, 0),
+                deltaTime * RotateSpeed); 
+        }
     }
 
     private void NormalState(float deltaTime)
     {
         animator.SetBool("isAming", false);
-        float rad = Mathf.Atan2(characterBase.playerMovement.x, characterBase.playerMovement.z);
+        float rad = Mathf.Atan2(playerMoveDir.x, playerMoveDir.z);
         animator.SetFloat("RotateSpeed", rad, 0.2f, deltaTime);
-        characterBase.character.transform.Rotate(0, rad * 360 * deltaTime, 0f);
+        transform.Rotate(0, rad * 360 * deltaTime, 0f);
     }
     
-    
-    private bool isRelongding = false;
-    // private bool isLerpingWeight = false;
-    private float lerpDuration = 0.5f;
-    // private float lerpTimer = 0f;
-    // private float startWeight = 0f;
-    // private float targetWeight = 1f;
-
     public void ReLoad(UnityAction callback)
     {
         if (isRelongding) return;
-        // lerpTimer = 0f;
-        // startWeight = 1f;
-        // targetWeight = 0f;
-        // isLerpingWeight = true;
         isRelongding = true;
-        animator.SetBool("isReloding",true);
+        animator.SetBool("isReloding", true);
         YOTOFramework.timeMgr.DelayCall(() =>
         {
-            animator.SetBool("isReloding",false);
-            // 启动权重插值（从 0 → 1）
-            // lerpTimer = 0f;
-            // startWeight = 0f;
-            // targetWeight = 1f;
-            // isLerpingWeight = true;
+            animator.SetBool("isReloding", false);
             isRelongding = false;
         }, 4f);
-        // 触发 DelayCall（执行动画时长）
-        YOTOFramework.timeMgr.DelayCall(() =>
-        {
-            callback?.Invoke();
-        }, 4.5f);
+        YOTOFramework.timeMgr.DelayCall(() => { callback?.Invoke(); }, 4.5f);
     }
 
     private void OnAnimatorMove()
     {
-        //����״̬
         characterBase.animationVelocity = animator.velocity;
         characterBase.animationRotate = animator.rootRotation;
     }
 
     public override void YOTOUpdate(float deltaTime)
     {
-        characterBase.CulculateDir();
         SwitchPlayerState();
         SetAnimator(deltaTime);
- 
     }
 
     public void UseGun()
     {
-        if (currentWeapon != GUN_LAYER)
-        animator.Play("EquipRifle",GUN_LAYER,0);
+        if (_currentWeapon != GUN_LAYER)
+            animator.Play("EquipRifle", GUN_LAYER, 0);
     }
 
     public void UseMelee()
     {
-        if (currentWeapon != MELEE_LAYER)
+        if (_currentWeapon != MELEE_LAYER)
         {
-            animator.Play("EquipMelee",MELEE_LAYER,0);
+            animator.Play("EquipMelee", MELEE_LAYER, 0);
         }
-
     }
+
     public override void YOTONetUpdate()
     {
-        
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Events;
 using YOTO;
 
 public class GunEntity : BaseEntity
@@ -70,14 +71,14 @@ public class GunEntity : BaseEntity
         player = entity;
     }
 
-    public void TryShot()
+    public void TryShot(UnityAction shootCallBack)
     {
         if (!canFire) return;
 
         if (fireTimer >= fireRate)
         {
             fireTimer = 0f;
-            player.animatorCtrl.TryShoot();
+            shootCallBack();
             SpawnBullet();
         }
     }
@@ -111,7 +112,7 @@ public class GunEntity : BaseEntity
         {
             // 设置 LineRenderer 点的数量（2个点：起点和终点）
        
-            if (player.isAimEnd&&player.animatorCtrl.currentWeapon==PlayerAnimatorCtrl.GUN_LAYER&&!player.isWaiting)
+            if (player.isAimEnd&&canFire&&!player.isWaiting)
             {
                 if (!laser.enabled)
                 {
@@ -181,7 +182,6 @@ public class GunEntity : BaseEntity
     {
         canFire = true;
         gun.SetActive(true);
-        //播放动画
-        player.animatorCtrl.UseGun();
+        
     }
 }

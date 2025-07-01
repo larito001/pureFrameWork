@@ -17,7 +17,7 @@ public class PlayerEntity : CharacterBase
     public float CRT; //暴击率
     public float CDMG; //暴击伤害
 
-    public PlayerAnimatorCtrl animatorCtrl;
+    private PlayerAnimatorCtrl animatorCtrl;
     public PlayerMoveCtrl moveCtrl;
     public PlayerInteractionCtrl interactionCtrl;
     public Camera camera;
@@ -26,7 +26,7 @@ public class PlayerEntity : CharacterBase
     public bool canMove = true;
     public Vector3 orgPosition;
 
-    public bool isAming = true;
+    // public bool isAming = true;
     public bool isShooting = false;
 
     public Vector3 mousePoint;
@@ -40,7 +40,7 @@ public class PlayerEntity : CharacterBase
     private float headRotationSpeed = 10;
     public RigBuilder builder;
     public bool isAimEnd = false;
-
+    private int currentWeapon = PlayerAnimatorCtrl.NONE_LAYER;
     private HandRoot handPos;
     private Transform charCameraPos;
     public bool isWaiting { get; private set; }
@@ -83,20 +83,14 @@ public class PlayerEntity : CharacterBase
         if (!canMove)
         {
             playerMovement = Vector3.zero;
+            animatorCtrl.SetMoveDir(playerMovement);
             return;
         }
-
-        // if (isAming)
-        // {
-        //     playerMovement = new Vector3(moveInput.x, 0, moveInput.y);
-        // }
-        // else
-        // {
-        //  
-        // }
+        
         playerMovement = cameraForwordProjection * moveInput.y + camera.transform.right * moveInput.x;
 
         playerMovement = character.transform.InverseTransformVector(playerMovement);
+        animatorCtrl.SetMoveDir(playerMovement);
     }
 
     public override void Init(Vector3 pos)
@@ -124,7 +118,7 @@ public class PlayerEntity : CharacterBase
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.Fire, () =>
         {
             if (!isInit) return;
-            isAming = true;
+            isAiming = true;
             isFireing = true;
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.FireRelease, FireRelease);
@@ -132,12 +126,11 @@ public class PlayerEntity : CharacterBase
         {
             if (!isInit) return;
             isTouching = true;
-            isAming = isTouching;
+            isAiming = isTouching;
         });
         YOTOFramework.eventMgr.AddEventListener(YOTO.EventType.TouchRelease, TouchReless);
         orgPosition = pos;
         Debug.Log("InitPlayer");
-        isRunning = true;
         YOTOFramework.eventMgr.AddEventListener<Vector2>(YOTO.EventType.Move, (ve) =>
         {
             if (!isInit) return;
@@ -174,18 +167,19 @@ public class PlayerEntity : CharacterBase
         if (!isInit) return;
         if (!isTouching)
         {
-            isAming = false;
+            isAiming = false;
         }
 
         isFireing = false;
     }
 
+    private bool isAiming = false;
     private void TouchReless()
     {
         if (!isInit) return;
         mousePoint = Vector3.zero;
         isTouching = false;
-        isAming = isTouching;
+        isAiming = isTouching;
     }
 
     private void SwitchWeapon(int index)
@@ -204,6 +198,7 @@ public class PlayerEntity : CharacterBase
             else
             {
                 gun.UseWeapon();
+                animatorCtrl.UseGun();
             }
 
             if (melee != null)
@@ -211,7 +206,7 @@ public class PlayerEntity : CharacterBase
                 melee.UnuseWeapon();
             }
 
-            animatorCtrl.currentWeapon = PlayerAnimatorCtrl.GUN_LAYER;
+            currentWeapon = PlayerAnimatorCtrl.GUN_LAYER;
         }
         else if (index == 2)
         {
@@ -223,6 +218,7 @@ public class PlayerEntity : CharacterBase
             else
             {
                 melee.UseWeapon();
+                animatorCtrl.UseMelee();
             }
 
             if (gun != null)
@@ -230,7 +226,7 @@ public class PlayerEntity : CharacterBase
                 gun.UnuseWeapon();
             }
 
-            animatorCtrl.currentWeapon = PlayerAnimatorCtrl.MELEE_LAYER;
+            currentWeapon = PlayerAnimatorCtrl.MELEE_LAYER;
         }
     }
 
@@ -243,6 +239,7 @@ public class PlayerEntity : CharacterBase
 
 
         animatorCtrl.Init(this);
+        animatorCtrl.SetAnimator(character.GetComponent<Animator>());
         moveCtrl.Init(this);
         interactionCtrl.Init(this);
         Debug.Log("AddComponent Finish");
@@ -290,13 +287,16 @@ public class PlayerEntity : CharacterBase
 
     public override void YOTOUpdate(float deltaTime)
     {
+        CulculateDir();
+        animatorCtrl.SetAimingState(isAiming);
+        animatorCtrl.SetCurrentWeapon(currentWeapon);
         if (!isInit) return;
         headTarget.rotation = Quaternion.Slerp(
             headTarget.rotation,
             Quaternion.Euler(0f, character.transform.eulerAngles.y, 0f),
             Time.deltaTime * headRotationSpeed
         );
-        if (isAming)
+        if (isAiming)
         {
             Vector3 cameraPos = camera.transform.position;
             Vector3 dir = mousePoint - cameraPos;
@@ -305,8 +305,9 @@ public class PlayerEntity : CharacterBase
             float height = 1.5f;
             float len = height / Mathf.Cos(angleRad);
             lookPos = mousePoint + dirNormalized * len;
+            animatorCtrl.SetLookPos(lookPos);
             //todo:偏移镜头charCameraPos（Transform），移动到  character.transform.position+character.transform.forward *3的圆形范围内
-            if (animatorCtrl.currentWeapon == PlayerAnimatorCtrl.GUN_LAYER)
+            if (currentWeapon == PlayerAnimatorCtrl.GUN_LAYER)
             {
                 charCameraPos.position = Vector3.Lerp(charCameraPos.position,
                     character.transform.position + character.transform.forward * 3, Time.deltaTime * 10);
@@ -347,10 +348,16 @@ public class PlayerEntity : CharacterBase
                 //todo:开火，子弹间隔，帮我写，在发射子弹的地方写好todo我创建子弹就好了
                 isShooting = true;
                 if (gun != null)
-                    gun.TryShot();
+                    gun.TryShot(() =>
+                    {
+                        animatorCtrl.TryShoot();
+                    });
                 if (melee != null)
                 {
-                    melee.TryShot();
+                    melee.TryShot(() =>
+                    {
+                        animatorCtrl.TryUseMelee();
+                    });
                 }
             }
         }

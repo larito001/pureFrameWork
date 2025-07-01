@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using YOTO;
 
 public class MeleeEntity : BaseEntity
@@ -46,14 +47,14 @@ public class MeleeEntity : BaseEntity
         player = entity;
     }
 
-    public void TryShot()
+    public void TryShot(UnityAction shootCallBack)
     {
         if (!canFire) return;
 
         if (fireTimer >= fireRate)
         {
             fireTimer = 0f;
-            player.animatorCtrl.TryUseMelee();
+            shootCallBack();
             SpawnBullet();
         }
     }
@@ -112,6 +113,6 @@ public class MeleeEntity : BaseEntity
     {
         canFire = true;
         melee.SetActive(true);
-        player.animatorCtrl.UseMelee();
+        
     }
 }

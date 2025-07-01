@@ -25,9 +25,6 @@ public class PlayerMoveCtrl : CtrlBase
         {
             rigidbody = characterBase.character.AddComponent<Rigidbody>();
         }
-        // YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/VFX/smoke_1.prefab",Vector3.zero ,Quaternion.identity,(obj,pos,rot) => {
-        // YOTOFramework.poolMgr.GetGameObjectPool(GameObjectPoolType.Smoke_FVX).SetPrefab(obj.GetComponent<VFXBase>());
-        // });
     }
     
     public override void YOTOUpdate(float deltaTime)
@@ -42,7 +39,6 @@ public class PlayerMoveCtrl : CtrlBase
             if (characterBase.isSpinting)
             {
                 characterBase.isSpinting = false;
-                // Sprint();
             }
             velocity = characterBase.animationVelocity;
             velocity.y = rigidbody.velocity.y;
