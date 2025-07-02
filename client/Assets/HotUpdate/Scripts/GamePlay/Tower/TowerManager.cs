@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TowerManager : Singleton<TowerManager>
@@ -7,10 +8,11 @@ public class TowerManager : Singleton<TowerManager>
     Dictionary<int, TowerBaseEntity> towers = new Dictionary<int, TowerBaseEntity>();
     public void Init()
     {
-        var org = GameObject.Find("PlayerOrgPos");
-        for (int i = 0; i < 5; i++)
+        var trainPos = GameObject.Find("BasePos");
+        var list = trainPos.GetComponentsInChildren<Transform>().ToList();
+        for (int i = 0; i < list.Count; i++)
         {
-            GenerateTowerBase(org.transform.position+new Vector3(0,-4,0)+new Vector3(5,0,0)*i); 
+            GenerateTowerBase(list[i].position); 
         }
     }
     public void GenerateTowerBase(Vector3 pos)

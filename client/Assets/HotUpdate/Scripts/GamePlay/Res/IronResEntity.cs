@@ -22,14 +22,10 @@ public class IronResEntity : SceneResEntity
         PlayerResManager.Instance.AddIronNum(1);
         if (canCollectNum == 0)
         {
-            Remove();
+            Free();
         }
     }
-    public override void Remove()
-    {
-        base.Remove();
-        pool.RecoverItem(this);
-    }
+
 
     protected override void SetResData()
     {

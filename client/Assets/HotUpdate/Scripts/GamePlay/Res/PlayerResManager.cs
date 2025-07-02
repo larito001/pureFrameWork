@@ -4,8 +4,8 @@ using YOTO;
 
 public class PlayerResManager : Singleton<PlayerResManager>
 {
-    private int woodNum = 0;
-    private int ironNum = 0;
+    private int woodNum = 999;
+    private int ironNum = 999;
 
     public bool CheckWoodEnough(int num)
     {

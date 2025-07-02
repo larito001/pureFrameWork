@@ -22,6 +22,7 @@ public class FightingPanel : UIPageBase
     public override void OnShow()
     {
       YOTOFramework.eventMgr.AddEventListener(EventType.RefreshResInfo,RefreshInfo);
+      RefreshInfo();
     }
 
     private void RefreshInfo()

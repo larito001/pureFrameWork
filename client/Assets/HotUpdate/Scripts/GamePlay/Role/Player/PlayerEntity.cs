@@ -345,6 +345,7 @@ public class PlayerEntity : CharacterBase
             if (currentTime >= waitTime)
             {
                 isAimEnd = true;
+                gun?.SetForward(character.transform.forward);
             }
         }
         else
@@ -365,7 +366,7 @@ public class PlayerEntity : CharacterBase
                 isShooting = true;
                 if (gun != null)
                 {
-                    gun.SetForward(character.transform.forward);
+                    
                     gun.TryShot(animatorCtrl.TryShoot);
                 }
                   

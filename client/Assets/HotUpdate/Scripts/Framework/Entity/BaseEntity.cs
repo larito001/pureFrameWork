@@ -33,16 +33,19 @@ public abstract  class BaseEntity
     public abstract void YOTONetUpdate();
     public abstract void YOTOFixedUpdate(float deltaTime);
     public abstract void YOTOOnHide();
-    private void Hide()
+
+    public virtual void Free()
     {
         YOTOOnHide();
         _isLoaded = false;
-    }
-    public virtual void Free()
-    {
-        Hide();
         YOTOFramework.entityMgr._RemoveEntity(this);
-    
+    }
+
+    public void RemoveThis()
+    {
+        YOTOOnHide();
+        _isLoaded = false;
+        YOTOFramework.entityMgr._RemoveEntity(this);
     }
 
 

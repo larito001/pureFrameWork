@@ -145,7 +145,7 @@ public class GunEntity : BaseEntity
                     // 如果没有击中，设置终点为最大距离点
                     laser.SetPosition(0, start);
                     laser.SetPosition(1, start + direction * 100f);
-                    laserPoint.position = pointPos;
+                    
                 }
             }
             else
@@ -153,6 +153,7 @@ public class GunEntity : BaseEntity
                 if (laser.enabled)
                 {
                     laser.enabled = false;
+                    laserPoint.position = pointPos;
                 }
             }
           

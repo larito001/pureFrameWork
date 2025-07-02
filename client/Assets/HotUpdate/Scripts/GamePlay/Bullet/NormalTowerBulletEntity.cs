@@ -62,25 +62,29 @@ public class NormalTowerBulletEntity : BulletEntity
         ZombieColliderCtrl ctrl;
         if (other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
         {
-            Vector3 zpos = objTrans.position;
-            Vector3 pos = other.ClosestPoint(zpos);
-            EnemyManager.Instance.Hurt(ctrl.entityId, 44);
+            if (objTrans!=null)
+            {
+                Vector3 zpos = objTrans.position;
+                Vector3 pos = other.ClosestPoint(zpos);
+                EnemyManager.Instance.Hurt(ctrl.entityId, 44);
    
-            var fvx = BloodFVXEntity.pool.GetItem(objTrans.position);
-            Debug.Log("生成血+"+fvx._entityID+pos);
-            fvx.Location = pos;
-            fvx.StartPlay();
-            fvx.InstanceGObj();
+                var fvx = BloodFVXEntity.pool.GetItem(objTrans.position);
+                Debug.Log("生成血+"+fvx._entityID+pos);
+                fvx.Location = pos;
+                fvx.StartPlay();
+                fvx.InstanceGObj();
             
 
-            Remove();
+                Remove(); 
+            }
+            
         }
         else if (other.gameObject.layer == 6)
         {
             Remove();
         }
     }
-
+    
     public override void TriggerExit(Collider other)
     {
         

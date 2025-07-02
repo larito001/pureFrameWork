@@ -36,10 +36,7 @@ public abstract class SceneResEntity : ObjectBase,PoolItem<Vector3>
     }
 
 
-    public virtual void Remove()
-    {
-        RecoverObject();
-    }
+
     protected override void AfterInstanceGObj()
     {
         var res=  ObjTrans.GetComponent<SceneResBase>();

@@ -32,7 +32,7 @@ public class NormalTower :  ObjectBase, PoolItem<TowerBaseEntity>
             var e = EnemyManager.Instance.GetRecentEnemy(Location);
             if (e != null && e.zombieBase != null)
             {
-                var dir = e.zombieBase.transform.position - this.Location;
+                var dir = e.zombieBase.transform.position+new Vector3(0,1.5f,0) - this.Location;
                 var bullet = NormalTowerBulletEntity.pool.GetItem(null);
                 bullet.InstanceGObj();
                 bullet.FireFromTo(this.Location , dir);

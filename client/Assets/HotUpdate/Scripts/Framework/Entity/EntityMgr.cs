@@ -25,8 +25,12 @@ public class EntityMgr
         baseEntities.Add(baseEntity);
     }
     public void _RemoveEntity(BaseEntity baseEntity) {
-        entities.Remove(baseEntity._entityID);
-        baseEntities.Remove(baseEntity);
+        if (entities.ContainsKey(baseEntity._entityID))
+        {
+            entities.Remove(baseEntity._entityID);
+            baseEntities.Remove(baseEntity); 
+        }
+   
     }
 
     public void _Update(float deltaTime)

@@ -69,7 +69,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
         EnemyManager.Instance.RemoveZombie(_entityID);
         YOTOFramework.timeMgr.DelayCall(() =>
         {
-            Remove();
+            Free();
 
         },2.2f);
         zombieBase.EnemyDie();

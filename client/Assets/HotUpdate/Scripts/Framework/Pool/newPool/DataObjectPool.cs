@@ -73,7 +73,7 @@ public class DataObjPool<T, S> where T : class, PoolItem<S>, new()
         {
             if (item is BaseEntity)
             {
-                (item as BaseEntity).Free();
+                (item as BaseEntity).RemoveThis();
             }
 
             _usingList.Remove(item);
@@ -111,7 +111,7 @@ public class DataObjPool<T, S> where T : class, PoolItem<S>, new()
             _usingList[i].AfterIntoObjectPool();
             if (_usingList[i] is BaseEntity)
             {
-                (_usingList[i] as BaseEntity).Free();
+                (_usingList[i] as BaseEntity).RemoveThis();
             }
         }
 
