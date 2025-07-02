@@ -6,7 +6,12 @@ public class WoodResEntity : SceneResEntity
 {
     public static DataObjPool<WoodResEntity, Vector3> pool =
         new DataObjPool<WoodResEntity, Vector3>("WoodResEntity", 20);
-
+    public override void Free()
+    {
+        base.Free();
+        RecoverObject();
+        pool.RecoverItem(this);
+    }
     public override void Collect()
     {
         canCollectNum--;

@@ -55,10 +55,6 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     {
       
         HP -= hurt;
-    
-        // 1. 将世界坐标转换为屏幕坐标
-     
-            
         int rand = Random.Range(0, 2); // 0 或 1
         FlyTextMgr.Instance.AddText(hurt.ToString(), this.objTrans.position, (FlyTextType)rand);
         if (HP <= 0)
@@ -118,12 +114,14 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     }
     
     //如果继承，注意重写
-    public  void Remove()
+    public override void Free()
     {
+        base.Free();
         objTrans.gameObject.SetActive(false);
         RecoverObject();
         pool.RecoverItem(this);
     }
+    
     public void AfterIntoObjectPool()
     {
         isInit = false;

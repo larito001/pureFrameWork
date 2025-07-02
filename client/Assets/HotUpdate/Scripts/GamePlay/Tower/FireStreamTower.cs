@@ -8,7 +8,12 @@ public class FireStreamTower : ObjectBase, PoolItem<TowerBaseEntity>
         new DataObjPool<FireStreamTower, TowerBaseEntity>("FireStreamTower", 20);
 
     private float timer = 3;
-
+    public override void Free()
+    {
+        base.Free();
+        RecoverObject();
+        pool.RecoverItem(this);
+    }
     protected override void YOTOOnload()
     {
      

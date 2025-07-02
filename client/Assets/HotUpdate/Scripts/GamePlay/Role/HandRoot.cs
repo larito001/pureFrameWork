@@ -1,13 +1,8 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DataMgr 
+public class HandRoot : MonoBehaviour
 {
 
- public void Init()
- {
-
- }
 }

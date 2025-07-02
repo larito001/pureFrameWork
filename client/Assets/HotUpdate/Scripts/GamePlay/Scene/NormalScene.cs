@@ -24,25 +24,28 @@ public class NormalScene : VirtualSceneBase
     //加载常用系统
     public override void OnInit()
     {
-        WeatherManager.Instance.Init();
-        //加载事件系统
-        EmergencyManager.Instance.Init();
-        YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
-        player = new PlayerEntity();
         var org = GameObject.Find("PlayerOrgPos");
+        WeatherManager.Instance.Init();
+        //加载紧急事件系统
+        // EmergencyManager.Instance.Init();
+        YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
         EnemyManager.Instance.Init();
+        player = new PlayerEntity();
         player.Init(org.transform.position);
         TowerManager.Instance.Init();
         SceneResManager.Instance.Init();
         YOTOFramework.uIMgr.Show(UIEnum.AimUI);
-  
-        // var obj= TestPoolObject.pool.GetItem(Vector3.zero);
-        // obj.InstanceGObj();
-        // obj.Location = org.transform.position;
     }
 
     public override void UnLoad()
     {
+        WeatherManager.Instance.Unload();
+        YOTOFramework.uIMgr.ClearUI();
+        EnemyManager.Instance.Unload();
+        TowerManager.Instance.Unload();
+        SceneResManager.Instance.Unload();
+        player.Free();
+        player = null;
         Debug.Log("yoto:unload");
     }
 

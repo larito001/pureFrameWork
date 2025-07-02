@@ -44,13 +44,14 @@ public class BloodFVXEntity : ObjectBase, PoolItem<Vector3>
         particle = objTrans.GetComponentInChildren<ParticleSystem>();
         particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         particle.Play();
-        YOTOFramework.timeMgr.DelayCall(() =>
-        {
-            Debug.Log("回收血"+_entityID+objTrans.position);
-            RecoverObject();
-            pool.RecoverItem(this);
-         
-        }, 1);
+        YOTOFramework.timeMgr.DelayCall(DelayRemove, 1);
+    }
+
+    private void DelayRemove()
+    {
+        Debug.Log("回收血"+_entityID+objTrans.position);
+        RecoverObject();
+        pool.RecoverItem(this);
     }
 
     public void AfterIntoObjectPool()

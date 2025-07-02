@@ -18,6 +18,11 @@ public class Singleton<T>where T : new()
         }
     }
 
+    public virtual void Unload()
+    {
+        instance = default(T);
+    }
+
 }
 public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
 {
@@ -40,8 +45,10 @@ public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
-    protected void OnDestroy()
+    
+    public virtual void Unload()
     {
+        GameObject.Destroy(instance);
         instance = null;
     }
 }

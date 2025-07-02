@@ -182,6 +182,13 @@ public class PlayerEntity : CharacterBase
 
     #region 对外：初始化，是否移动，受击
 
+    public override void Free()
+    {
+        base.Free();
+        gun.Free();
+        melee.Free();
+    }
+
     public override void Init(Vector3 pos)
     {
         orgPosition = pos;
@@ -400,7 +407,7 @@ public class PlayerEntity : CharacterBase
     {
         //todo:释放调角色包
         RemoveEvent();
-        GameObject.Destroy(character);
+        character.SetActive(false);
     }
 
     #endregion

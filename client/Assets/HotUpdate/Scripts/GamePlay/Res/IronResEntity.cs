@@ -7,6 +7,13 @@ public class IronResEntity : SceneResEntity
     public static DataObjPool<IronResEntity, Vector3> pool =
         new DataObjPool<IronResEntity, Vector3>("IronResEntity", 20);
 
+    public override void Free()
+    {
+        base.Free();
+        RecoverObject();
+        pool.RecoverItem(this);
+    }
+
     public override void Collect()
     {
         canCollectNum--;

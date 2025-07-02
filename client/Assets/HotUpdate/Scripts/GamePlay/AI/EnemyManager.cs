@@ -43,6 +43,18 @@ public class EnemyManager : SingletonMono<EnemyManager>
         
     }
 
+    public override void Unload()
+    {
+        foreach (var e in zombieEntities)
+        {
+            e.Value.Free();
+        }
+        zombieEntities.Clear();
+        zombieAreaList.Clear();
+        zombieAreaDic.Clear();
+        base.Unload();
+    }
+    
     public void TriggerEnmeies(int id,Transform target)
     {
         if (zombieAreaList.ContainsKey(id))

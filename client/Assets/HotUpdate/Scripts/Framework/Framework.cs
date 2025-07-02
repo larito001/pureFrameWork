@@ -10,7 +10,6 @@ namespace YOTO
         public static  TimeMgr timeMgr = new TimeMgr();
         public static  Logger logger = new Logger();
         public static  ToolMgr toolMgr = new ToolMgr();
-        // public static  PoolMgr poolMgr = new PoolMgr();
         public static  EventMgr eventMgr = new EventMgr();
         public static  StoreMgr storeMgr = new StoreMgr();
         public static  ResMgr resMgr = new ResMgr();
@@ -20,14 +19,11 @@ namespace YOTO
         public static  UIMgr uIMgr = new UIMgr();
         public static  EntityMgr entityMgr = new EntityMgr();
         public static  NetMgr netMgr = new NetMgr();
-        public static  DataMgr dataMgr = new DataMgr();
-
         public void Init()
         {
             if (!isInit)
             {
                 isInit = true;
-                // poolMgr.Init();
                 storeMgr.Init();
                 toolMgr.Init();
                 logger.Init();
@@ -38,8 +34,6 @@ namespace YOTO
                 entityMgr.Init();
                 uIMgr.Init();
                 sceneMgr.Init();
-                dataMgr.Init();
-                // netMgr.Init();
             }
 
             Debug.Log("YTLOG初始化完成");
@@ -66,7 +60,6 @@ namespace YOTO
         {
             float dt = Time.deltaTime;
             timeMgr.Update(dt);
-            // poolMgr.Update(dt);
             entityMgr._Update(dt);
             sceneMgr.Update(dt);
       
@@ -95,9 +88,8 @@ namespace YOTO
             entityMgr=null;
             uIMgr=null;
             sceneMgr=null;
-            dataMgr=null;
             System.GC.Collect();
-            base.OnDestroy();
+            Unload();
         }
 
         private void OnGUI()

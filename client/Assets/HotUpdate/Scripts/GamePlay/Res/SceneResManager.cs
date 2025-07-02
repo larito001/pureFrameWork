@@ -50,4 +50,13 @@ public class SceneResManager : Singleton<SceneResManager>
 
         return null;
     }
+
+    public override void Unload()
+    {
+        base.Unload();
+        foreach (var sceneResEntity in resList)
+        {
+            sceneResEntity.Value.Free();
+        }
+    }
 }

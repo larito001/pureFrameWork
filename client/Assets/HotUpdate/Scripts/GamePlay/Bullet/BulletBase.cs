@@ -43,10 +43,8 @@ public class BulletBase : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Debug.Log("碰撞内部！"+other.name);
         if (bulletEntity != null)
         {
-            // Debug.Log("碰撞内部尝试成功");
             bulletEntity.TriggerEnter(other);
         }
     }

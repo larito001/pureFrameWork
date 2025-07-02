@@ -78,8 +78,8 @@ public class GunEntity : BaseEntity
         fireTrans = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity).transform;
         fire = fireTrans.GetComponentInChildren<ParticleSystem>();
         fireTrans.transform.parent = firePos;
-        fireTrans.transform.localPosition = Vector3.zero;
-        fireTrans.transform.localRotation = Quaternion.identity;
+        fireTrans.localPosition = Vector3.zero;
+        fireTrans.localRotation = Quaternion.identity;
         fire.Stop();
     }
     public void TryShot(UnityAction shootCallBack)
@@ -174,6 +174,13 @@ public class GunEntity : BaseEntity
     public void Reload()
     {
         canFire = false;
+    }
+
+    public override void Free()
+    {
+        base.Free();
+        GameObject.Destroy(laser);
+        GameObject.Destroy(gun);
     }
 
     public void ReloadEnd()

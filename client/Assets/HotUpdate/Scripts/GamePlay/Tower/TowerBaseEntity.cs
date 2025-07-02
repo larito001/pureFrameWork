@@ -19,7 +19,7 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
 
     public static TowerBaseEntity selectTower;
     private bool isHaveTower = false;
-    
+    private ObjectBase tower; 
     protected override void YOTOOnload()
     {
     }
@@ -34,21 +34,21 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
     {
         if (towerType==TowerEnum.NormalBullet)
         {
-            var ntower = NormalTower.pool.GetItem(this);
-            ntower.Location=this.Location+new Vector3(0,0.5f,0);
-            ntower.InstanceGObj();
+            tower = NormalTower.pool.GetItem(this);
+            tower.Location=this.Location+new Vector3(0,0.5f,0);
+            tower.InstanceGObj();
 
         }else if (towerType == TowerEnum.Fire)
         {
-            var tower = FireStreamTower.pool.GetItem(this);
+            tower= FireStreamTower.pool.GetItem(this);
             tower.Location=this.Location+new Vector3(0,0.5f,0);
             tower.InstanceGObj();
         }
         else
         {
-            var ntower = NormalTower.pool.GetItem(this);
-            ntower.Location=this.Location;
-            ntower.InstanceGObj();
+            tower = NormalTower.pool.GetItem(this);
+            tower.Location=this.Location;
+            tower.InstanceGObj();
     
         }
         isHaveTower = true;
@@ -105,5 +105,13 @@ public class TowerBaseEntity : ObjectBase, PoolItem<Vector3>
     {
         YOTOFramework.uIMgr.Hide(UIEnum.TowerCreateUI);
         selectTower = null;
+    }
+
+    public override void Free()
+    {
+        base.Free();
+        tower.Free();
+        RecoverObject();
+        pool.RecoverItem(this);
     }
 }

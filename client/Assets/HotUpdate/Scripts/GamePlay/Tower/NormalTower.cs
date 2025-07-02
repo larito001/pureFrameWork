@@ -9,6 +9,12 @@ public class NormalTower :  ObjectBase, PoolItem<TowerBaseEntity>
         new DataObjPool<NormalTower, TowerBaseEntity>("NormalTower", 20);
 
     private float timer = 3;
+    public override void Free()
+    {
+        base.Free();
+        RecoverObject();
+        pool.RecoverItem(this);
+    }
 
     protected override void YOTOOnload()
     {

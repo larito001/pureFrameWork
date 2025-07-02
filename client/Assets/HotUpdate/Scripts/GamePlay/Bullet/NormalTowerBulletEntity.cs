@@ -60,11 +60,24 @@ public class NormalTowerBulletEntity : BulletEntity
     public override void TriggerEnter(Collider other)
     {
         ZombieColliderCtrl ctrl;
-        if ( other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
+        if (other.TryGetComponent<ZombieColliderCtrl>(out ctrl))
         {
-            EnemyManager.Instance.Hurt(ctrl.entityId,44);
-            Remove();
+            Vector3 zpos = objTrans.position;
+            Vector3 pos = other.ClosestPoint(zpos);
+            EnemyManager.Instance.Hurt(ctrl.entityId, 44);
+   
+            var fvx = BloodFVXEntity.pool.GetItem(objTrans.position);
+            Debug.Log("生成血+"+fvx._entityID+pos);
+            fvx.Location = pos;
+            fvx.StartPlay();
+            fvx.InstanceGObj();
             
+
+            Remove();
+        }
+        else if (other.gameObject.layer == 6)
+        {
+            Remove();
         }
     }
 
