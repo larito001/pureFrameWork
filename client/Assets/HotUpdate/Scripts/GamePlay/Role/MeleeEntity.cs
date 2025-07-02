@@ -6,7 +6,7 @@ using YOTO;
 
 public class MeleeEntity : BaseEntity
 {
-    private PlayerEntity player;
+    private const string WeaponPath = "Assets/Fire Axe/Prefab/PBR/Fire_Axe_LODA.prefab";
     private HandRoot handRoot;
     private ParticleSystem fire;
     public float fireRate =1f; // 每发子弹的时间间隔
@@ -16,37 +16,43 @@ public class MeleeEntity : BaseEntity
     private bool isFiring = false; // 当前是否处于开火状态
 
     public Transform firePos { get; private set; }
+    private Vector3 _gunForward;
 
+    public void SetForward(Vector3 forward)
+    {
+        _gunForward = forward;
+    }
     public MeleeEntity(HandRoot handRoot)
     {
         this.handRoot = handRoot;
     }
 
     private GameObject melee;
+    private Transform _firePosParent;
 
+    public void SetFirePosParent(Transform firePosParent)
+    {
+        _firePosParent = firePosParent;
+        if (firePos != null)
+        {
+            firePos.SetParent(_firePosParent);
+            firePos.localPosition = new Vector3(0, 0, 0);
+        }
+    }
     protected override void YOTOOnload()
     {
-        // VFXManager.Instance.Init();
-
-
-        YOTOFramework.resMgr.LoadGameObject("Assets/Fire Axe/Prefab/PBR/Fire_Axe_LODA.prefab",
-         (obj) =>
-            {
-                melee = UnityEngine.Object.Instantiate(obj,handRoot.transform);
-
-                // leftHand.data.target = LeftHandTarget;
-                melee.transform.localPosition = Vector3.zero;
-                firePos = melee.transform.Find("FirePos");
-                firePos.parent = player.character.transform;
-                firePos.localPosition = Vector3.zero;
-            });
+        YOTOFramework.resMgr.LoadGameObject(WeaponPath, WeaponLoadComplete);
     }
 
-    public void Init(PlayerEntity entity)
+    private void WeaponLoadComplete(GameObject obj)
     {
-        player = entity;
+        melee = UnityEngine.Object.Instantiate(obj,handRoot.transform);
+        melee.transform.localPosition = Vector3.zero;
+        firePos = melee.transform.Find("FirePos");
+        firePos.parent = _firePosParent;
+        firePos.localPosition = Vector3.zero;
     }
-
+    
     public void TryShot(UnityAction shootCallBack)
     {
         if (!canFire) return;
@@ -76,7 +82,7 @@ public class MeleeEntity : BaseEntity
         // 获取子弹对象
         var bullet = MeleeBullet.pool.GetItem(firePos);
         bullet.InstanceGObj();
-        bullet.FireFromTo(firePos.position, player.character.transform.forward);
+        bullet.FireFromTo(firePos.position, _gunForward);
     }
     
 

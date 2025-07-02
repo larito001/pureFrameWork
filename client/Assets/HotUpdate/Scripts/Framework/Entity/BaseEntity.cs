@@ -23,7 +23,6 @@ public abstract  class BaseEntity
     {
         if (_isLoaded) return;
         _entityID=ids++;
-        //Debug.Log("���������");
         YOTOOnload();
         _isLoaded = true;
         YOTOFramework.entityMgr._AddEntity(this);

@@ -7,18 +7,26 @@ using YOTO;
 
 public class GunEntity : BaseEntity
 {
-    private PlayerEntity player;
+    private const string WeaponPath = "Assets/HotUpdate/prefabs/Role/Gun/SM_Wep_AssaultRifle_02.prefab";
+    private const string LaserPath = "Assets/HotUpdate/prefabs/Laser/Prefab/Laser.prefab";
+    private const string FirePath = "Assets/HotUpdate/prefabs/Bullet/Fire.prefab";
     private HandRoot handRoot;
     private ParticleSystem fire;
     private Transform fireTrans;
     public float fireRate = 0.2f; // 每发子弹的时间间隔
     private float fireTimer = 0f;
-
+    private Vector3 pointPos = new Vector3(9999,99999,9999);
     public bool canFire { get; private set; } // 是否允许发射
     private bool isFiring = false; // 当前是否处于开火状态
     private bool _isAimEnd;
     private bool _isWaiting;
+    private Vector3 _gunForward;
 
+    public void SetForward(Vector3 forward)
+    {
+        _gunForward = forward;
+    }
+    
     public void SetIsAinEnd(bool isAimEnd)
     {
         _isAimEnd = isAimEnd;
@@ -28,7 +36,6 @@ public class GunEntity : BaseEntity
         _isWaiting = isWaiting;
     }
     public Transform firePos { get; private set; }
-    // private Queue<BulletEntity> bullets = new Queue<BulletEntity>();
 
     public GunEntity(HandRoot handRoot)
     {
@@ -38,48 +45,43 @@ public class GunEntity : BaseEntity
     private GameObject gun;
     private LineRenderer laser;
     private Transform laserPoint;
+    
     int enemyTriggerLayer = LayerMask.NameToLayer("EnemyTrigger"); // 获取 EnemyTrigger 层的索引
     protected override void YOTOOnload()
     {
         // VFXManager.Instance.Init();
-
-
-        YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Role/Gun/SM_Wep_AssaultRifle_02.prefab",
-            (obj) =>
-            {
-                gun = UnityEngine.Object.Instantiate(obj);
-                gun.transform.SetParent(handRoot.transform);
-                canFire = true;
-                // leftHand.data.target = LeftHandTarget;
-                gun.transform.localPosition = Vector3.zero;
-                gun.transform.localRotation = Quaternion.identity;
-                firePos = gun.transform.Find("FirePos");
-                YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Laser/Prefab/Laser.prefab",
-               
-                    (obj) =>
-                    {
-                        laser = GameObject.Instantiate(obj).GetComponent<LineRenderer>();
-                        laser.positionCount = 2;
-                        laserPoint = laser.GetComponentInChildren<Transform>();
-                        laserPoint.parent = null;
-                    });
-                YOTOFramework.resMgr.LoadGameObject("Assets/HotUpdate/prefabs/Bullet/Fire.prefab", (obj) =>
-                {
-                    fireTrans = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity).transform;
-                    fire = fireTrans.GetComponentInChildren<ParticleSystem>();
-                    fireTrans.transform.parent = firePos;
-                    fireTrans.transform.localPosition = Vector3.zero;
-                    fireTrans.transform.localRotation = Quaternion.identity;
-                    fire.Stop();
-                });
-            });
+        YOTOFramework.resMgr.LoadGameObject(WeaponPath, LoadWeaponComplete);
     }
 
-    public void Init(PlayerEntity entity)
+    private void LoadWeaponComplete(GameObject obj)
     {
-        player = entity;
+        gun = UnityEngine.Object.Instantiate(obj);
+        gun.transform.SetParent(handRoot.transform);
+        canFire = true;
+        gun.transform.localPosition = Vector3.zero;
+        gun.transform.localRotation = Quaternion.identity;
+        firePos = gun.transform.Find("FirePos");
+        YOTOFramework.resMgr.LoadGameObject(LaserPath, LoadLaserComplete);
+        YOTOFramework.resMgr.LoadGameObject(FirePath, LoadFireComplete);
     }
 
+    private void LoadLaserComplete(GameObject obj)
+    {
+        laser = GameObject.Instantiate(obj).GetComponent<LineRenderer>();
+        laser.positionCount = 2;
+        laserPoint = laser.GetComponentInChildren<Transform>();
+        laserPoint.parent = null;
+    }
+
+    private void LoadFireComplete(GameObject obj)
+    {
+        fireTrans = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity).transform;
+        fire = fireTrans.GetComponentInChildren<ParticleSystem>();
+        fireTrans.transform.parent = firePos;
+        fireTrans.transform.localPosition = Vector3.zero;
+        fireTrans.transform.localRotation = Quaternion.identity;
+        fire.Stop();
+    }
     public void TryShot(UnityAction shootCallBack)
     {
         if (!canFire) return;
@@ -96,13 +98,12 @@ public class GunEntity : BaseEntity
     protected virtual void SpawnBullet()
     {
         fire.Stop();
-        // fireTrans .LookAt(fire.transform.position);
-        fireTrans.forward = player.character.transform.forward;
+        fireTrans.forward = _gunForward;
         fire.Play();
         // 获取子弹对象
         var bullet = NormalGunBullet.pool.GetItem(firePos);
         bullet.InstanceGObj();
-        bullet.FireFromTo(firePos.position, player.character.transform.forward);
+        bullet.FireFromTo(firePos.position, _gunForward);
     }
 
     public override void YOTOStart()
@@ -120,17 +121,15 @@ public class GunEntity : BaseEntity
         if (laser)
         {
             // 设置 LineRenderer 点的数量（2个点：起点和终点）
-       
             if (_isAimEnd&&canFire&&!_isWaiting)
             {
                 if (!laser.enabled)
                 {
                     laser.enabled = true;
                 }
-    
                 // 设置起点
                 Vector3 start = fireTrans.position;
-                Vector3 direction = player.character.transform.forward;
+                Vector3 direction = _gunForward;
              
                 LayerMask layerMask = ~(1 << enemyTriggerLayer); // 排除 EnemyTrigger 层
                 RaycastHit hit;
@@ -146,6 +145,7 @@ public class GunEntity : BaseEntity
                     // 如果没有击中，设置终点为最大距离点
                     laser.SetPosition(0, start);
                     laser.SetPosition(1, start + direction * 100f);
+                    laserPoint.position = pointPos;
                 }
             }
             else

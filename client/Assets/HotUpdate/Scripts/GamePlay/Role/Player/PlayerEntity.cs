@@ -28,7 +28,6 @@ public class PlayerEntity : CharacterBase
     private Transform charCameraPos; //相机跟随的点，设置瞄准镜头偏移
     private Outline outline; //描边
     public GunEntity gun;
-
     public MeleeEntity melee;
 
     //玩家状态信息
@@ -51,8 +50,6 @@ public class PlayerEntity : CharacterBase
     private float currentTime = 0; //当前抬枪进度
     #endregion
     
-
-
     #region 输入
 
     private void OnPlayerLoadComplete(GameObject player)
@@ -143,7 +140,7 @@ public class PlayerEntity : CharacterBase
             if (gun == null)
             {
                 gun = new GunEntity(handPos);
-                gun.Init(this);
+                gun.Init();
             }
             else
             {
@@ -163,7 +160,8 @@ public class PlayerEntity : CharacterBase
             if (melee == null)
             {
                 melee = new MeleeEntity(handPos);
-                melee.Init(this);
+                melee.Init();
+                melee.SetFirePosParent(this.character.transform);
             }
             else
             {
@@ -359,7 +357,11 @@ public class PlayerEntity : CharacterBase
             {
                 isShooting = true;
                 if (gun != null)
+                {
+                    gun.SetForward(character.transform.forward);
                     gun.TryShot(animatorCtrl.TryShoot);
+                }
+                  
                 if (melee != null)
                 {
                     melee.TryShot(animatorCtrl.TryUseMelee);
