@@ -25,7 +25,7 @@ public class ZombieNavCtrl : MonoBehaviour
         
         UnityEngine.Vector3 currentPos = transform.position;
         float distance = math.distance(currentPos, agent.EntityBody.Destination);
-        if (agent.EntityBody.IsStopped&&Target&&distance <= (agent.GetStopDistance()+0.1f))
+        if (agent.EntityBody.IsStopped&&zombieEntity.canAtk&&distance <= (agent.GetStopDistance()+0.1f))
         {
             if (atkTimer >= 2.4f)
             {

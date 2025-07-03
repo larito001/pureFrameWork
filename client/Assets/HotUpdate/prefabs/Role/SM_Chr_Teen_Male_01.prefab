@@ -6169,7 +6169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5100621636889431473}
-  - component: {fileID: 1505145227416698675}
+  - component: {fileID: 6599212843452279901}
   m_Layer: 0
   m_Name: HandPos
   m_TagString: Untagged
@@ -6192,7 +6192,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4875715716804884}
   m_LocalEulerAnglesHint: {x: -2.352, y: 76.39, z: 255.345}
---- !u!114 &1505145227416698675
+--- !u!114 &6599212843452279901
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

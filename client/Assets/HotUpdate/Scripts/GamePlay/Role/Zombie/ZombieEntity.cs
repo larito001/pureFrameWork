@@ -15,6 +15,7 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
     private Transform target;
     private CrowdGroupAuthoring group;
     public bool isInit=false;
+    public bool canAtk = false;
     public bool isDie { get; private set; }
     public void SetTarget(Transform t)
     {
@@ -32,7 +33,9 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
         zombieNav.Init(this);
         zombieBase.GetComponent<ZombieColliderCtrl>().entityId = this._entityID;
         zombieBase.EnemyRun();
-        zombieBase.GetComponent<ZombieColliderCtrl>().Run();
+       var colliderCtrl= zombieBase.GetComponent<ZombieColliderCtrl>();
+       colliderCtrl.Init(this);
+       colliderCtrl.Run();
         HP = 100;
         zombieBase.GetComponent<AgentCrowdPathingAuthoring>().Group =group;  
 
@@ -127,6 +130,23 @@ public class ZombieEntity : ObjectBase, PoolItem<Vector3>
         isInit = false;
     }
 
+
+    public void TriggerEnter(Collider other)
+    {
+        PlayerAnimatorCtrl p;
+        if (other.TryGetComponent(out p))
+        {
+            canAtk = true;
+        }
+    }
+    public void TriggerExit(Collider other)
+    {
+        PlayerAnimatorCtrl p;
+        if (other.TryGetComponent(out p))
+        {
+            canAtk = false;
+        }
+    }
     public void SetData(Vector3 serverData)
     {
         SetInVision(true);

@@ -34,7 +34,7 @@ public class EnemyManager : SingletonMono<EnemyManager>
                 zombieEntity.SetGroup(triggers[i].GetComponent<CrowdGroupAuthoring>());
                 // 设置位置，假设僵尸在地面上（y轴为0）
                 zombieEntity.Location=pos;
-
+                zombieEntity.SetTarget(triggers[i].transform);
                 zombieEntities.Add(zombieEntity._entityID, zombieEntity);
                 list.Add(zombieEntity);
                 zombieAreaDic.Add(zombieEntity._entityID,i);

@@ -7,7 +7,13 @@ public class ZombieColliderCtrl : MonoBehaviour
 {
     private BoxCollider collider;
     public int entityId;
+    public ZombieEntity _zombieEntity;
 
+    public void Init(ZombieEntity zombieEntity)
+    {
+        _zombieEntity = zombieEntity;
+
+    }
     public void Run()
     {
         if(collider != null)
@@ -24,11 +30,11 @@ public class ZombieColliderCtrl : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
+        _zombieEntity.TriggerEnter(other);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        
+        _zombieEntity.TriggerExit(other);
     }
 }
