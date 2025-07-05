@@ -14,7 +14,7 @@ public class PlayerEntity : CharacterBase
     private const float waitTime = 0.5f; //抬枪时间
     private const string playerPerfabPath = "Assets/PolygonApocalypse/Prefabs/Characters/SM_Chr_Teen_Male_01.prefab";
 
-
+    
     //控制器
     private PlayerAnimatorCtrl animatorCtrl;
 
@@ -94,6 +94,15 @@ public class PlayerEntity : CharacterBase
         mousePoint = pos;
     }
 
+    public Vector3 GetPlayerPos()
+    {
+        if (character == null)
+        {
+            return new Vector3(9999, 9999, 9999);
+        }
+
+        return character.transform.position;
+    }
     private void TryReload()
     {
         if (!isInit) return;

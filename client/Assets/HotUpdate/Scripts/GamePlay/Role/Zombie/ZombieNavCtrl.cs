@@ -18,37 +18,21 @@ public class ZombieNavCtrl : MonoBehaviour
     {
         agent = transform.GetComponent<AgentAuthoring>();
     }
-    private float atkTimer = 0;
+
     private void FixedUpdate()
     {
         if (!canMove) return;
-        
+
         UnityEngine.Vector3 currentPos = transform.position;
         float distance = math.distance(currentPos, agent.EntityBody.Destination);
-        if (agent.EntityBody.IsStopped&&zombieEntity.canAtk&&distance <= (agent.GetStopDistance()+0.1f))
+        if (agent.EntityBody.IsStopped && distance <= (agent.GetStopDistance() + 0.1f))
         {
-            if (atkTimer >= 2.4f)
-            {
-                if (!zombieEntity.isDie)
-                {
-                    zombieEntity.zombieBase.EnemyAtk();
-                }
-         
-                atkTimer = 0;
-            }
-            atkTimer += Time.fixedDeltaTime;
-          
-        }else if(!agent.EntityBody.IsStopped&&distance > (agent.GetStopDistance()+0.1f))
-        {
-            atkTimer = 2.4f;
-            zombieEntity.zombieBase.EnemyRun();
+            zombieEntity.ZombieMoveStopTrigger();
         }
-        else if (agent.EntityBody.IsStopped&&distance <= (agent.GetStopDistance()+0.1f))
+        else if (!agent.EntityBody.IsStopped && distance > (agent.GetStopDistance() + 0.1f))
         {
-            atkTimer = 2.4f;
-            zombieEntity.zombieBase.EnemyIdel();
+            zombieEntity.ZombieMovingTrigger();
         }
-     
     }
 
     public void Stop()
@@ -66,13 +50,13 @@ public class ZombieNavCtrl : MonoBehaviour
         body.IsStopped = false;
         agent.EntityBody = body;
     }
+
     public void SetTarget(Transform Target)
     {
         if (canMove && agent)
         {
             this.Target = Target;
             StartMove();
-       
         }
     }
 

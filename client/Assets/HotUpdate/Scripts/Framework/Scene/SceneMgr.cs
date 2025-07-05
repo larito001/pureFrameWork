@@ -45,6 +45,11 @@ namespace YOTO
          
 
         }
+
+        public VirtualSceneBase GetCurrentScene()
+        {
+            return currentScene;
+        }
         public void Update(float dt)
         {
             if (cameraCtrl!=null)

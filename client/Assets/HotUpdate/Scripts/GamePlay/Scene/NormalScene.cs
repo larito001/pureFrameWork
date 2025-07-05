@@ -7,7 +7,7 @@ using EventType = YOTO.EventType;
 
 public class NormalScene : VirtualSceneBase
 {
-    private PlayerEntity player;
+  
 
     //注册事件
     public override void OnAdd()
@@ -30,8 +30,7 @@ public class NormalScene : VirtualSceneBase
         // EmergencyManager.Instance.Init();
         YOTOFramework.uIMgr.Show(UIEnum.FightingPanel);
         EnemyManager.Instance.Init();
-        player = new PlayerEntity();
-        player.Init(org.transform.position);
+        PlayerManager.Instance.Init(org.transform);
         TowerManager.Instance.Init();
         SceneResManager.Instance.Init();
         YOTOFramework.uIMgr.Show(UIEnum.AimUI);
@@ -44,8 +43,7 @@ public class NormalScene : VirtualSceneBase
         EnemyManager.Instance.Unload();
         TowerManager.Instance.Unload();
         SceneResManager.Instance.Unload();
-        player.Free();
-        player = null;
+        PlayerManager.Instance.Unload();
         Debug.Log("yoto:unload");
     }
 

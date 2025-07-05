@@ -20,33 +20,31 @@ public class ZombieAnimatorCtrl : MonoBehaviour
     {
         this.zombieEntity = zombieEntity;
     }
+
     public void EnemyDie()
     {
         if (state == ZombieState.Die) return;
-    
+
         state = ZombieState.Die;
         BodyMeshAnimator.Play("Die", 0);
     }
 
     public void EnemyAtk()
     {
-        zombieEntity.zombieNav.Stop();
+        zombieEntity.StopNav();
         YOTOFramework.timeMgr.DelayCall(() =>
         {
             if (!zombieEntity.isDie)
             {
-                var bullet = NormalZombieBullet.pool.GetItem(this.transform);
-                bullet.Location = transform.position;
-                bullet.InstanceGObj();
-                bullet.FireFromTo(bullet.Location, transform.forward);
+                zombieEntity.GenerateZombieBullet();
+       
             }
-      
-        },1.2f);
+        }, 1.2f);
         YOTOFramework.timeMgr.DelayCall(() =>
         {
             if (!zombieEntity.isDie)
-            zombieEntity.zombieNav.StartMove();
-        },1.5f);
+                zombieEntity.StartNav();
+        }, 1.5f);
 
         state = ZombieState.Atk;
         // Debug.Log("Atk");
