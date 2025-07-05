@@ -27,7 +27,7 @@ public class EnemyManager : SingletonMono<EnemyManager>
             zombieAreaList.Add(i,list);
             
             var pos = triggers[i].transform.position;
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < 40; j++)
             {
                 ZombieEntity zombieEntity=  ZombieEntity.pool.GetItem(Vector3.zero);
                 zombieEntity.InstanceGObj();
