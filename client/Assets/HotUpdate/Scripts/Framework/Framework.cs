@@ -19,11 +19,13 @@ namespace YOTO
         public static  UIMgr uIMgr = new UIMgr();
         public static  EntityMgr entityMgr = new EntityMgr();
         public static  NetMgr netMgr = new NetMgr();
+        private static PluginManager PluginMgr = new PluginManager();
         public void Init()
         {
             if (!isInit)
             {
                 isInit = true;
+                PluginMgr.InitPlugins();
                 storeMgr.Init();
                 toolMgr.Init();
                 logger.Init();
@@ -89,6 +91,8 @@ namespace YOTO
             uIMgr=null;
             sceneMgr=null;
             System.GC.Collect();
+            PluginMgr.Unload();
+            PluginMgr = null;
             Unload();
         }
 
